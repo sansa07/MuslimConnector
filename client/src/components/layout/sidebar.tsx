@@ -45,7 +45,7 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
         )}
         
         {/* Navigation Menu */}
-        <nav className="space-y-1">
+        <nav className="space-y-1 mb-20">
           <a href="/" className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
             <Home className="w-5 h-5" />
             <span>{t('nav.home')}</span>

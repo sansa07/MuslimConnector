@@ -44,7 +44,9 @@
     "quran": "Kuran & Hadis",
     "profile": "Profil",
     "settings": "Ayarlar",
-    "communities": "Topluluklar"
+    "communities": "Topluluklar",
+    "prayerTimes": "Namaz Vakitleri",
+    "dailyWisdom": "Günün Öğüdü"
   },
   "home": {
     "welcomeMessage": "Hoş Geldiniz!",
