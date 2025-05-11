@@ -1,0 +1,145 @@
+🌐 1. Genel Site Amacı ve Teması
+Amaç:
+Müslüman bireylerin bir araya gelip bilgi, tecrübe, dua, etkinlik ve dini içerikleri paylaştığı, İslami değerlere uygun, güvenli ve estetik bir sosyal ağ platformu oluşturmak.
+
+Temalar:
+
+Dini içerik odaklı (ayet, hadis, ilmihal, sorular)
+
+Sosyal içerik (günlük dua, başarı hikayeleri, yardımlaşma)
+
+Etkinlik ve cemiyet (toplu iftar, cami sohbetleri, yardım kampanyaları)
+
+🧩 2. Gerekli Sayfalar ve Bileşenler
+🔹 Kullanıcı Sayfaları
+Anasayfa
+
+Kayıt / Giriş Ekranı
+
+Profil Sayfası (Takip ettikleri, beğeniler, paylaşımlar)
+
+Paylaşım Ekranı (metin, dua, ayet, görsel, video)
+
+Keşfet Sayfası (trend içerikler)
+
+Bildirimler
+
+Dua Panosu / İstek Duası Alanı
+
+Forum / Soru-Cevap Alanı
+
+Etkinlik Takvimi
+
+🔹 Yönetim Sayfaları
+İçerik Moderasyonu
+
+Kullanıcı Yönetimi
+
+Şikayet Kutusu
+
+İstatistik Paneli (aktiflik, popüler içerikler)
+
+🛠 3. Gerekli Bileşenler (Frontend)
+🧱 UI Bileşenleri
+Navbar (Namaz Vakti, Ayet, Hızlı Paylaşım, Menü)
+
+Kartlar (Paylaşım kartı: Ayet, Hadis, Söz, Fotoğraf)
+
+Takipçi / Takip Edilen Listesi
+
+Yorum kutusu
+
+Dua et butonu 🤲
+
+Beğeni kalbi ❤️ ama İslami usule uygun stil
+
+"Elhamdülillah", "Amin", "Maşallah" gibi etkileşim butonları
+
+Gece Modu 🌙
+
+💾 4. Veri Yapısı (Backend)
+🔐 Kullanıcı
+json
+Kopyala
+Düzenle
+{
+  "id": "uid123",
+  "name": "Fatih Yılmaz",
+  "email": "fatih@example.com",
+  "profileImage": "/images/fatih.png",
+  "followers": ["uid321", "uid999"],
+  "following": ["uid876"]
+}
+📝 Paylaşım
+json
+Kopyala
+Düzenle
+{
+  "id": "post567",
+  "userId": "uid123",
+  "type": "dua", // veya "ayet", "söz", "görsel"
+  "content": "Allah'ım bizi doğru yoldan ayırma.",
+  "image": null,
+  "likes": 54,
+  "comments": [
+    { "userId": "uid999", "text": "Amin 🙏", "timestamp": "..." }
+  ],
+  "timestamp": "2025-05-11T12:00:00"
+}
+🎨 5. UI/UX Teması
+Renkler: Yeşil (iman), Altın (hikmet), Beyaz (temizlik), Lacivert (derinlik)
+
+Yazı Tipi: Lateef, Noto Naskh Arabic, veya modern bir sans-serif
+
+Responsive tasarım (mobil odaklı)
+
+İslami kaligrafi süslemeleri / minimal motifler
+
+🔒 6. Güvenlik ve Uygunluk
+Uygunsuz içerik bildirimi
+
+Takip filtreleme
+
+İçerik kontrol algoritması (AI moderasyon mümkün)
+
+Cinsiyetler arası hassas filtre (isteğe bağlı)
+
+Profillere özel dua isteği özelliği
+
+📢 7. Prompt Listesi (AI İçerik için)
+🤖 AI'ya içerik üretmesi için örnek promptlar:
+"Bugün için anlamlı bir dua paylaş"
+
+"Peygamber Efendimiz'in sabırla ilgili bir hadisini göster"
+
+"Kullanıcılara uygun bir Cuma mesajı öner"
+
+"Yardımlaşma ile ilgili kısa bir ayet yaz"
+
+"İslami motivasyon içeren bir görsel altyazısı oluştur"
+
+📦 8. Teknolojik Yapı Önerisi
+Frontend:
+React veya Next.js (Tailwind CSS ile)
+
+PWA desteği
+
+Mobil uygulama: React Native
+
+Backend:
+Firebase / Supabase (hızlı prototip için)
+
+Node.js + Express + MongoDB (daha özelleştirilebilir yapı)
+
+Admin Panel: AdminJS / custom panel
+
+📣 9. Bonus Özellikler
+Namaz Vakti API entegrasyonu
+
+Ramazan İmsakiye Modu
+
+Hatim Takip Modülü (toplu okuma)
+
+Dualar Kitaplığı
+
+Sesli paylaşım (kendi duasını ses kaydı olarak yükleyebilme)
