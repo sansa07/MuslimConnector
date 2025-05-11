@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "emailLoginNotAvailable": "Email login is currently unavailable",
+    "useOtherMethods": "Please try other login methods",
+    "socialLogin": "Social Login",
+    "emailLogin": "Email Login",
+    "createNewAccount": "Create a new account",
+    "emailRegister": "Email Registration",
+    "termsRequired": "Terms and conditions required",
+    "mustAgreeToTerms": "You must agree to the terms and conditions to continue",
+    "emailRegisterNotAvailable": "Email registration is currently unavailable",
+    "passwordMismatch": "Passwords do not match",
+    "passwordsMustMatch": "The passwords you entered must be the same",
+    "chooseLoginMethod": "Choose your login method"
+  }
+}

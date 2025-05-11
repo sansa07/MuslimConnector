@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "emailLoginNotAvailable": "E-posta ile giriş şu anda kullanılamıyor",
+    "useOtherMethods": "Lütfen diğer giriş yöntemlerini deneyin",
+    "socialLogin": "Sosyal Medya ile Giriş",
+    "emailLogin": "E-posta ile Giriş",
+    "createNewAccount": "Yeni hesap oluşturun",
+    "emailRegister": "E-posta ile Kayıt",
+    "termsRequired": "Şartlar ve koşullar gerekli",
+    "mustAgreeToTerms": "Devam etmek için şartları ve koşulları kabul etmelisiniz",
+    "emailRegisterNotAvailable": "E-posta ile kayıt şu anda kullanılamıyor",
+    "passwordMismatch": "Şifreler eşleşmiyor",
+    "passwordsMustMatch": "Girdiğiniz şifreler birbiriyle aynı olmalıdır",
+    "chooseLoginMethod": "Giriş yönteminizi seçin"
+  }
+}

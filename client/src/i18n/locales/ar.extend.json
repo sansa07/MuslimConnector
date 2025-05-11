@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "emailLoginNotAvailable": "تسجيل الدخول بالبريد الإلكتروني غير متاح حاليًا",
+    "useOtherMethods": "يرجى تجربة طرق تسجيل الدخول الأخرى",
+    "socialLogin": "تسجيل الدخول الاجتماعي",
+    "emailLogin": "تسجيل الدخول بالبريد الإلكتروني",
+    "createNewAccount": "إنشاء حساب جديد",
+    "emailRegister": "التسجيل بالبريد الإلكتروني",
+    "termsRequired": "الشروط والأحكام مطلوبة",
+    "mustAgreeToTerms": "يجب أن توافق على الشروط والأحكام للمتابعة",
+    "emailRegisterNotAvailable": "التسجيل بالبريد الإلكتروني غير متاح حاليًا",
+    "passwordMismatch": "كلمات المرور غير متطابقة",
+    "passwordsMustMatch": "يجب أن تكون كلمات المرور التي أدخلتها متطابقة",
+    "chooseLoginMethod": "اختر طريقة تسجيل الدخول"
+  }
+}
