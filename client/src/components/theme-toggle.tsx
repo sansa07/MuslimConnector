@@ -1,8 +1,14 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { Moon, Sun } from "lucide-react";
+import { Moon, Sun, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-type Theme = "dark" | "light" | "system";
+type Theme = "dark" | "light" | "system" | "islamic-green" | "islamic-gold" | "islamic-navy";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -34,7 +40,8 @@ export function ThemeProvider({
 
   useEffect(() => {
     const root = window.document.documentElement;
-    root.classList.remove("light", "dark");
+    // Tüm tema sınıflarını kaldır
+    root.classList.remove("light", "dark", "islamic-green", "islamic-gold", "islamic-navy");
 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
@@ -46,6 +53,13 @@ export function ThemeProvider({
       return;
     }
 
+    // İslami temaları özel olarak işle
+    if (theme.startsWith("islamic-")) {
+      // Temel aydınlık/karanlık mod için
+      const baseTheme = theme.includes("navy") ? "dark" : "light";
+      root.classList.add(baseTheme);
+    }
+    
     root.classList.add(theme);
   }, [theme]);
 
@@ -76,20 +90,61 @@ export const useTheme = () => {
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
-  function toggleTheme() {
-    setTheme(theme === "light" ? "dark" : "light");
-  }
-
   return (
-    <Button 
-      variant="ghost" 
-      size="icon" 
-      onClick={toggleTheme}
-      className="rounded-full hover:bg-gray-100 dark:hover:bg-navy"
-    >
-      <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:rotate-90 dark:scale-0 text-gray-600" />
-      <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-yellow-300" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="rounded-full hover:bg-gray-100 dark:hover:bg-navy"
+        >
+          {theme === "light" && (
+            <Sun className="h-5 w-5 text-gray-600" />
+          )}
+          {theme === "dark" && (
+            <Moon className="h-5 w-5 text-yellow-300" />
+          )}
+          {theme === "islamic-green" && (
+            <Palette className="h-5 w-5 text-green-600" />
+          )}
+          {theme === "islamic-gold" && (
+            <Palette className="h-5 w-5 text-yellow-500" />
+          )}
+          {theme === "islamic-navy" && (
+            <Palette className="h-5 w-5 text-blue-800" />
+          )}
+          {theme === "system" && (
+            <Palette className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+          )}
+          <span className="sr-only">Tema Seçenekleri</span>
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => setTheme("light")}>
+          <Sun className="mr-2 h-4 w-4" />
+          <span>Açık</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("dark")}>
+          <Moon className="mr-2 h-4 w-4" />
+          <span>Koyu</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("islamic-green")}>
+          <Palette className="mr-2 h-4 w-4 text-green-600" />
+          <span>İslami Yeşil</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("islamic-gold")}>
+          <Palette className="mr-2 h-4 w-4 text-yellow-500" />
+          <span>İslami Altın</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("islamic-navy")}>
+          <Palette className="mr-2 h-4 w-4 text-blue-800" />
+          <span>İslami Lacivert</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => setTheme("system")}>
+          <Palette className="mr-2 h-4 w-4" />
+          <span>Sistem</span>
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }

@@ -86,6 +86,60 @@
   --chart-5: 217 91% 60%;
 }
 
+/* İslami Yeşil Tema */
+.islamic-green {
+  --primary: 142.1 76.2% 36.3%;
+  --primary-foreground: 355.7 100% 97.3%;
+  --secondary: 142.1 30% 92%;
+  --secondary-foreground: 142.1 70% 20%;
+  --border: 142.1 30% 88%;
+  --ring: 142.1 76.2% 36.3%;
+
+  --pattern-color: rgba(30, 132, 73, 0.15);
+}
+
+/* İslami Altın Tema */
+.islamic-gold {
+  --primary: 48 96.5% 50%;
+  --primary-foreground: 0 0% 20%;
+  --secondary: 48 30% 92%;
+  --secondary-foreground: 48 80% 20%;
+  --border: 48.5 30% 85%;
+  --ring: 48 95% 45%;
+  
+  --pattern-color: rgba(212, 175, 55, 0.15);
+}
+
+/* İslami Lacivert Tema */
+.islamic-navy {
+  --background: 217 75% 11%;
+  --foreground: 0 0% 98%;
+  
+  --card: 217 75% 14%;
+  --card-foreground: 0 0% 98%;
+  
+  --popover: 217 75% 11%;
+  --popover-foreground: 0 0% 98%;
+  
+  --primary: 217 80% 36%;
+  --primary-foreground: 0 0% 98%;
+  
+  --secondary: 217 60% 22%;
+  --secondary-foreground: 0 0% 98%;
+  
+  --muted: 217 60% 20%;
+  --muted-foreground: 217 10% 70%;
+  
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 0 0% 20%;
+  
+  --border: 217 60% 27%;
+  --input: 217 60% 27%;
+  --ring: 217 80% 36%;
+  
+  --pattern-color: rgba(20, 52, 89, 0.25);
+}
+
 @layer base {
   * {
     @apply border-border;
@@ -107,7 +161,7 @@
   }
 }
 
-/* Islamic Pattern Overlay */
+/* İslami Geometrik Desen Arka Planı */
 .pattern-overlay {
   position: fixed;
   top: 0;
@@ -120,6 +174,22 @@
   opacity: 0.05;
   pointer-events: none;
   z-index: 0;
+}
+
+/* Tema renk desenleri için özel arka planlar */
+.islamic-green .pattern-overlay {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  opacity: 0.15;
+}
+
+.islamic-gold .pattern-overlay {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  opacity: 0.15;
+}
+
+.islamic-navy .pattern-overlay {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  opacity: 0.25;
 }
 
 /* Islamic Border Style */
