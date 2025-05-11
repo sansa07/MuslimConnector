@@ -1,0 +1,165 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 142.1 76.2% 36.3%;
+  --primary-foreground: 355.7 100% 97.3%;
+
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
+
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 24 9.8% 10%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --ring: 142.1 76.2% 36.3%;
+
+  --radius: 0.5rem;
+
+  /* Islamic colors */
+  --islamic-green: 142.1 76.2% 36.3%;
+  --islamic-gold: 48 96.5% 50%;
+  --islamic-navy: 217 70.3% 22.9%;
+  --islamic-white: 0 0% 100%;
+  
+  /* Chart colors for Islamic theme */
+  --chart-1: var(--islamic-green);
+  --chart-2: var(--islamic-gold);
+  --chart-3: var(--islamic-navy);
+  --chart-4: 0 100% 62%;
+  --chart-5: 217 91% 60%;
+}
+
+.dark {
+  --background: 217 70.3% 12.9%;
+  --foreground: 0 0% 98%;
+
+  --card: 217 70.3% 15.9%;
+  --card-foreground: 0 0% 98%;
+
+  --popover: 217 70.3% 12.9%;
+  --popover-foreground: 0 0% 98%;
+
+  --primary: 142.1 70.6% 45.3%;
+  --primary-foreground: 144.9 80.4% 10%;
+
+  --secondary: 217 70.3% 22.9%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 217 70.3% 22.9%;
+  --muted-foreground: 217 10% 64.9%;
+
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 0 0% 98%;
+
+  --border: 217 70.3% 25.9%;
+  --input: 217 70.3% 25.9%;
+  --ring: 142.1 76.2% 36.3%;
+
+  /* Chart colors for Islamic theme - dark mode */
+  --chart-1: 142.1 70.6% 45.3%;
+  --chart-2: 48 90% 60%;
+  --chart-3: 217 70.3% 50.9%;
+  --chart-4: 0 84.2% 60.2%;
+  --chart-5: 217 91% 60%;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Roboto', sans-serif;
+  }
+  
+  .font-amiri {
+    font-family: 'Amiri', serif;
+  }
+}
+
+/* Islamic Pattern Overlay */
+.pattern-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  background-repeat: repeat;
+  background-size: 200px;
+  opacity: 0.05;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Islamic Border Style */
+.islamic-border {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.islamic-border::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
+}
+
+/* Right-to-left text for Arabic */
+.rtl {
+  direction: rtl;
+}
+
+/* Make sure icons are centered in buttons */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Custom scrollbar for Islamic theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: hsl(var(--muted));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--primary));
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--primary));
+}
