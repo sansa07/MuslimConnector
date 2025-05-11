@@ -94,10 +94,16 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Roboto', sans-serif;
+    color: hsl(var(--foreground));
   }
   
   .font-amiri {
     font-family: 'Amiri', serif;
+  }
+  
+  /* Improve text visibility */
+  h1, h2, h3, h4, h5, h6, p, span, a, button, input, label, div {
+    @apply text-foreground dark:text-white;
   }
 }
 

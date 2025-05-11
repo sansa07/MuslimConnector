@@ -5,7 +5,7 @@ export function useTranslation() {
   const { t: originalT, i18n } = useI18nTranslation();
   
   // Özel t fonksiyonu oluştur
-  const t = (key: string, options?: any) => {
+  const t = (key: string, options?: any): string => {
     const translation = originalT(key, options);
     
     // Eğer çeviri bulunamazsa (i18next anahtarı döndürürse) varsayılan değeri döndür
@@ -15,7 +15,7 @@ export function useTranslation() {
       return defaultValue.charAt(0).toUpperCase() + defaultValue.slice(1);
     }
     
-    return translation;
+    return translation as string;
   };
   
   return { t, i18n };
