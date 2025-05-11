@@ -159,14 +159,16 @@
     "dark": "Koyu",
     "system": "Sistem",
     "islamic": "İslami",
-    "turquoise": "Turkuaz",
-    "emerald": "Zümrüt",
-    "navy": "Lacivert",
+    "islamicGreen": "İslami Yeşil",
+    "islamicGold": "İslami Altın",
+    "islamicNavy": "İslami Lacivert",
     "customize": "Özelleştir",
     "pattern": "Desen",
     "primaryColor": "Ana Renk",
     "secondaryColor": "İkincil Renk",
-    "accentColor": "Vurgu Rengi"
+    "accentColor": "Vurgu Rengi",
+    "changeTheme": "Tema Değiştir",
+    "themeOptions": "Tema Seçenekleri"
   },
   "settings": {
     "title": "Ayarlar",

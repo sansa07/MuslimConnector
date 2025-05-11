@@ -7,6 +7,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useTranslation } from "@/hooks/use-translation-with-defaults";
 
 type Theme = "dark" | "light" | "system" | "islamic-green" | "islamic-gold" | "islamic-navy";
 
@@ -89,6 +90,7 @@ export const useTheme = () => {
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <DropdownMenu>
@@ -116,33 +118,33 @@ export function ThemeToggle() {
           {theme === "system" && (
             <Palette className="h-5 w-5 text-gray-600 dark:text-gray-400" />
           )}
-          <span className="sr-only">Tema Seçenekleri</span>
+          <span className="sr-only">{t('themes.themeOptions')}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setTheme("light")}>
           <Sun className="mr-2 h-4 w-4" />
-          <span>Açık</span>
+          <span>{t('themes.light')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("dark")}>
           <Moon className="mr-2 h-4 w-4" />
-          <span>Koyu</span>
+          <span>{t('themes.dark')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("islamic-green")}>
           <Palette className="mr-2 h-4 w-4 text-green-600" />
-          <span>İslami Yeşil</span>
+          <span>{t('themes.islamicGreen')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("islamic-gold")}>
           <Palette className="mr-2 h-4 w-4 text-yellow-500" />
-          <span>İslami Altın</span>
+          <span>{t('themes.islamicGold')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("islamic-navy")}>
           <Palette className="mr-2 h-4 w-4 text-blue-800" />
-          <span>İslami Lacivert</span>
+          <span>{t('themes.islamicNavy')}</span>
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => setTheme("system")}>
           <Palette className="mr-2 h-4 w-4" />
-          <span>Sistem</span>
+          <span>{t('themes.system')}</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

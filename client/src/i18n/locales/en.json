@@ -159,14 +159,16 @@
     "dark": "Dark",
     "system": "System",
     "islamic": "Islamic",
-    "turquoise": "Turquoise",
-    "emerald": "Emerald",
-    "navy": "Navy",
+    "islamicGreen": "Islamic Green",
+    "islamicGold": "Islamic Gold",
+    "islamicNavy": "Islamic Navy",
     "customize": "Customize",
     "pattern": "Pattern",
     "primaryColor": "Primary Color",
     "secondaryColor": "Secondary Color",
-    "accentColor": "Accent Color"
+    "accentColor": "Accent Color",
+    "changeTheme": "Change Theme",
+    "themeOptions": "Theme Options"
   },
   "settings": {
     "title": "Settings",
