@@ -70,12 +70,12 @@ export default function MobileDailyMenu() {
     const currentTime = currentHour * 60 + currentMinute;
     
     const prayers = [
-      { name: t('prayers.fajr'), time: prayerTimes.imsak },
-      { name: t('prayers.sunrise'), time: prayerTimes.gunes },
-      { name: t('prayers.dhuhr'), time: prayerTimes.ogle },
-      { name: t('prayers.asr'), time: prayerTimes.ikindi },
-      { name: t('prayers.maghrib'), time: prayerTimes.aksam },
-      { name: t('prayers.isha'), time: prayerTimes.yatsi },
+      { name: t('prayerTimes.imsak'), time: prayerTimes.imsak },
+      { name: t('prayerTimes.sunrise'), time: prayerTimes.gunes },
+      { name: t('prayerTimes.dhuhr'), time: prayerTimes.ogle },
+      { name: t('prayerTimes.asr'), time: prayerTimes.ikindi },
+      { name: t('prayerTimes.maghrib'), time: prayerTimes.aksam },
+      { name: t('prayerTimes.isha'), time: prayerTimes.yatsi },
     ];
     
     const prayerTimes24h = prayers.map(prayer => {
@@ -100,11 +100,11 @@ export default function MobileDailyMenu() {
       <TabsList className="grid grid-cols-2 mb-2">
         <TabsTrigger value="prayerTimes">
           <Clock className="mr-2 h-4 w-4" />
-          {t('prayers.prayerTimes')}
+          {t('prayerTimes.title')}
         </TabsTrigger>
         <TabsTrigger value="dailyWisdom">
           <Book className="mr-2 h-4 w-4" />
-          {t('home.dailyWisdom')}
+          {t('dailyWisdom.title')}
         </TabsTrigger>
       </TabsList>
       
@@ -118,42 +118,42 @@ export default function MobileDailyMenu() {
             <CardContent className="p-3">
               <h3 className="text-sm font-medium mb-2 flex items-center">
                 <Clock className="mr-2 h-4 w-4 text-primary" /> 
-                {t('prayers.prayerTimes')} - {city.charAt(0).toUpperCase() + city.slice(1)}
+                {t('prayerTimes.title')} - {city.charAt(0).toUpperCase() + city.slice(1)}
               </h3>
               <div className="grid grid-cols-6 gap-1 text-xs">
-                <div className={`text-center p-1 ${currentPrayer === t('prayers.fajr') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
-                  <div className="font-medium">{t('prayers.fajr')}</div>
-                  <div className={`${currentPrayer === t('prayers.fajr') ? 'text-primary font-bold' : 'text-primary'}`}>
+                <div className={`text-center p-1 ${currentPrayer === t('prayerTimes.imsak') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
+                  <div className="font-medium">{t('prayerTimes.imsak')}</div>
+                  <div className={`${currentPrayer === t('prayerTimes.imsak') ? 'text-primary font-bold' : 'text-primary'}`}>
                     {prayerTimes?.imsak}
                   </div>
                 </div>
-                <div className={`text-center p-1 ${currentPrayer === t('prayers.sunrise') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
-                  <div className="font-medium">{t('prayers.sunrise')}</div>
-                  <div className={`${currentPrayer === t('prayers.sunrise') ? 'text-primary font-bold' : 'text-primary'}`}>
+                <div className={`text-center p-1 ${currentPrayer === t('prayerTimes.sunrise') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
+                  <div className="font-medium">{t('prayerTimes.sunrise')}</div>
+                  <div className={`${currentPrayer === t('prayerTimes.sunrise') ? 'text-primary font-bold' : 'text-primary'}`}>
                     {prayerTimes?.gunes}
                   </div>
                 </div>
-                <div className={`text-center p-1 ${currentPrayer === t('prayers.dhuhr') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
-                  <div className="font-medium">{t('prayers.dhuhr')}</div>
-                  <div className={`${currentPrayer === t('prayers.dhuhr') ? 'text-primary font-bold' : 'text-primary'}`}>
+                <div className={`text-center p-1 ${currentPrayer === t('prayerTimes.dhuhr') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
+                  <div className="font-medium">{t('prayerTimes.dhuhr')}</div>
+                  <div className={`${currentPrayer === t('prayerTimes.dhuhr') ? 'text-primary font-bold' : 'text-primary'}`}>
                     {prayerTimes?.ogle}
                   </div>
                 </div>
-                <div className={`text-center p-1 ${currentPrayer === t('prayers.asr') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
-                  <div className="font-medium">{t('prayers.asr')}</div>
-                  <div className={`${currentPrayer === t('prayers.asr') ? 'text-primary font-bold' : 'text-primary'}`}>
+                <div className={`text-center p-1 ${currentPrayer === t('prayerTimes.asr') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
+                  <div className="font-medium">{t('prayerTimes.asr')}</div>
+                  <div className={`${currentPrayer === t('prayerTimes.asr') ? 'text-primary font-bold' : 'text-primary'}`}>
                     {prayerTimes?.ikindi}
                   </div>
                 </div>
-                <div className={`text-center p-1 ${currentPrayer === t('prayers.maghrib') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
-                  <div className="font-medium">{t('prayers.maghrib')}</div>
-                  <div className={`${currentPrayer === t('prayers.maghrib') ? 'text-primary font-bold' : 'text-primary'}`}>
+                <div className={`text-center p-1 ${currentPrayer === t('prayerTimes.maghrib') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
+                  <div className="font-medium">{t('prayerTimes.maghrib')}</div>
+                  <div className={`${currentPrayer === t('prayerTimes.maghrib') ? 'text-primary font-bold' : 'text-primary'}`}>
                     {prayerTimes?.aksam}
                   </div>
                 </div>
-                <div className={`text-center p-1 ${currentPrayer === t('prayers.isha') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
-                  <div className="font-medium">{t('prayers.isha')}</div>
-                  <div className={`${currentPrayer === t('prayers.isha') ? 'text-primary font-bold' : 'text-primary'}`}>
+                <div className={`text-center p-1 ${currentPrayer === t('prayerTimes.isha') ? 'bg-primary bg-opacity-10 rounded' : ''}`}>
+                  <div className="font-medium">{t('prayerTimes.isha')}</div>
+                  <div className={`${currentPrayer === t('prayerTimes.isha') ? 'text-primary font-bold' : 'text-primary'}`}>
                     {prayerTimes?.yatsi}
                   </div>
                 </div>

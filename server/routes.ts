@@ -62,6 +62,54 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: 'Failed to fetch random hadith' });
     }
   });
+  
+  // Daily hadith API (alias for random-hadith)
+  app.get('/api/daily-hadith', async (req, res) => {
+    try {
+      const hadith = await storage.getRandomHadith();
+      if (!hadith) {
+        return res.status(404).json({ message: 'No hadith found' });
+      }
+      res.json(hadith);
+    } catch (error) {
+      console.error('Error fetching daily hadith:', error);
+      res.status(500).json({ message: 'Failed to fetch daily hadith' });
+    }
+  });
+  
+  // Daily dua API
+  app.get('/api/daily-dua', async (req, res) => {
+    try {
+      // For now, we'll return a simple placeholder dua until we have a duas table
+      const dua = {
+        arabicText: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
+        translation: 'Rabbimiz! Bize dünyada iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.',
+        source: 'Kuran-ı Kerim',
+        reference: 'Bakara Suresi, 201. Ayet'
+      };
+      res.json(dua);
+    } catch (error) {
+      console.error('Error fetching daily dua:', error);
+      res.status(500).json({ message: 'Failed to fetch daily dua' });
+    }
+  });
+  
+  // Daily story API
+  app.get('/api/daily-story', async (req, res) => {
+    try {
+      // For now, we'll return a simple placeholder story
+      const story = {
+        title: 'Hz. İbrahim ve Ateş',
+        content: 'Hz. İbrahim putları yıkınca, kavmi onu ateşe atmaya karar verdi. Büyük bir ateş yaktılar ve İbrahim\'i ateşe attılar. Ancak Allah ateşe "serin ve selamet ol" diye emretti ve ateş İbrahim\'i yakmadı.',
+        source: 'Kuran-ı Kerim',
+        reference: 'Enbiya Suresi, 69-70. Ayetler'
+      };
+      res.json(story);
+    } catch (error) {
+      console.error('Error fetching daily story:', error);
+      res.status(500).json({ message: 'Failed to fetch daily story' });
+    }
+  });
 
   // Posts API
   app.get('/api/posts', async (req, res) => {
