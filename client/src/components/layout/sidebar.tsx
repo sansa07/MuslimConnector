@@ -1,5 +1,4 @@
-import { useAuth } from "@/hooks/useAuth";
-import { Link } from "wouter";
+import { useAuth, UserData } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Home, Compass, Calendar, HandHelping, Book, Users, User, Settings, LogOut } from "lucide-react";
@@ -8,6 +7,7 @@ import LanguageSwitcher from "../lang-switcher";
 
 export default function Sidebar() {
   const { user, isAuthenticated } = useAuth();
+  const userData = user || {} as UserData;
   const { t } = useTranslation();
   const [location] = useLocation();
 
@@ -23,13 +23,13 @@ export default function Sidebar() {
         {isAuthenticated ? (
           <div className="flex items-center space-x-3 mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
             <img 
-              src={user?.profileImageUrl || "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100"} 
+              src={userData.profileImageUrl || "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100"} 
               alt="Profil Fotoğrafı" 
               className="w-12 h-12 rounded-full object-cover"
             />
             <div>
-              <p className="font-medium">{user?.firstName || "Müslüman"} {user?.lastName || "Kullanıcı"}</p>
-              <p className="text-sm text-gray-500 dark:text-gray-400">@{user?.username || user?.email?.split('@')[0]}</p>
+              <p className="font-medium">{userData.firstName || "Müslüman"} {userData.lastName || "Kullanıcı"}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">@{userData.username || (userData.email ? userData.email.split('@')[0] : 'kullanici')}</p>
             </div>
           </div>
         ) : (
