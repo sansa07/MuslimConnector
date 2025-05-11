@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
-import { IconMenu, IconSearch, IconBell, IconMosque, IconClose } from "@/lib/icons";
+import { IconMenu, IconSearch, IconBell, IconMosque, IconClose, IconUser, IconPrayerTimes, IconWisdom } from "@/lib/icons";
 import { ThemeToggle } from "@/components/ui/theme-provider";
 
 const MobileHeader = () => {
@@ -34,11 +34,18 @@ const MobileHeader = () => {
             <h1 className="font-amiri text-xl font-bold text-primary dark:text-primary-light">MüslimNet</h1>
           </div>
           
-          {/* Search & Icons */}
-          <div className="flex items-center space-x-3">
-            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
-              <IconSearch className="text-gray-600 dark:text-gray-300" />
-            </button>
+          {/* Quick Access & Icons */}
+          <div className="flex items-center space-x-2">
+            <Link href="/prayer-times">
+              <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+                <IconPrayerTimes />
+              </a>
+            </Link>
+            <Link href="/daily-wisdom">
+              <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+                <IconWisdom />
+              </a>
+            </Link>
             {isAuthenticated ? (
               <Link href="/profile">
                 <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
@@ -50,9 +57,9 @@ const MobileHeader = () => {
                 </a>
               </Link>
             ) : (
-              <Link href="/api/login">
-                <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-xs font-medium text-primary">
-                  Giriş
+              <Link href="/profile">
+                <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+                  <IconUser />
                 </a>
               </Link>
             )}
