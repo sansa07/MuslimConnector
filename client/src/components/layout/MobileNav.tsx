@@ -1,5 +1,5 @@
 import { Link, useLocation } from "wouter";
-import { IconHome, IconCompass, IconPraying, IconCalendar, IconUser } from "@/lib/icons";
+import { IconHome, IconCompass, IconPraying, IconCalendar, IconPrayerTimes, IconWisdom } from "@/lib/icons";
 
 const MobileNav = () => {
   const [location] = useLocation();
@@ -13,7 +13,8 @@ const MobileNav = () => {
     { label: "Keşfet", path: "/explore", icon: <IconCompass /> },
     { label: "Dua", path: "/dua-requests", icon: <IconPraying /> },
     { label: "Etkinlik", path: "/events", icon: <IconCalendar /> },
-    { label: "Profil", path: "/profile", icon: <IconUser /> },
+    { label: "Namaz", path: "/prayer-times", icon: <IconPrayerTimes /> },
+    { label: "Günlük", path: "/daily-wisdom", icon: <IconWisdom /> },
   ];
 
   return (

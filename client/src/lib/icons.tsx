@@ -111,6 +111,14 @@ export const IconClock = ({ className = "" }: IconProps) => (
   <i className={`fas fa-clock ${className}`}></i>
 );
 
+export const IconPrayerTimes = ({ className = "" }: IconProps) => (
+  <i className={`fas fa-kaaba ${className}`}></i>
+);
+
+export const IconWisdom = ({ className = "" }: IconProps) => (
+  <i className={`fas fa-lightbulb ${className}`}></i>
+);
+
 export const IconBook = ({ className = "" }: IconProps) => (
   <i className={`fas fa-book ${className}`}></i>
 );

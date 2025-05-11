@@ -16,9 +16,10 @@ const Sidebar = () => {
     { label: "Keşfet", path: "/explore", icon: <IconCompass /> },
     { label: "Etkinlikler", path: "/events", icon: <IconCalendar /> },
     { label: "Dua İstekleri", path: "/dua-requests", icon: <IconPraying /> },
+    { label: "Namaz Vakitleri", path: "/prayer-times", icon: <IconPrayerTimes /> },
+    { label: "Günün Öğüdü", path: "/daily-wisdom", icon: <IconWisdom /> },
     { label: "Kuran & Hadisler", path: "/quran-hadith", icon: <IconQuran /> },
     { label: "Topluluklar", path: "/communities", icon: <IconUsers /> },
-    { label: "Profilim", path: "/profile", icon: <IconUser /> },
   ];
 
   return (
