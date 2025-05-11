@@ -1,7 +1,7 @@
 import { useAuth, UserData } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { Home, Compass, Calendar, HandHelping, Book, Users, User, Settings, LogOut } from "lucide-react";
+import { Home, Compass, Calendar, HandHelping, Book, Users, User, Settings, LogOut, Clock, SunMoon } from "lucide-react";
 import { useTranslation } from "@/hooks/use-translation-with-defaults";
 import LanguageSwitcher from "../lang-switcher";
 
@@ -70,9 +70,13 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
             <Users className="w-5 h-5" />
             <span>{t('nav.communities')}</span>
           </a>
-          <a href="/profile" className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/profile" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
-            <User className="w-5 h-5" />
-            <span>{t('nav.profile')}</span>
+          <a href="/prayer-times" className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/prayer-times" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
+            <Clock className="w-5 h-5" />
+            <span>{t('nav.prayerTimes')}</span>
+          </a>
+          <a href="/daily-wisdom" className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/daily-wisdom" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
+            <SunMoon className="w-5 h-5" />
+            <span>{t('nav.dailyWisdom')}</span>
           </a>
         </nav>
       </div>
@@ -85,6 +89,9 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
             <LanguageSwitcher />
           </div>
           <div className="flex items-center space-x-1">
+            <a href="/profile" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
+              <User className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </a>
             <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
               <Settings className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
