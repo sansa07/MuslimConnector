@@ -10,6 +10,8 @@ import Explore from "@/pages/explore";
 import Events from "@/pages/events";
 import Duas from "@/pages/duas";
 import Quran from "@/pages/quran";
+import Login from "@/pages/login";
+import Register from "@/pages/register";
 import MobileHeader from "@/components/layout/mobile-header";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNavigation from "@/components/layout/mobile-navigation";
@@ -23,6 +25,8 @@ function Router() {
       <Route path="/events" component={Events} />
       <Route path="/duas" component={Duas} />
       <Route path="/quran" component={Quran} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
       <Route component={NotFound} />
     </Switch>
   );

@@ -6,6 +6,15 @@ import trTranslation from './locales/tr.json';
 import enTranslation from './locales/en.json';
 import arTranslation from './locales/ar.json';
 
+import trExtend from './locales/tr.extend.json';
+import enExtend from './locales/en.extend.json';
+import arExtend from './locales/ar.extend.json';
+
+// Çevirileri birleştir
+const trMerged = { ...trTranslation, ...trExtend };
+const enMerged = { ...enTranslation, ...enExtend };
+const arMerged = { ...arTranslation, ...arExtend };
+
 export const availableLanguages = [
   { 
     code: 'tr', 
@@ -33,13 +42,13 @@ i18n
   .init({
     resources: {
       tr: {
-        translation: trTranslation
+        translation: trMerged
       },
       en: {
-        translation: enTranslation
+        translation: enMerged
       },
       ar: {
-        translation: arTranslation
+        translation: arMerged
       }
     },
     fallbackLng: 'tr',

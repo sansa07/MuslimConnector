@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
-import { useNavigate } from "wouter";
+import { useLocation } from "wouter";
 import { Mail, Lock, Facebook, Github } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { useToast } from "@/hooks/use-toast";
@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 export default function Login() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
-  const [, navigate] = useNavigate();
+  const [, navigate] = useLocation();
   const { toast } = useToast();
   const [loginMethod, setLoginMethod] = useState<"email" | "social">("social");
   const [email, setEmail] = useState("");
@@ -69,12 +69,12 @@ export default function Login() {
               
               <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled>
                 <FcGoogle className="w-5 h-5" />
-                <span>{t("auth.loginWithGoogle")}</span>
+                <span>Google ile Giriş Yap</span>
               </Button>
               
               <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled>
                 <Facebook className="w-5 h-5 text-blue-600" />
-                <span>{t("auth.loginWithFacebook")}</span>
+                <span>Facebook ile Giriş Yap</span>
               </Button>
               
               <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled>
@@ -112,11 +112,6 @@ export default function Login() {
                       onChange={(e) => setPassword(e.target.value)}
                       required
                     />
-                  </div>
-                  <div className="text-right">
-                    <a href="#" className="text-sm text-primary hover:underline">
-                      {t("auth.forgotPassword")}
-                    </a>
                   </div>
                 </div>
                 

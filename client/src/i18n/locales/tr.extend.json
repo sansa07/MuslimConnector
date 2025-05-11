@@ -11,6 +11,19 @@
     "emailRegisterNotAvailable": "E-posta ile kayıt şu anda kullanılamıyor",
     "passwordMismatch": "Şifreler eşleşmiyor",
     "passwordsMustMatch": "Girdiğiniz şifreler birbiriyle aynı olmalıdır",
-    "chooseLoginMethod": "Giriş yönteminizi seçin"
+    "chooseLoginMethod": "Giriş yönteminizi seçin",
+    "dontHaveAccount": "Henüz hesabınız yok mu?",
+    "alreadyHaveAccount": "Zaten bir hesabınız var mı?",
+    "register": "Kayıt Ol",
+    "login": "Giriş Yap",
+    "or": "veya",
+    "email": "E-posta",
+    "password": "Şifre",
+    "username": "Kullanıcı adı",
+    "confirmPassword": "Şifre Onayı",
+    "agreeToTerms": "Şartları ve koşulları kabul ediyorum"
+  },
+  "general": {
+    "loading": "Yükleniyor..."
   }
 }

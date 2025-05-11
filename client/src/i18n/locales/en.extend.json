@@ -11,6 +11,19 @@
     "emailRegisterNotAvailable": "Email registration is currently unavailable",
     "passwordMismatch": "Passwords do not match",
     "passwordsMustMatch": "The passwords you entered must be the same",
-    "chooseLoginMethod": "Choose your login method"
+    "chooseLoginMethod": "Choose your login method",
+    "dontHaveAccount": "Don't have an account yet?",
+    "alreadyHaveAccount": "Already have an account?",
+    "register": "Register",
+    "login": "Login",
+    "or": "or",
+    "email": "Email",
+    "password": "Password",
+    "username": "Username",
+    "confirmPassword": "Confirm Password",
+    "agreeToTerms": "I agree to the terms and conditions"
+  },
+  "general": {
+    "loading": "Loading..."
   }
 }

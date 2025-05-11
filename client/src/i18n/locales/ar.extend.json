@@ -11,6 +11,19 @@
     "emailRegisterNotAvailable": "التسجيل بالبريد الإلكتروني غير متاح حاليًا",
     "passwordMismatch": "كلمات المرور غير متطابقة",
     "passwordsMustMatch": "يجب أن تكون كلمات المرور التي أدخلتها متطابقة",
-    "chooseLoginMethod": "اختر طريقة تسجيل الدخول"
+    "chooseLoginMethod": "اختر طريقة تسجيل الدخول",
+    "dontHaveAccount": "ليس لديك حساب بعد؟",
+    "alreadyHaveAccount": "هل لديك حساب بالفعل؟",
+    "register": "تسجيل",
+    "login": "تسجيل الدخول",
+    "or": "أو",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "username": "اسم المستخدم",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "agreeToTerms": "أوافق على الشروط والأحكام"
+  },
+  "general": {
+    "loading": "جار التحميل..."
   }
 }
