@@ -1,5 +1,5 @@
 import { useLocation } from "wouter";
-import { Home, Compass, HandHelping, Calendar, User } from "lucide-react";
+import { Home, Compass, HandHelping, Calendar, Clock } from "lucide-react";
 
 export default function MobileNavigation() {
   const [location] = useLocation();
@@ -23,9 +23,9 @@ export default function MobileNavigation() {
           <Calendar className="h-5 w-5" />
           <span className="text-xs mt-1">Etkinlik</span>
         </a>
-        <a href="/profile" className={`flex flex-col items-center p-3 ${location === "/profile" ? "text-primary dark:text-primary-light" : "text-gray-500 dark:text-gray-400"}`}>
-          <User className="h-5 w-5" />
-          <span className="text-xs mt-1">Profil</span>
+        <a href="/prayer-times" className={`flex flex-col items-center p-3 ${location === "/prayer-times" ? "text-primary dark:text-primary-light" : "text-gray-500 dark:text-gray-400"}`}>
+          <Clock className="h-5 w-5" />
+          <span className="text-xs mt-1">Hakikat</span>
         </a>
       </div>
     </nav>
