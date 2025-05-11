@@ -76,8 +76,8 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
                 <p className="text-sm text-red-500">{t('errors.failedToLoad')}</p>
               ) : (
                 <div className="text-xs">
-                  <p className="font-amiri text-sm mb-1 text-primary-foreground dark:text-gray-200" dir="rtl">
-                    {verse?.arabicText || "وَمَا خَلَقْتُ الْجِنَّ وَالْإِنسَ إِلَّا لِيَعْبُدُونِ"}
+                  <p className="text-gray-700 dark:text-gray-300 mb-1">
+                    {verse?.translation || "Ben cinleri ve insanları, ancak bana kulluk etsinler diye yarattım."}
                   </p>
                   <p className="text-primary text-right text-xs">
                     {verse?.reference || "Zariyat Suresi, 56. Ayet"}
@@ -110,11 +110,11 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
                 <p className="text-sm text-red-500">{t('errors.failedToLoad')}</p>
               ) : (
                 <div className="text-xs">
-                  <p className="font-amiri text-sm mb-1 text-primary-foreground dark:text-gray-200" dir="rtl">
-                    {dua?.arabicText || "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ"}
-                  </p>
                   <p className="text-gray-700 dark:text-gray-300 mb-1">
                     {dua?.translation || "Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver. Bizi cehennem azabından koru!"}
+                  </p>
+                  <p className="text-primary text-right text-xs">
+                    {dua?.source || "Bakara Suresi, 201"}
                   </p>
                 </div>
               )}
@@ -171,10 +171,7 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
               <p className="text-red-500 text-center py-4">{t('errors.verseLoadFailed')}</p>
             ) : (
               <div className="text-center py-4">
-                <p className="font-amiri text-xl leading-relaxed mb-2 rtl text-primary-foreground dark:text-gray-200" dir="rtl">
-                  {verse?.arabicText || "وَمَا خَلَقْتُ الْجِنَّ وَالْإِنسَ إِلَّا لِيَعْبُدُونِ"}
-                </p>
-                <p className="text-gray-700 dark:text-gray-300 mb-3">
+                <p className="text-gray-700 dark:text-gray-300 mb-3 text-lg">
                   {verse?.translation || "Ben cinleri ve insanları, ancak bana kulluk etsinler diye yarattım."}
                 </p>
                 <p className="text-sm text-primary dark:text-primary-light">
@@ -216,10 +213,7 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
               <p className="text-red-500 text-center py-4">{t('errors.duaLoadFailed')}</p>
             ) : (
               <div className="text-center py-4">
-                <p className="font-amiri text-xl leading-relaxed mb-2 rtl text-primary-foreground dark:text-gray-200" dir="rtl">
-                  {dua?.arabicText || "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ"}
-                </p>
-                <p className="text-gray-700 dark:text-gray-300 mb-3">
+                <p className="text-gray-700 dark:text-gray-300 mb-3 text-lg">
                   {dua?.translation || "Rabbimiz! Bize dünyada da iyilik ver, ahirette de iyilik ver. Bizi cehennem azabından koru!"}
                 </p>
                 <p className="text-sm text-primary dark:text-primary-light">

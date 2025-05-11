@@ -51,11 +51,7 @@ export default function Home() {
 
   return (
     <>
-      {/* Prayer Times Widget */}
-      <PrayerTimesWidget />
-
-      {/* Daily Verse */}
-      <DailyVerse />
+      {/* Ana sayfa içeriği */}
 
       {/* Create Post */}
       <CreatePost />

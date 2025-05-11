@@ -49,10 +49,7 @@ export default function DailyVerse() {
           Günün Ayeti
         </h2>
         <div className="text-center py-4">
-          <p className="font-amiri text-xl leading-relaxed mb-2 rtl text-primary-foreground dark:text-gray-200" dir="rtl">
-            {verse?.arabicText || "وَمَا خَلَقْتُ الْجِنَّ وَالْإِنسَ إِلَّا لِيَعْبُدُونِ"}
-          </p>
-          <p className="text-gray-700 dark:text-gray-300 mb-3">
+          <p className="text-gray-700 dark:text-gray-300 mb-3 text-lg">
             {verse?.translation || "Ben cinleri ve insanları, ancak bana kulluk etsinler diye yarattım."}
           </p>
           <p className="text-sm text-primary dark:text-primary-light">
