@@ -1,7 +1,19 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
 import { ThemeToggle } from "@/components/ui/theme-provider";
-import { IconHome, IconCompass, IconCalendar, IconPraying, IconQuran, IconUsers, IconUser, IconSettings, IconLogout } from "@/lib/icons";
+import { 
+  IconHome, 
+  IconCompass, 
+  IconCalendar, 
+  IconPraying, 
+  IconQuran, 
+  IconUsers, 
+  IconUser, 
+  IconSettings, 
+  IconLogout,
+  IconPrayerTimes,
+  IconWisdom
+} from "@/lib/icons";
 
 const Sidebar = () => {
   const [location] = useLocation();

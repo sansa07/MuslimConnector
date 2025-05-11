@@ -17,9 +17,11 @@ const MobileHeader = () => {
     { label: "Keşfet", path: "/explore" },
     { label: "Etkinlikler", path: "/events" },
     { label: "Dua İstekleri", path: "/dua-requests" },
+    { label: "Namaz Vakitleri", path: "/prayer-times" },
+    { label: "Günün Öğüdü", path: "/daily-wisdom" },
     { label: "Kuran & Hadisler", path: "/quran-hadith" },
     { label: "Topluluklar", path: "/communities" },
-    { label: "Profilim", path: "/profile" },
+    { label: "Hakkımızda", path: "/about" },
   ];
 
   return (
@@ -37,9 +39,23 @@ const MobileHeader = () => {
             <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
               <IconSearch className="text-gray-600 dark:text-gray-300" />
             </button>
-            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
-              <IconBell className="text-gray-600 dark:text-gray-300" />
-            </button>
+            {isAuthenticated ? (
+              <Link href="/profile">
+                <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
+                  <img 
+                    src={user?.profileImageUrl || "https://via.placeholder.com/32"} 
+                    alt="Profil" 
+                    className="w-6 h-6 rounded-full object-cover border border-primary"
+                  />
+                </a>
+              </Link>
+            ) : (
+              <Link href="/api/login">
+                <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-xs font-medium text-primary">
+                  Giriş
+                </a>
+              </Link>
+            )}
             <button 
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light"
               onClick={toggleMenu}
