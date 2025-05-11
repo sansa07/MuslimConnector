@@ -2,9 +2,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { Link, useLocation } from "wouter";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Home, Compass, Calendar, HandHelping, Book, Users, User, Settings, LogOut } from "lucide-react";
+import { useTranslation } from "@/hooks/use-translation-with-defaults";
+import LanguageSwitcher from "../lang-switcher";
 
 export default function Sidebar() {
   const { user, isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [location] = useLocation();
 
   return (
@@ -32,7 +35,7 @@ export default function Sidebar() {
           <div className="flex justify-center mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
             <Link href="/api/login">
               <a className="bg-primary text-white rounded-full px-6 py-2 hover:bg-primary/90 transition-colors">
-                Giriş Yap
+                {t('auth.login')}
               </a>
             </Link>
           </div>
@@ -43,60 +46,65 @@ export default function Sidebar() {
           <Link href="/">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <Home className="w-5 h-5" />
-              <span>Anasayfa</span>
+              <span>{t('nav.home')}</span>
             </a>
           </Link>
           <Link href="/explore">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/explore" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <Compass className="w-5 h-5" />
-              <span>Keşfet</span>
+              <span>{t('nav.explore')}</span>
             </a>
           </Link>
           <Link href="/events">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/events" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <Calendar className="w-5 h-5" />
-              <span>Etkinlikler</span>
+              <span>{t('nav.events')}</span>
             </a>
           </Link>
           <Link href="/duas">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/duas" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <HandHelping className="w-5 h-5" />
-              <span>Dua İstekleri</span>
+              <span>{t('nav.duas')}</span>
             </a>
           </Link>
           <Link href="/quran">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/quran" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <Book className="w-5 h-5" />
-              <span>Kuran & Hadisler</span>
+              <span>{t('nav.quran')}</span>
             </a>
           </Link>
           <Link href="/communities">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/communities" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <Users className="w-5 h-5" />
-              <span>Topluluklar</span>
+              <span>{t('nav.communities')}</span>
             </a>
           </Link>
           <Link href="/profile">
             <a className={`flex items-center space-x-3 p-3 rounded-lg ${location === "/profile" ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"}`}>
               <User className="w-5 h-5" />
-              <span>Profilim</span>
+              <span>{t('nav.profile')}</span>
             </a>
           </Link>
         </nav>
       </div>
       
-      {/* Theme Toggle & Settings */}
+      {/* Theme Toggle, Language & Settings */}
       <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex items-center justify-between">
-          <ThemeToggle />
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
-            <Settings className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-          </button>
-          {isAuthenticated && (
-            <a href="/api/logout" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
-              <LogOut className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-            </a>
-          )}
+          <div className="flex items-center space-x-1">
+            <ThemeToggle />
+            <LanguageSwitcher />
+          </div>
+          <div className="flex items-center space-x-1">
+            <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
+              <Settings className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+            </button>
+            {isAuthenticated && (
+              <a href="/api/logout" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
+                <LogOut className="h-5 w-5 text-gray-600 dark:text-gray-300" />
+              </a>
+            )}
+          </div>
         </div>
       </div>
     </aside>

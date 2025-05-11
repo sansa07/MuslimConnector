@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { Search, Bell, Menu, X } from "lucide-react";
 import Sidebar from "./sidebar";
-import { useTranslation } from "react-i18next";
+import { useTranslation } from "@/hooks/use-translation-with-defaults";
 import LanguageSwitcher from "../lang-switcher";
 import { ThemeToggle } from "../theme-toggle";
 
