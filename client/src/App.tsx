@@ -13,6 +13,8 @@ import Duas from "@/pages/duas";
 import Quran from "@/pages/quran";
 import Login from "@/pages/login";
 import Register from "@/pages/register";
+import PrayerTimes from "@/pages/PrayerTimes";
+import DailyWisdom from "@/pages/DailyWisdom";
 import MobileHeader from "@/components/layout/mobile-header";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNavigation from "@/components/layout/mobile-navigation";
@@ -27,6 +29,8 @@ function Router() {
       <Route path="/events" component={Events} />
       <Route path="/duas" component={Duas} />
       <Route path="/quran" component={Quran} />
+      <Route path="/prayer-times" component={PrayerTimes} />
+      <Route path="/daily-wisdom" component={DailyWisdom} />
       <Route path="/login" component={Login} />
       <Route path="/register" component={Register} />
       <Route component={NotFound} />
@@ -56,9 +60,6 @@ function App() {
                 <Router />
               </div>
             </main>
-            
-            {/* Mobile Daily Menu - visible above mobile navigation */}
-            <MobileDailyMenu />
             
             {/* Mobile Bottom Navigation - visible on mobile only */}
             <MobileNavigation />

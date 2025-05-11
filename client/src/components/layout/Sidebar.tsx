@@ -32,6 +32,7 @@ const Sidebar = () => {
     { label: "Günün Öğüdü", path: "/daily-wisdom", icon: <IconWisdom /> },
     { label: "Kuran & Hadisler", path: "/quran-hadith", icon: <IconQuran /> },
     { label: "Topluluklar", path: "/communities", icon: <IconUsers /> },
+    { label: "Hakkımızda", path: "/about", icon: <IconSettings /> },
   ];
 
   return (
