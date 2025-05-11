@@ -3,9 +3,13 @@ import { useState } from "react";
 import { Link } from "wouter";
 import { Search, Bell, Menu, X } from "lucide-react";
 import Sidebar from "./sidebar";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "../lang-switcher";
+import { ThemeToggle } from "../theme-toggle";
 
 export default function MobileHeader() {
   const { isAuthenticated } = useAuth();
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const toggleMenu = () => {
@@ -23,7 +27,7 @@ export default function MobileHeader() {
           </div>
           
           {/* Search & Icons */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-1">
             <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
               <Search className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
@@ -32,6 +36,8 @@ export default function MobileHeader() {
                 <Bell className="h-5 w-5 text-gray-600 dark:text-gray-300" />
               </button>
             )}
+            <LanguageSwitcher />
+            <ThemeToggle />
             <button 
               onClick={toggleMenu}
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light"
