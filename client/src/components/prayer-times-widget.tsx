@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { Clock } from "lucide-react";
+import { Clock, MapPin } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
+import { useTranslation } from "@/hooks/use-translation-with-defaults";
 
 export default function PrayerTimesWidget() {
   const { data: prayerTimes, isLoading, error } = useQuery({

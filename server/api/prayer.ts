@@ -10,35 +10,70 @@ const DEFAULT_PRAYER_TIMES = {
   yatsi: "22:03",
 };
 
-interface PrayerTimesResponse {
-  success: boolean;
-  result: {
-    times: {
-      imsak: string;
-      gunes: string;
-      ogle: string;
-      ikindi: string;
-      aksam: string;
-      yatsi: string;
-    }
+interface AdhanResponse {
+  code: number;
+  status: string;
+  data: {
+    timings: {
+      Fajr: string;
+      Sunrise: string;
+      Dhuhr: string;
+      Asr: string;
+      Maghrib: string;
+      Isha: string;
+      [key: string]: string;
+    };
+    date: {
+      readable: string;
+      timestamp: string;
+      hijri: {
+        date: string;
+        month: {
+          number: number;
+          en: string;
+          ar: string;
+        };
+        year: string;
+      };
+      gregorian: {
+        date: string;
+        month: {
+          number: number;
+          en: string;
+        };
+        year: string;
+      };
+    };
+    meta: {
+      latitude: number;
+      longitude: number;
+      timezone: string;
+      method: {
+        id: number;
+        name: string;
+      };
+    };
   };
 }
 
 export async function getPrayerTimes(city: string = 'istanbul'): Promise<typeof DEFAULT_PRAYER_TIMES> {
   try {
-    // Using ezanvakti API for Turkey
-    const response = await axios.get<PrayerTimesResponse>(
-      `https://namaz-vakti-api.herokuapp.com/api/timesFromPlace?place=${encodeURIComponent(city)}`
+    // Using aladhan.com API as a replacement
+    const response = await axios.get<AdhanResponse>(
+      `https://api.aladhan.com/v1/timingsByCity?city=${encodeURIComponent(city)}&country=Turkey&method=13`
     );
 
-    if (response.data.success && response.data.result.times) {
+    if (response.data.code === 200 && response.data.data.timings) {
+      const timings = response.data.data.timings;
+      
+      // Convert from 24hr format to preferred format and map to Turkish names
       return {
-        imsak: response.data.result.times.imsak,
-        gunes: response.data.result.times.gunes,
-        ogle: response.data.result.times.ogle,
-        ikindi: response.data.result.times.ikindi,
-        aksam: response.data.result.times.aksam,
-        yatsi: response.data.result.times.yatsi,
+        imsak: timings.Fajr,
+        gunes: timings.Sunrise,
+        ogle: timings.Dhuhr,
+        ikindi: timings.Asr,
+        aksam: timings.Maghrib,
+        yatsi: timings.Isha,
       };
     }
     

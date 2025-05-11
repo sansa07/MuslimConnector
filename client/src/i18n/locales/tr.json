@@ -204,5 +204,33 @@
     "help": "Yardım",
     "contact": "İletişim",
     "copyright": "© 2025 İslami Sosyal Ağ. Tüm hakları saklıdır."
+  },
+  "dailyWisdom": {
+    "title": "Günün Bilgeliği",
+    "verse": "Günün Ayeti",
+    "hadith": "Günün Hadisi",
+    "dua": "Günün Duası",
+    "story": "Günün Kıssası",
+    "loading": "Yükleniyor...",
+    "error": "Yüklenirken hata oluştu",
+    "tryAgain": "Tekrar dene"
+  },
+  "prayerTimes": {
+    "title": "Namaz Vakitleri",
+    "imsak": "İmsak",
+    "sunrise": "Güneş",
+    "dhuhr": "Öğle",
+    "asr": "İkindi",
+    "maghrib": "Akşam",
+    "isha": "Yatsı",
+    "location": "Konum",
+    "change": "Değiştir",
+    "loading": "Yükleniyor...",
+    "error": "Yüklenirken hata oluştu",
+    "currentLocation": "Mevcut Konum",
+    "cities": "Şehirler",
+    "locationNotice": "Namaz vakitleri için konumunuzu paylaşın",
+    "allow": "İzin ver",
+    "deny": "Daha sonra"
   }
 }
