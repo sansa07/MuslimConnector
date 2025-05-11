@@ -1,4 +1,9 @@
-import { QuranVerse, Hadith, IslamicStory, DailyDua } from "@shared/schema";
+import { 
+  QuranVerse, 
+  Hadith, 
+  IslamicStory, 
+  DailyDua 
+} from "@shared/schema";
 
 export function getDailyVerseForDay(day: number): Promise<QuranVerse> {
   // 365 gün için farklı ayetler
@@ -10,7 +15,7 @@ export function getDailyVerseForDay(day: number): Promise<QuranVerse> {
     ayah: ((dayIndex % 10) || 1), // Örnek olarak 1-10 ayet numaraları
     arabicText: getArabicVerseForDay(dayIndex),
     translation: getTurkishVerseForDay(dayIndex),
-    surahName: getSurahNameForNumber((dayIndex % 114) || 114),
+    reference: getSurahNameForNumber((dayIndex % 114) || 114),
   });
 }
 
@@ -20,9 +25,10 @@ export function getDailyHadithForDay(day: number): Promise<Hadith> {
   
   return Promise.resolve({
     id: dayIndex,
-    text: getHadithTextForDay(dayIndex),
-    narrator: getHadithNarratorForDay(dayIndex),
+    arabicText: "", // Arapça metin eklenmesi gereken yer
+    translation: getHadithTextForDay(dayIndex),
     source: getHadithSourceForDay(dayIndex),
+    reference: getHadithNarratorForDay(dayIndex),
   });
 }
 

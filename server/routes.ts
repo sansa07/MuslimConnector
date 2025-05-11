@@ -3,6 +3,13 @@ import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { getPrayerTimes } from "./api/prayer";
+import { 
+  getDailyVerseForDay, 
+  getDailyHadithForDay, 
+  getDailyDuaForDay, 
+  getDailyStoryForDay,
+  getCurrentDayOfYear
+} from "./api/daily-wisdom";
 import { quranVerses, hadiths } from "@shared/schema";
 import { insertPostSchema, insertCommentSchema, insertLikeSchema, insertEventSchema, insertDuaRequestSchema } from "@shared/schema";
 import { z } from "zod";
@@ -63,13 +70,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Daily hadith API (alias for random-hadith)
+  // Daily verse of the day API - using date-based selection
+  app.get('/api/daily-verse', async (req, res) => {
+    try {
+      const dayOfYear = getCurrentDayOfYear();
+      const verse = await getDailyVerseForDay(dayOfYear);
+      res.json(verse);
+    } catch (error) {
+      console.error('Error fetching daily verse:', error);
+      res.status(500).json({ message: 'Failed to fetch daily verse' });
+    }
+  });
+
+  // Daily hadith API - using date-based selection
   app.get('/api/daily-hadith', async (req, res) => {
     try {
-      const hadith = await storage.getRandomHadith();
-      if (!hadith) {
-        return res.status(404).json({ message: 'No hadith found' });
-      }
+      const dayOfYear = getCurrentDayOfYear();
+      const hadith = await getDailyHadithForDay(dayOfYear);
       res.json(hadith);
     } catch (error) {
       console.error('Error fetching daily hadith:', error);
@@ -77,16 +94,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Daily dua API
+  // Daily dua API - using date-based selection
   app.get('/api/daily-dua', async (req, res) => {
     try {
-      // For now, we'll return a simple placeholder dua until we have a duas table
-      const dua = {
-        arabicText: 'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ',
-        translation: 'Rabbimiz! Bize dünyada iyilik, ahirette de iyilik ver ve bizi ateş azabından koru.',
-        source: 'Kuran-ı Kerim',
-        reference: 'Bakara Suresi, 201. Ayet'
-      };
+      const dayOfYear = getCurrentDayOfYear();
+      const dua = await getDailyDuaForDay(dayOfYear);
       res.json(dua);
     } catch (error) {
       console.error('Error fetching daily dua:', error);
@@ -94,16 +106,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  // Daily story API
+  // Daily story API - using date-based selection
   app.get('/api/daily-story', async (req, res) => {
     try {
-      // For now, we'll return a simple placeholder story
-      const story = {
-        title: 'Hz. İbrahim ve Ateş',
-        content: 'Hz. İbrahim putları yıkınca, kavmi onu ateşe atmaya karar verdi. Büyük bir ateş yaktılar ve İbrahim\'i ateşe attılar. Ancak Allah ateşe "serin ve selamet ol" diye emretti ve ateş İbrahim\'i yakmadı.',
-        source: 'Kuran-ı Kerim',
-        reference: 'Enbiya Suresi, 69-70. Ayetler'
-      };
+      const dayOfYear = getCurrentDayOfYear();
+      const story = await getDailyStoryForDay(dayOfYear);
       res.json(story);
     } catch (error) {
       console.error('Error fetching daily story:', error);

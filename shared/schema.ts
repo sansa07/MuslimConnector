@@ -157,3 +157,19 @@ export type QuranVerse = typeof quranVerses.$inferSelect;
 export type InsertQuranVerse = typeof quranVerses.$inferInsert;
 export type Hadith = typeof hadiths.$inferSelect;
 export type InsertHadith = typeof hadiths.$inferInsert;
+
+// Define additional types for daily content not stored in database
+export interface DailyDua {
+  id: number;
+  arabicText: string;
+  translation: string;
+  source: string;
+}
+
+export interface IslamicStory {
+  id: number;
+  title: string;
+  content: string;
+  source: string;
+  reference: string;
+}
