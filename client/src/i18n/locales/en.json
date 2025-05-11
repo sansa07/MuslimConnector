@@ -51,11 +51,22 @@
     "featuredContent": "Featured Content",
     "recentPosts": "Recent Posts",
     "dailyVerse": "Daily Verse",
+    "dailyWisdom": "Daily Wisdom",
     "upcomingEvents": "Upcoming Events",
     "prayerTimes": "Prayer Times",
     "duaRequests": "Dua Requests",
     "whatOnYourMind": "What's on your mind?",
     "seeAll": "See All"
+  },
+  "wisdom": {
+    "verse": "Verse",
+    "hadith": "Hadith",
+    "dua": "Dua",
+    "story": "Story",
+    "dailyVerse": "Daily Verse",
+    "dailyHadith": "Daily Hadith",
+    "dailyDua": "Daily Dua",
+    "dailyStory": "Daily Story"
   },
   "prayers": {
     "fajr": "Fajr",

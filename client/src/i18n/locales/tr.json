@@ -51,11 +51,22 @@
     "featuredContent": "Öne Çıkan İçerik",
     "recentPosts": "Son Paylaşımlar",
     "dailyVerse": "Günün Ayeti",
+    "dailyWisdom": "Günün Öğüdü",
     "upcomingEvents": "Yaklaşan Etkinlikler",
     "prayerTimes": "Namaz Vakitleri",
     "duaRequests": "Dua İstekleri",
     "whatOnYourMind": "Aklınızdan ne geçiyor?",
     "seeAll": "Tümünü Gör"
+  },
+  "wisdom": {
+    "verse": "Ayet",
+    "hadith": "Hadis",
+    "dua": "Dua",
+    "story": "Kıssa",
+    "dailyVerse": "Günün Ayeti",
+    "dailyHadith": "Günün Hadisi",
+    "dailyDua": "Günün Duası",
+    "dailyStory": "Günün Kıssası"
   },
   "prayers": {
     "fajr": "İmsak",
