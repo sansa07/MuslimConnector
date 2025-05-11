@@ -88,11 +88,29 @@
 
 /* İslami Yeşil Tema */
 .islamic-green {
+  --background: 142.1 30% 96%;
+  --foreground: 142.1 70% 10%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 142.1 70% 10%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 142.1 70% 10%;
+  
   --primary: 142.1 76.2% 36.3%;
   --primary-foreground: 355.7 100% 97.3%;
+  
   --secondary: 142.1 30% 92%;
   --secondary-foreground: 142.1 70% 20%;
+  
+  --muted: 142.1 20% 94%;
+  --muted-foreground: 142.1 40% 30%;
+  
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 0 0% 20%;
+  
   --border: 142.1 30% 88%;
+  --input: 142.1 30% 88%;
   --ring: 142.1 76.2% 36.3%;
 
   --pattern-color: rgba(30, 132, 73, 0.15);
@@ -100,12 +118,30 @@
 
 /* İslami Altın Tema */
 .islamic-gold {
-  --primary: 48 96.5% 50%;
+  --background: 43 50% 96%;
+  --foreground: 30 30% 15%;
+  
+  --card: 0 0% 100%;
+  --card-foreground: 30 30% 15%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 30 30% 15%;
+  
+  --primary: 45 93% 47%;
   --primary-foreground: 0 0% 20%;
-  --secondary: 48 30% 92%;
-  --secondary-foreground: 48 80% 20%;
-  --border: 48.5 30% 85%;
-  --ring: 48 95% 45%;
+  
+  --secondary: 42 30% 90%;
+  --secondary-foreground: 42 60% 20%;
+  
+  --muted: 43 20% 90%;
+  --muted-foreground: 43 15% 40%;
+  
+  --accent: 217 75% 36%;
+  --accent-foreground: 0 0% 98%;
+  
+  --border: 43 30% 85%;
+  --input: 43 30% 85%;
+  --ring: 45 93% 47%;
   
   --pattern-color: rgba(212, 175, 55, 0.15);
 }
@@ -113,29 +149,29 @@
 /* İslami Lacivert Tema */
 .islamic-navy {
   --background: 217 75% 11%;
-  --foreground: 0 0% 98%;
+  --foreground: 210 20% 98%;
   
   --card: 217 75% 14%;
-  --card-foreground: 0 0% 98%;
+  --card-foreground: 210 20% 98%;
   
   --popover: 217 75% 11%;
-  --popover-foreground: 0 0% 98%;
+  --popover-foreground: 210 20% 98%;
   
-  --primary: 217 80% 36%;
-  --primary-foreground: 0 0% 98%;
+  --primary: 210 80% 56%;
+  --primary-foreground: 210 20% 98%;
   
   --secondary: 217 60% 22%;
-  --secondary-foreground: 0 0% 98%;
+  --secondary-foreground: 210 20% 98%;
   
   --muted: 217 60% 20%;
-  --muted-foreground: 217 10% 70%;
+  --muted-foreground: 210 15% 70%;
   
-  --accent: 48 96.5% 50%;
+  --accent: 45 93% 47%;
   --accent-foreground: 0 0% 20%;
   
   --border: 217 60% 27%;
   --input: 217 60% 27%;
-  --ring: 217 80% 36%;
+  --ring: 210 80% 56%;
   
   --pattern-color: rgba(20, 52, 89, 0.25);
 }
@@ -168,9 +204,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(30, 132, 73, 0.05)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(30, 132, 73, 0.05)" fill="none" stroke-width="0.5" /><path d="M70,100 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" stroke="rgba(30, 132, 73, 0.05)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(30, 132, 73, 0.05)" fill="none" stroke-width="0.5" /></svg>');
   background-repeat: repeat;
-  background-size: 200px;
+  background-size: 400px;
   opacity: 0.05;
   pointer-events: none;
   z-index: 0;
@@ -178,17 +214,17 @@
 
 /* Tema renk desenleri için özel arka planlar */
 .islamic-green .pattern-overlay {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(30, 132, 73, 0.15)" fill="none" stroke-width="0.5" /><path d="M70,100 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" stroke="rgba(30, 132, 73, 0.15)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(30, 132, 73, 0.15)" fill="none" stroke-width="0.5" /></svg>');
   opacity: 0.15;
 }
 
 .islamic-gold .pattern-overlay {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(212, 175, 55, 0.15)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(212, 175, 55, 0.15)" fill="none" stroke-width="0.5" /></svg>');
   opacity: 0.15;
 }
 
 .islamic-navy .pattern-overlay {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 100 100"><path fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5" d="M0,50 C0,22.4 22.4,0 50,0 C77.6,0 100,22.4 100,50 C100,77.6 77.6,100 50,100 C22.4,100 0,77.6 0,50 Z"></path><path fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5" d="M20,50 C20,33.4 33.4,20 50,20 C66.6,20 80,33.4 80,50 C80,66.6 66.6,80 50,80 C33.4,80 20,66.6 20,50 Z"></path><path fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5" d="M40,50 C40,44.5 44.5,40 50,40 C55.5,40 60,44.5 60,50 C60,55.5 55.5,60 50,60 C44.5,60 40,55.5 40,50 Z"></path></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(20, 52, 89, 0.25)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(20, 52, 89, 0.25)" fill="none" stroke-width="0.5" /></svg>');
   opacity: 0.25;
 }
 

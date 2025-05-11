@@ -5,14 +5,18 @@ import { Home, Compass, Calendar, HandHelping, Book, Users, User, Settings, LogO
 import { useTranslation } from "@/hooks/use-translation-with-defaults";
 import LanguageSwitcher from "../lang-switcher";
 
-export default function Sidebar() {
+interface SidebarProps {
+  direction?: "ltr" | "rtl";
+}
+
+export default function Sidebar({ direction = "ltr" }: SidebarProps) {
   const { user, isAuthenticated } = useAuth();
   const userData = user || {} as UserData;
   const { t } = useTranslation();
   const [location] = useLocation();
 
   return (
-    <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-[#121E2F] shadow-md z-40">
+    <aside className={`hidden lg:block fixed ${direction === "rtl" ? "right-0" : "left-0"} top-0 bottom-0 w-64 bg-white dark:bg-[#121E2F] shadow-md z-40`}>
       <div className="p-4">
         <div className="flex items-center mb-8">
           <i className="fas fa-mosque text-primary text-2xl mr-2"></i>

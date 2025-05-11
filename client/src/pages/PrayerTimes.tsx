@@ -164,38 +164,50 @@ const PrayerTimes = () => {
           <CardContent>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               <div className={`p-4 rounded-lg ${currentPrayer === t('prayerTimes.imsak') ? 'bg-primary bg-opacity-10' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <h3 className="font-medium mb-1">{t('prayerTimes.imsak')}</h3>
-                <p className={`text-2xl ${currentPrayer === t('prayerTimes.imsak') ? 'text-primary font-bold' : ''}`}>
+                <h3 className={`font-medium mb-1 ${currentPrayer === t('prayerTimes.imsak') ? 'text-primary-foreground dark:text-primary-foreground font-bold' : ''}`}>
+                  {t('prayerTimes.imsak')}
+                </h3>
+                <p className={`text-2xl ${currentPrayer === t('prayerTimes.imsak') ? 'text-primary dark:text-primary-foreground font-bold' : ''}`}>
                   {prayerTimes?.imsak}
                 </p>
               </div>
               <div className={`p-4 rounded-lg ${currentPrayer === t('prayerTimes.sunrise') ? 'bg-primary bg-opacity-10' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <h3 className="font-medium mb-1">{t('prayerTimes.sunrise')}</h3>
-                <p className={`text-2xl ${currentPrayer === t('prayerTimes.sunrise') ? 'text-primary font-bold' : ''}`}>
+                <h3 className={`font-medium mb-1 ${currentPrayer === t('prayerTimes.sunrise') ? 'text-primary-foreground dark:text-primary-foreground font-bold' : ''}`}>
+                  {t('prayerTimes.sunrise')}
+                </h3>
+                <p className={`text-2xl ${currentPrayer === t('prayerTimes.sunrise') ? 'text-primary dark:text-primary-foreground font-bold' : ''}`}>
                   {prayerTimes?.gunes}
                 </p>
               </div>
               <div className={`p-4 rounded-lg ${currentPrayer === t('prayerTimes.dhuhr') ? 'bg-primary bg-opacity-10' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <h3 className="font-medium mb-1">{t('prayerTimes.dhuhr')}</h3>
-                <p className={`text-2xl ${currentPrayer === t('prayerTimes.dhuhr') ? 'text-primary font-bold' : ''}`}>
+                <h3 className={`font-medium mb-1 ${currentPrayer === t('prayerTimes.dhuhr') ? 'text-primary-foreground dark:text-primary-foreground font-bold' : ''}`}>
+                  {t('prayerTimes.dhuhr')}
+                </h3>
+                <p className={`text-2xl ${currentPrayer === t('prayerTimes.dhuhr') ? 'text-primary dark:text-primary-foreground font-bold' : ''}`}>
                   {prayerTimes?.ogle}
                 </p>
               </div>
               <div className={`p-4 rounded-lg ${currentPrayer === t('prayerTimes.asr') ? 'bg-primary bg-opacity-10' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <h3 className="font-medium mb-1">{t('prayerTimes.asr')}</h3>
-                <p className={`text-2xl ${currentPrayer === t('prayerTimes.asr') ? 'text-primary font-bold' : ''}`}>
+                <h3 className={`font-medium mb-1 ${currentPrayer === t('prayerTimes.asr') ? 'text-primary-foreground dark:text-primary-foreground font-bold' : ''}`}>
+                  {t('prayerTimes.asr')}
+                </h3>
+                <p className={`text-2xl ${currentPrayer === t('prayerTimes.asr') ? 'text-primary dark:text-primary-foreground font-bold' : ''}`}>
                   {prayerTimes?.ikindi}
                 </p>
               </div>
               <div className={`p-4 rounded-lg ${currentPrayer === t('prayerTimes.maghrib') ? 'bg-primary bg-opacity-10' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <h3 className="font-medium mb-1">{t('prayerTimes.maghrib')}</h3>
-                <p className={`text-2xl ${currentPrayer === t('prayerTimes.maghrib') ? 'text-primary font-bold' : ''}`}>
+                <h3 className={`font-medium mb-1 ${currentPrayer === t('prayerTimes.maghrib') ? 'text-primary-foreground dark:text-primary-foreground font-bold' : ''}`}>
+                  {t('prayerTimes.maghrib')}
+                </h3>
+                <p className={`text-2xl ${currentPrayer === t('prayerTimes.maghrib') ? 'text-primary dark:text-primary-foreground font-bold' : ''}`}>
                   {prayerTimes?.aksam}
                 </p>
               </div>
               <div className={`p-4 rounded-lg ${currentPrayer === t('prayerTimes.isha') ? 'bg-primary bg-opacity-10' : 'bg-gray-50 dark:bg-gray-800'}`}>
-                <h3 className="font-medium mb-1">{t('prayerTimes.isha')}</h3>
-                <p className={`text-2xl ${currentPrayer === t('prayerTimes.isha') ? 'text-primary font-bold' : ''}`}>
+                <h3 className={`font-medium mb-1 ${currentPrayer === t('prayerTimes.isha') ? 'text-primary-foreground dark:text-primary-foreground font-bold' : ''}`}>
+                  {t('prayerTimes.isha')}
+                </h3>
+                <p className={`text-2xl ${currentPrayer === t('prayerTimes.isha') ? 'text-primary dark:text-primary-foreground font-bold' : ''}`}>
                   {prayerTimes?.yatsi}
                 </p>
               </div>

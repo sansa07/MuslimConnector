@@ -18,6 +18,8 @@ import DailyWisdom from "@/pages/DailyWisdom";
 import MobileHeader from "@/components/layout/mobile-header";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNavigation from "@/components/layout/mobile-navigation";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 function Router() {
   return (
@@ -38,11 +40,22 @@ function Router() {
 }
 
 function App() {
+  const { i18n } = useTranslation();
+  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
+  
+  // Dil değiştiğinde yönlendirmeyi güncelle
+  useEffect(() => {
+    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    setDirection(dir);
+    document.documentElement.dir = dir;
+    document.documentElement.lang = i18n.language;
+  }, [i18n.language]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="müslimnet-theme">
         <TooltipProvider>
-          <div className="relative min-h-screen">
+          <div className={`relative min-h-screen ${direction === "rtl" ? "rtl" : ""}`}>
             {/* Pattern Overlay */}
             <div className="pattern-overlay"></div>
             
@@ -50,10 +63,10 @@ function App() {
             <MobileHeader />
             
             {/* Desktop Sidebar - visible on desktop only */}
-            <Sidebar />
+            <Sidebar direction={direction} />
             
             {/* Main Content */}
-            <main className="lg:ml-64 pb-20 lg:pb-10">
+            <main className={`pb-20 lg:pb-10 ${direction === "rtl" ? "lg:mr-64" : "lg:ml-64"}`}>
               <div className="container mx-auto px-4 py-6">
                 <Toaster />
                 <Router />
