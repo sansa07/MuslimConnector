@@ -21,7 +21,10 @@ const MobileHeader = () => {
     { label: "Günün Öğüdü", path: "/daily-wisdom" },
     { label: "Kuran & Hadisler", path: "/quran-hadith" },
     { label: "Topluluklar", path: "/communities" },
+    { label: "Profil", path: "/profile" },
     { label: "Hakkımızda", path: "/about" },
+    { label: "İletişim", path: "/contact" },
+    { label: "Destek", path: "/support" },
   ];
 
   return (
@@ -57,7 +60,7 @@ const MobileHeader = () => {
                 </a>
               </Link>
             ) : (
-              <Link href="/profile">
+              <Link href="/api/login">
                 <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
                   <IconUser />
                 </a>

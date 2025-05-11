@@ -13,8 +13,7 @@ const MobileNav = () => {
     { label: "Keşfet", path: "/explore", icon: <IconCompass /> },
     { label: "Dua", path: "/dua-requests", icon: <IconPraying /> },
     { label: "Etkinlik", path: "/events", icon: <IconCalendar /> },
-    { label: "Namaz", path: "/prayer-times", icon: <IconPrayerTimes /> },
-    { label: "Öğüt", path: "/daily-wisdom", icon: <IconWisdom /> },
+    { label: "Hakikat", path: "/prayer-times", icon: <IconPrayerTimes /> },
   ];
 
   return (
