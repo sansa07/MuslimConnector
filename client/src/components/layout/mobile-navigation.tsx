@@ -23,7 +23,7 @@ export default function MobileNavigation() {
           <Calendar className="h-5 w-5" />
           <span className="text-xs mt-1">Etkinlik</span>
         </a>
-        <a href="/prayer-times" className={`flex flex-col items-center p-3 ${location === "/prayer-times" ? "text-primary dark:text-primary-light" : "text-gray-500 dark:text-gray-400"}`}>
+        <a href="/daily-wisdom" className={`flex flex-col items-center p-3 ${location === "/daily-wisdom" ? "text-primary dark:text-primary-light" : "text-gray-500 dark:text-gray-400"}`}>
           <Clock className="h-5 w-5" />
           <span className="text-xs mt-1">Hakikat</span>
         </a>
