@@ -8,6 +8,15 @@ import { Clock, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+interface PrayerTimesData {
+  imsak: string;
+  gunes: string;
+  ogle: string;
+  ikindi: string;
+  aksam: string;
+  yatsi: string;
+}
+
 const PrayerTimes = () => {
   const { t } = useTranslation();
   const [city, setCity] = useState<string>("istanbul");
@@ -20,7 +29,7 @@ const PrayerTimes = () => {
     isLoading: prayerTimesLoading, 
     error: prayerTimesError,
     refetch: refetchPrayerTimes
-  } = useQuery({
+  } = useQuery<PrayerTimesData>({
     queryKey: [`/api/prayer-times?city=${city}`],
   });
 

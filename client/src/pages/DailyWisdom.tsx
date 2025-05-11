@@ -6,6 +6,37 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTranslation } from "@/hooks/use-translation-with-defaults";
 import { Book, BookOpen, BookText, ScrollText } from "lucide-react";
 
+interface QuranVerse {
+  id: number;
+  surah: number;
+  ayah: number;
+  arabicText: string;
+  translation: string;
+  surahName: string;
+}
+
+interface Hadith {
+  id: number;
+  text: string;
+  narrator: string;
+  source: string;
+}
+
+interface Dua {
+  id: number;
+  arabicText: string;
+  translation: string;
+  source: string;
+}
+
+interface IslamicStory {
+  id: number;
+  title: string;
+  content: string;
+  source: string;
+  reference: string;
+}
+
 const DailyWisdom = () => {
   const { t } = useTranslation();
   
@@ -13,7 +44,7 @@ const DailyWisdom = () => {
   const { 
     data: verseData, 
     isLoading: verseLoading 
-  } = useQuery({
+  } = useQuery<QuranVerse>({
     queryKey: ['/api/daily-verse'],
   });
 
@@ -21,7 +52,7 @@ const DailyWisdom = () => {
   const { 
     data: hadithData, 
     isLoading: hadithLoading 
-  } = useQuery({
+  } = useQuery<Hadith>({
     queryKey: ['/api/daily-hadith'],
   });
 
@@ -29,7 +60,7 @@ const DailyWisdom = () => {
   const { 
     data: duaData, 
     isLoading: duaLoading 
-  } = useQuery({
+  } = useQuery<Dua>({
     queryKey: ['/api/daily-dua'],
   });
 
@@ -37,7 +68,7 @@ const DailyWisdom = () => {
   const { 
     data: storyData, 
     isLoading: storyLoading 
-  } = useQuery({
+  } = useQuery<IslamicStory>({
     queryKey: ['/api/daily-story'],
   });
 

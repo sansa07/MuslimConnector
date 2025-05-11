@@ -18,7 +18,6 @@ import DailyWisdom from "@/pages/DailyWisdom";
 import MobileHeader from "@/components/layout/mobile-header";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNavigation from "@/components/layout/mobile-navigation";
-import MobileDailyMenu from "@/components/mobile-daily-menu";
 
 function Router() {
   return (
