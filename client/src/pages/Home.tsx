@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import { Skeleton } from "@/components/ui/skeleton";
-import PrayerTimesWidget from "@/components/home/PrayerTimesWidget";
-import DailyVerseCard from "@/components/home/DailyVerseCard";
 import CreatePostCard from "@/components/home/CreatePostCard";
 import PostCard from "@/components/posts/PostCard";
 import HadithPostCard from "@/components/posts/HadithPostCard";
 import EventCard from "@/components/events/EventCard";
 import DuaRequestCard from "@/components/dua/DuaRequestCard";
 import { useAuth } from "@/hooks/useAuth";
+import DailyWisdom from "@/components/daily-wisdom";
 
 const Home = () => {
   const { isAuthenticated } = useAuth();
@@ -31,8 +30,7 @@ const Home = () => {
         <meta name="description" content="MüslimNet - Müslüman bireylerin bir araya gelip bilgi, tecrübe, dua, etkinlik ve dini içerikleri paylaştığı sosyal ağ platformu." />
       </div>
       
-      <PrayerTimesWidget />
-      <DailyVerseCard />
+      <DailyWisdom />
       <CreatePostCard />
       
       {/* Posts */}

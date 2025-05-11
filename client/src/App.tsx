@@ -16,6 +16,7 @@ import Register from "@/pages/register";
 import MobileHeader from "@/components/layout/mobile-header";
 import Sidebar from "@/components/layout/sidebar";
 import MobileNavigation from "@/components/layout/mobile-navigation";
+import MobileDailyMenu from "@/components/mobile-daily-menu";
 
 function Router() {
   return (
@@ -55,6 +56,9 @@ function App() {
                 <Router />
               </div>
             </main>
+            
+            {/* Mobile Daily Menu - visible above mobile navigation */}
+            <MobileDailyMenu />
             
             {/* Mobile Bottom Navigation - visible on mobile only */}
             <MobileNavigation />
