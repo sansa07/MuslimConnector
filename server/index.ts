@@ -2,7 +2,14 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from "cors";
+import bodyParser from 'body-parser';
+import { setupAuth } from "./auth";
 
+// 2 ayrı uygulama oluşturalım
+// 1. API sunucusu - Vite'tan tamamen bağımsız
+const apiApp = express();
+
+// 2. Web sunucusu - Vite ile entegre
 const app = express();
 
 // CORS'u etkinleştir
@@ -45,49 +52,12 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // Tüm istekleri ele alacak ve özellikle API isteklerini yönlendireceğiz
-  app.use((req, res, next) => {
-    // URL içindeki özel karakterleri analiz et
-    // Bu, Vite'ın araya girmemesi için tasarlanmış bir hacktir
-    const urlParts = req.path.split('/');
-    
-    // Özel API isteklerini ele al
-    if (req.path.includes('__auth__')) {
-      console.log('Özel auth isteği yakalandı:', req.method, req.path);
-      const realPath = req.path.replace('__auth__', 'api');
-      req.url = realPath;
-      console.log(`URL dönüştürüldü: ${req.path} -> ${realPath}`);
-      res.setHeader('Content-Type', 'application/json');
-    }
-    
-    // XHR API yönlendirmesi 
-    if (req.path.startsWith('/xhr-api/')) {
-      console.log('XHR isteği yakalandı:', req.method, req.path);
-      const realPath = `/api${req.path.substring('/xhr-api'.length)}`;
-      req.url = realPath;
-      console.log(`URL dönüştürüldü: ${req.path} -> ${realPath}`);
-      res.setHeader('Content-Type', 'application/json');
-    }
-    
-    // Escape edilmiş API yönlendirmesi
-    if (req.path.includes('%5F%5Fapi%5F%5F')) {
-      console.log('Escape edilmiş API isteği yakalandı:', req.method, req.path);
-      const realPath = req.path.replace('%5F%5Fapi%5F%5F', 'api');
-      req.url = realPath;
-      console.log(`URL dönüştürüldü: ${req.path} -> ${realPath}`);
-      res.setHeader('Content-Type', 'application/json');
-    }
-    
-    // Normal API isteklerini işle
-    if (req.path.startsWith('/api/')) {
-      // API isteği olduğunu logla
-      console.log('Direkt API isteği yakalandı:', req.method, req.path);
-      // İçerik türünü ayarla
-      res.setHeader('Content-Type', 'application/json');
-    }
-    
-    next();
-  });
+  // API isteklerini doğrudan app üzerinde işleyelim
+  app.use(bodyParser.json());
+  app.use(bodyParser.urlencoded({ extended: false }));
+  
+  // Auth işlemlerini kuralım
+  setupAuth(app);
 
   // Tüm rotaları kaydet
   const server = await registerRoutes(app);

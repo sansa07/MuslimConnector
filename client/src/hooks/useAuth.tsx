@@ -42,45 +42,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     queryKey: ["/api/user"], 
     queryFn: async () => {
       try {
-        // Vite'ın engellemediği özel bir path kullanarak kullanıcı bilgilerini al
-        const res = await fetch("/__auth__/user", {
+        // Direkt API rotasını kullanalım
+        const res = await fetch("/api/user", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
             "Accept": "application/json",
           },
-          credentials: "include",
-          cache: "no-store"
+          credentials: "include"
         });
         
         if (res.status === 401) return null;
         
-        // Yanıtı text olarak al
-        const text = await res.text();
-        if (!text || !text.trim()) return null;
-        
-        // HTML mı diye kontrol et
-        if (text.includes('<!DOCTYPE html>')) {
-          console.log('HTML yanıtı alındı, doğrudan API isteği yapılıyor...');
-          
-          // Direkt API çağrısı yap
-          const directRes = await fetch("/api/user", {
-            method: "GET",
-            headers: { "Accept": "application/json" },
-            credentials: "include"
-          });
-          
-          if (directRes.status === 401) return null;
-          return await directRes.json();
-        }
-        
-        // JSON olarak parse et
-        try {
-          return JSON.parse(text);
-        } catch (e) {
-          console.error('JSON parse hatası:', e);
-          return null;
-        }
+        // Yanıtı doğrudan JSON olarak alalım
+        return await res.json();
       } catch (err) {
         console.error('Kullanıcı bilgisi alma hatası:', err);
         return null;
@@ -93,9 +68,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login form values:", credentials);
       
       try {
-        // Vite'ın asla yakalamayacağı, geçersiz bir URL formatı kullanıyoruz
-        // __auth__ dizisi içeren pathler API tarafından algılanacak
-        const requestUrl = `/__auth__/login?ts=${Date.now()}`;
+        // Direkt olarak API rotasını kullanalım
+        const requestUrl = `/api/login`;
         console.log(`Şu URL'e istek gönderiliyor: ${requestUrl}`);
         
         // Headers'ı detaylı ayarla
@@ -103,23 +77,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         headers.append("Content-Type", "application/json");
         headers.append("Accept", "application/json");
         
-        // Özel bir istekte bulun - post yöntemi yerine options kullanarak önce izin iste
-        await fetch(requestUrl, {
-          method: "OPTIONS",
-          headers: {
-            "Access-Control-Request-Method": "POST",
-            "Access-Control-Request-Headers": "Content-Type, Accept"
-          }
-        });
-        
-        // Şimdi gerçek isteği yap
+        // Gerçek isteği yap
         const res = await fetch(requestUrl, {
           method: "POST",
           headers,
           body: JSON.stringify(credentials),
           credentials: "include",
-          cache: "no-store",
-          redirect: "manual" // Yönlendirmeleri kabul etme
+          cache: "no-store"
         });
 
         // Ham cevabı debug için konsola yazdıralım
