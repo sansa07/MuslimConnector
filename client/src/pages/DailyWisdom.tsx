@@ -17,9 +17,10 @@ interface QuranVerse {
 
 interface Hadith {
   id: number;
-  text: string;
-  narrator: string;
+  arabicText?: string;
+  translation: string;
   source: string;
+  reference: string;
 }
 
 interface Dua {
@@ -96,8 +97,8 @@ const DailyWisdom = () => {
                 <p className="mb-2 text-lg">
                   {verseData?.translation}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {verseData?.surahName} {verseData?.ayah}
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                  {verseData?.reference || `${verseData?.surahName} ${verseData?.ayah}`}
                 </p>
               </>
             )}
@@ -121,10 +122,10 @@ const DailyWisdom = () => {
             ) : (
               <>
                 <p className="mb-4">
-                  {hadithData?.text}
+                  {hadithData?.translation}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {hadithData?.narrator} - {hadithData?.source}
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                  {hadithData?.source} {hadithData?.reference ? `- ${hadithData?.reference}` : ''}
                 </p>
               </>
             )}
@@ -150,7 +151,7 @@ const DailyWisdom = () => {
                 <p className="mb-2 text-lg">
                   {duaData?.translation}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                   {duaData?.source}
                 </p>
               </>
@@ -195,7 +196,7 @@ const DailyWisdom = () => {
                     Devamını Oku
                   </button>
                 </div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">
+                <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
                   {storyData?.source} {storyData?.reference}
                 </p>
               </>
