@@ -1,5 +1,5 @@
 import { useAuth, UserData } from "@/hooks/useAuth";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Home, Compass, Calendar, HandHelping, Book, Users, User, Settings, LogOut, Clock, SunMoon } from "lucide-react";
 import { useTranslation } from "@/hooks/use-translation-with-defaults";
@@ -38,12 +38,9 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
           </div>
         ) : (
           <div className="flex justify-center mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
-            <button 
-              onClick={() => window.alert('Giriş işlemi şu anda aktif değil. Tüm kullanıcılar otomatik olarak giriş yapmış kabul edilmektedir.')} 
-              className="bg-primary text-white rounded-full px-6 py-2 hover:bg-primary/90 transition-colors"
-            >
+            <Link to="/login" className="bg-primary text-white rounded-full px-6 py-2 hover:bg-primary/90 transition-colors">
               {t('auth.login')}
-            </button>
+            </Link>
           </div>
         )}
         
