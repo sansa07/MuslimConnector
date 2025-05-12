@@ -45,7 +45,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
+      // apiRequest yerine doğrudan fetch kullanıyoruz
+      const res = await fetch("/api/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(credentials),
+        credentials: "include"
+      });
+      
       try {
         // Yanıtı text olarak alıp kontrol edelim
         const text = await res.text();
@@ -105,7 +114,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (credentials: RegisterData) => {
       try {
         console.log("Starting register API request");
-        const res = await apiRequest("POST", "/api/register/user", credentials);
+        // Doğrudan fetch kullanarak kayıt isteği gönderiyoruz
+        const res = await fetch("/api/register/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(credentials),
+          credentials: "include"
+        });
         
         // Yanıtı text olarak alıp kontrol edelim
         const text = await res.text();
@@ -166,7 +183,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest("POST", "/api/v1/logout");
+      await fetch("/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include"
+      });
     },
     onSuccess: () => {
       queryClient.setQueryData(["/api/v1/user"], null);

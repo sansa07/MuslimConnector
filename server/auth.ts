@@ -307,10 +307,20 @@ export function setupAuth(app: Express) {
     res.json(userResponse);
   });
 
-  // Çıkış yap
+  // Çıkış yap - V1 rotası
   app.post("/api/v1/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
+      res.sendStatus(200);
+    });
+  });
+  
+  // Çıkış yap - Direkt rota
+  app.post("/api/logout", (req, res, next) => {
+    console.log("Direct Logout API called");
+    req.logout((err) => {
+      if (err) return next(err);
+      res.setHeader('Content-Type', 'application/json');
       res.sendStatus(200);
     });
   });
