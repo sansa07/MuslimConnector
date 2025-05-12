@@ -68,81 +68,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login form values:", credentials);
       
       try {
-        // Direkt olarak API rotasını kullanalım
+        // Doğrudan API isteklerini yapalım - basitleştirilmiş yaklaşım
         const requestUrl = `/api/login`;
         console.log(`Şu URL'e istek gönderiliyor: ${requestUrl}`);
         
-        // Headers'ı detaylı ayarla
-        const headers = new Headers();
-        headers.append("Content-Type", "application/json");
-        headers.append("Accept", "application/json");
-        
-        // Gerçek isteği yap
+        // İsteği gönder
         const res = await fetch(requestUrl, {
           method: "POST",
-          headers,
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
           body: JSON.stringify(credentials),
-          credentials: "include",
-          cache: "no-store"
+          credentials: "include"
         });
 
-        // Ham cevabı debug için konsola yazdıralım
-        let text;
-        try {
-          text = await res.text();
-          console.log("Login API raw response:", text);
-        } catch (err) {
-          console.error("API yanıtı okunamadı:", err);
-          throw new Error("API yanıtı okunamadı");
-        }
+        // İlk önce text olarak yanıtı alalım
+        const text = await res.text();
+        console.log("Login API raw response:", text);
         
-        // Başlangıçta HTML içeriyor mu kontrol et
-        if (text && text.includes("<!DOCTYPE html>")) {
-          console.error("Vite müdahale ediyor, HTML döndürüyor");
-          
-          // HTML yanıttan oturum bilgisini parse etmeyi dene
-          try {
-            // Buraya geldiyse doğrudan API'ye ayrı bir istek atalım
-            const directApiCall = await fetch("/api/user", {
-              method: "GET",
-              headers: {
-                "Accept": "application/json"
-              },
-              credentials: "include"
-            });
-            
-            const userData = await directApiCall.json();
-            if (userData && userData.id) {
-              console.log("Login sonrası kullanıcı verisi alındı:", userData);
-              return userData;
-            }
-          } catch (err) {
-            console.error("Direkt API isteği başarısız:", err);
-          }
-          
-          throw new Error("API yanıtı okunamadı: HTML içeriği alındı");
-        }
-        
-        // Eğer boş bir yanıt gelirse hata ver
+        // Boş yanıt kontrolü
         if (!text || !text.trim()) {
-          console.log("Empty response from login API");
-          throw new Error("API boş yanıt döndürdü");
+          throw new Error("Sunucu boş yanıt döndürdü");
         }
         
+        // HTML kontrolü
+        if (text.includes("<!DOCTYPE html>")) {
+          throw new Error("Sunucu HTML yanıtı döndürdü");
+        }
+        
+        // JSON parse etmeyi dene
         try {
-          // JSON olarak işlemeyi dene
-          const userData = JSON.parse(text);
-          console.log("Login API parsed response:", userData);
+          const data = JSON.parse(text);
+          console.log("Login API parsed response:", data);
           
-          // İçerdiği bilgileri kontrol edelim
-          if (!userData || !userData.id) {
-            throw new Error("Geçersiz kullanıcı verisi alındı");
+          // Hata yanıtı kontrolü
+          if (!res.ok) {
+            throw new Error(data.message || "Giriş başarısız");
           }
           
-          return userData;
-        } catch (jsonError) {
-          console.error("JSON parse error:", jsonError);
-          throw new Error("API yanıtı geçersiz JSON formatında");
+          return data;
+        } catch (e) {
+          console.error("JSON parse error:", e);
+          throw new Error("Sunucu geçersiz JSON yanıtı döndürdü");
         }
       } catch (error) {
         console.error("Login error:", error);

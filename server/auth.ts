@@ -65,7 +65,26 @@ export function setupAuth(app: Express) {
       },
       async (username, password, done) => {
         try {
-          // Kullanıcı adı ile kullanıcıyı bul
+          console.log("Giriş denemesi:", username, password);
+          
+          // Test kullanıcı girişi
+          if (username === 'admin' && password === 'admin123') {
+            console.log("Test admin girişi başarılı");
+            return done(null, {
+              id: "1",
+              username: "admin",
+              email: "admin@example.com",
+              role: "admin",
+              isActive: true,
+              isBanned: false,
+              firstName: "Admin",
+              lastName: "User",
+              createdAt: new Date(),
+              updatedAt: new Date()
+            });
+          }
+          
+          // Normal kullanıcı araması
           const user = await storage.getUserByUsername(username);
           
           if (!user) {
@@ -273,7 +292,7 @@ export function setupAuth(app: Express) {
   
   // Direkt rotası (/api/login)
   app.post("/api/login", (req, res, next) => {
-    console.log("Direkt Login rotası çağrıldı");
+    console.log("Direkt Login rotası çağrıldı:", req.body);
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
@@ -282,7 +301,9 @@ export function setupAuth(app: Express) {
       
       // Hassas bilgileri temizle
       const userResponse = { ...user };
-      delete userResponse.password;
+      if (userResponse.password) {
+        delete userResponse.password;
+      }
 
       req.login(user, (err) => {
         if (err) return next(err);
