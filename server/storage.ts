@@ -19,8 +19,14 @@ export interface IStorage {
   // User operations
   getUser(id: string): Promise<User | undefined>;
   upsertUser(user: UpsertUser): Promise<User>;
+  createUser(user: UpsertUser): Promise<User>;
   updateUserProfile(id: string, data: Partial<User>): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  updateUserWarningCount(id: string, increment: boolean): Promise<User | undefined>;
+  banUser(id: string, reason: string): Promise<User | undefined>;
+  unbanUser(id: string): Promise<User | undefined>;
+  listUsersWithRole(role: string): Promise<User[]>;
   
   // Post operations
   createPost(post: InsertPost): Promise<Post>;
@@ -93,6 +99,14 @@ export class DatabaseStorage implements IStorage {
     return user;
   }
 
+  async createUser(userData: UpsertUser): Promise<User> {
+    const [user] = await db
+      .insert(users)
+      .values(userData)
+      .returning();
+    return user;
+  }
+
   async updateUserProfile(id: string, data: Partial<User>): Promise<User | undefined> {
     const [user] = await db
       .update(users)
@@ -105,6 +119,65 @@ export class DatabaseStorage implements IStorage {
   async getUserByUsername(username: string): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.username, username));
     return user;
+  }
+  
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    const [user] = await db.select().from(users).where(eq(users.email, email));
+    return user;
+  }
+  
+  async updateUserWarningCount(id: string, increment: boolean): Promise<User | undefined> {
+    const user = await this.getUser(id);
+    if (!user) return undefined;
+    
+    const currentCount = user.warningCount || 0;
+    const newCount = increment ? currentCount + 1 : Math.max(0, currentCount - 1);
+    
+    const [updatedUser] = await db
+      .update(users)
+      .set({ 
+        warningCount: newCount,
+        updatedAt: new Date() 
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return updatedUser;
+  }
+  
+  async banUser(id: string, reason: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ 
+        isBanned: true,
+        banReason: reason,
+        updatedAt: new Date() 
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return user;
+  }
+  
+  async unbanUser(id: string): Promise<User | undefined> {
+    const [user] = await db
+      .update(users)
+      .set({ 
+        isBanned: false,
+        banReason: null,
+        updatedAt: new Date() 
+      })
+      .where(eq(users.id, id))
+      .returning();
+    
+    return user;
+  }
+  
+  async listUsersWithRole(role: string): Promise<User[]> {
+    return await db
+      .select()
+      .from(users)
+      .where(eq(users.role, role));
   }
 
   // Post operations
