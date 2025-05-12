@@ -88,6 +88,9 @@
   --border: 220 40% 25%;
   --input: 220 40% 25%;
   --ring: 142.1 65% 40%;
+  
+  /* Daha iyi gölge efekti */
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
 
   /* Chart colors for Islamic theme - dark mode */
   --chart-1: 142.1 65% 40%;
@@ -100,25 +103,25 @@
 /* İslami Yeşil Tema - Geliştirilmiş */
 .islamic-green {
   --background: 142.1 35% 97%;
-  --foreground: 142.1 70% 15%;
+  --foreground: 142.1 80% 10%;
   
   --card: 0 0% 100%;
-  --card-foreground: 142.1 70% 15%;
+  --card-foreground: 142.1 80% 10%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 142.1 70% 15%;
+  --popover-foreground: 142.1 80% 10%;
   
   --primary: 142.1 70% 32.3%;
   --primary-foreground: 0 0% 100%;
   
   --secondary: 40 80% 50%; /* Altın vurgu */
-  --secondary-foreground: 142.1 70% 15%;
+  --secondary-foreground: 142.1 80% 10%;
   
   --muted: 142.1 20% 90%;
-  --muted-foreground: 142.1 35% 35%;
+  --muted-foreground: 142.1 60% 25%;
   
   --accent: 40 80% 50%; /* Altın vurgu */
-  --accent-foreground: 142.1 70% 15%;
+  --accent-foreground: 142.1 80% 10%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
@@ -135,25 +138,25 @@
 /* İslami Altın Tema - Geliştirilmiş */
 .islamic-gold {
   --background: 40 30% 97%;
-  --foreground: 40 75% 15%;
+  --foreground: 30 95% 10%;
   
   --card: 0 0% 100%;
-  --card-foreground: 40 75% 15%;
+  --card-foreground: 30 95% 10%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 40 75% 15%;
+  --popover-foreground: 30 95% 10%;
   
   --primary: 40 85% 45%;
   --primary-foreground: 0 0% 100%;
   
   --secondary: 142.1 65% 35%; /* Yeşil vurgu */
-  --secondary-foreground: 40 75% 15%;
+  --secondary-foreground: 30 95% 10%;
   
   --muted: 40 20% 90%;
-  --muted-foreground: 40 35% 35%;
+  --muted-foreground: 40 60% 25%;
   
   --accent: 142.1 65% 35%; /* Yeşil vurgu */
-  --accent-foreground: 40 75% 15%;
+  --accent-foreground: 30 95% 10%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
@@ -170,25 +173,25 @@
 /* İslami Lacivert Tema - Geliştirilmiş */
 .islamic-navy {
   --background: 220 30% 97%;
-  --foreground: 220 75% 15%;
+  --foreground: 220 95% 10%;
   
   --card: 0 0% 100%;
-  --card-foreground: 220 75% 15%;
+  --card-foreground: 220 95% 10%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 220 75% 15%;
+  --popover-foreground: 220 95% 10%;
   
   --primary: 220 60% 25%;
   --primary-foreground: 0 0% 100%;
   
   --secondary: 40 85% 45%; /* Altın vurgu */
-  --secondary-foreground: 220 75% 15%;
+  --secondary-foreground: 220 95% 10%;
   
   --muted: 220 20% 90%;
-  --muted-foreground: 220 35% 40%;
+  --muted-foreground: 220 65% 30%;
   
   --accent: 40 85% 45%; /* Altın vurgu */
-  --accent-foreground: 220 75% 15%;
+  --accent-foreground: 220 95% 10%;
   
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
@@ -227,9 +230,33 @@
     direction: rtl;
   }
   
-  /* Improve text visibility */
+  /* Improve text visibility for all themes */
   h1, h2, h3, h4, h5, h6, p, span, a, button, input, label, div {
-    @apply text-foreground dark:text-white;
+    @apply text-foreground;
+  }
+  
+  /* Dark mode text visibility */
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6, 
+  .dark p, .dark span, .dark a, .dark button, .dark input, .dark label, .dark div {
+    color: hsl(0 0% 98%);
+  }
+  
+  /* Islamic green theme text visibility */
+  .islamic-green h1, .islamic-green h2, .islamic-green h3, .islamic-green h4, .islamic-green h5, .islamic-green h6,
+  .islamic-green p, .islamic-green span, .islamic-green a, .islamic-green button, .islamic-green input, .islamic-green label, .islamic-green div {
+    color: hsl(142.1 70% 15%);
+  }
+  
+  /* Islamic gold theme text visibility */
+  .islamic-gold h1, .islamic-gold h2, .islamic-gold h3, .islamic-gold h4, .islamic-gold h5, .islamic-gold h6,
+  .islamic-gold p, .islamic-gold span, .islamic-gold a, .islamic-gold button, .islamic-gold input, .islamic-gold label, .islamic-gold div {
+    color: hsl(40 75% 15%);
+  }
+  
+  /* Islamic navy theme text visibility */
+  .islamic-navy h1, .islamic-navy h2, .islamic-navy h3, .islamic-navy h4, .islamic-navy h5, .islamic-navy h6,
+  .islamic-navy p, .islamic-navy span, .islamic-navy a, .islamic-navy button, .islamic-navy input, .islamic-navy label, .islamic-navy div {
+    color: hsl(220 75% 15%);
   }
 
   /* İslami Desenler */
