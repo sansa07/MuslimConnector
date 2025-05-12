@@ -41,10 +41,10 @@ export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const [socialAuthError, setSocialAuthError] = useState<string | null>(null);
 
-  // Redirect if already logged in
-  if (user) {
-    return <Redirect to="/" />;
-  }
+  // // Kullanıcı yönlendirmeyi loginMutation'a bırakalım
+  // if (user) {
+  //   return <Redirect to="/" />;
+  // }
 
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),

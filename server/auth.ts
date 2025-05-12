@@ -70,18 +70,32 @@ export function setupAuth(app: Express) {
           // Test kullanıcı girişi
           if (username === 'admin' && password === 'admin123') {
             console.log("Test admin girişi başarılı");
-            return done(null, {
+            const testUser = {
               id: "1",
               username: "admin",
               email: "admin@example.com",
+              password: null,
               role: "admin",
               isActive: true,
               isBanned: false,
               firstName: "Admin",
               lastName: "User",
+              profileImageUrl: null,
+              bio: null,
+              banReason: null,
+              warningCount: 0,
+              verificationToken: null,
+              verificationTokenExpiry: null,
+              resetPasswordToken: null,
+              resetPasswordTokenExpiry: null,
+              authProvider: "email",
+              authProviderId: null,
+              lastLoginAt: new Date(),
               createdAt: new Date(),
               updatedAt: new Date()
-            });
+            };
+            
+            return done(null, testUser);
           }
           
           // Normal kullanıcı araması
@@ -96,8 +110,8 @@ export function setupAuth(app: Express) {
             return done(null, false, { message: "Bu hesap yasaklanmıştır" });
           }
           
-          // Hesap aktif mi kontrol et
-          if (!user.isActive) {
+          // Hesap aktif mi kontrol et - isActive undefined olabileceği için optional chaining kullanıyoruz
+          if (user.isActive === false) {
             return done(null, false, { message: "Bu hesap etkin değil" });
           }
           

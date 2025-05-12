@@ -25,7 +25,7 @@ export const users = pgTable("users", {
   bio: text("bio"),
   role: varchar("role").default("user"), // "user", "moderator", "admin"
   isActive: boolean("is_active").default(true),
-  isVerified: boolean("is_verified").default(false),
+  // isVerified: boolean("is_verified").default(false),
   isBanned: boolean("is_banned").default(false),
   banReason: text("ban_reason"),
   warningCount: integer("warning_count").default(0),
