@@ -79,7 +79,7 @@ export default function MobileHeader() {
               </div>
             ) : (
               <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <Link to="/login" className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors">
+                <Link to="/auth" className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors">
                   Giriş Yap
                 </Link>
               </div>
