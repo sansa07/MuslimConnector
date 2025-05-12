@@ -25,10 +25,17 @@ export const users = pgTable("users", {
   bio: text("bio"),
   role: varchar("role").default("user"), // "user", "moderator", "admin"
   isActive: boolean("is_active").default(true),
+  isVerified: boolean("is_verified").default(false),
   isBanned: boolean("is_banned").default(false),
   banReason: text("ban_reason"),
   warningCount: integer("warning_count").default(0),
+  verificationToken: varchar("verification_token"),
+  verificationTokenExpiry: timestamp("verification_token_expiry"),
+  resetPasswordToken: varchar("reset_password_token"),
+  resetPasswordTokenExpiry: timestamp("reset_password_token_expiry"),
   authProvider: varchar("auth_provider").default("email"), // "email", "google", "facebook", "github", "replit"
+  authProviderId: varchar("auth_provider_id"), // ID from OAuth provider
+  lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
