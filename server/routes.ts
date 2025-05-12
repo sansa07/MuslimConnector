@@ -142,7 +142,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/posts', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/posts', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const validatedData = insertPostSchema.parse({ ...req.body, userId });
@@ -184,7 +184,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/posts/:id/comments', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/posts/:id/comments', isAuthenticated, async (req: any, res) => {
     try {
       const postId = parseInt(req.params.id);
       const userId = req.user.claims.sub;
@@ -213,7 +213,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/posts/:id/likes', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/posts/:id/likes', isAuthenticated, async (req: any, res) => {
     try {
       const postId = parseInt(req.params.id);
       const userId = req.user.claims.sub;
@@ -254,7 +254,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/events', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/events', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const validatedData = insertEventSchema.parse({ ...req.body, userId });
@@ -284,7 +284,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/events/:id/participate', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/events/:id/participate', isAuthenticated, async (req: any, res) => {
     try {
       const eventId = parseInt(req.params.id);
       const userId = req.user.claims.sub;
@@ -331,7 +331,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/dua-requests', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/dua-requests', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const validatedData = insertDuaRequestSchema.parse({ ...req.body, userId });
@@ -361,7 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/dua-requests/:id/support', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/dua-requests/:id/support', isAuthenticated, async (req: any, res) => {
     try {
       const duaRequestId = parseInt(req.params.id);
       const userId = req.user.claims.sub;
@@ -431,7 +431,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post('/api/users/:id/follow', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/users/:id/follow', isAuthenticated, async (req: any, res) => {
     try {
       const followingId = req.params.id;
       const followerId = req.user.claims.sub;
@@ -471,7 +471,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post('/api/notifications/:id/read', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/notifications/:id/read', isAuthenticated, async (req: any, res) => {
     try {
       const notificationId = parseInt(req.params.id);
       await markNotificationAsRead(notificationId);
@@ -482,7 +482,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post('/api/notifications/read-all', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/notifications/read-all', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       await markAllNotificationsAsRead(userId);
@@ -494,7 +494,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Content reports
-  app.post('/api/posts/:id/report', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/posts/:id/report', isAuthenticated, async (req: any, res) => {
     try {
       const postId = parseInt(req.params.id);
       const userId = req.user.claims.sub;
@@ -540,7 +540,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post('/api/comments/:id/report', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/comments/:id/report', isAuthenticated, async (req: any, res) => {
     try {
       const commentId = parseInt(req.params.id);
       const userId = req.user.claims.sub;
@@ -587,7 +587,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Email verification
-  app.post('/api/verify-email', async (req, res) => {
+  apiRouter.post('/verify-email', async (req, res) => {
     try {
       const { token } = req.body;
       
@@ -648,7 +648,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post('/api/resend-verification-email', isAuthenticated, async (req: any, res) => {
+  apiRouter.post('/resend-verification-email', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       
@@ -699,7 +699,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Social authentication
-  app.post('/api/auth/facebook', async (req, res) => {
+  apiRouter.post('/auth/facebook', async (req, res) => {
     try {
       await handleFacebookAuth(req, res);
     } catch (error) {
@@ -708,7 +708,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  app.post('/api/auth/google', async (req, res) => {
+  apiRouter.post('/auth/google', async (req, res) => {
     try {
       await handleGoogleAuth(req, res);
     } catch (error) {
@@ -727,7 +727,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // User profile
-  app.put('/api/users/profile', isAuthenticated, async (req: any, res) => {
+  apiRouter.put('/users/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const updatedUser = await storage.updateUserProfile(userId, req.body);
