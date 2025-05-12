@@ -66,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (credentials: RegisterData) => {
-      const res = await apiRequest("POST", "/api/register", credentials);
+      const res = await apiRequest("POST", "/api/register/user", credentials);
       return await res.json();
     },
     onSuccess: (user: User) => {

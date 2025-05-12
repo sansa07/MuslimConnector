@@ -111,7 +111,7 @@ export function setupAuth(app: Express) {
 
   // API rotaları
   // E-posta ile kayıt ol
-  app.post("/api/register", async (req, res, next) => {
+  app.post("/api/register/user", async (req, res, next) => {
     try {
       const { email, username, password } = req.body;
 
