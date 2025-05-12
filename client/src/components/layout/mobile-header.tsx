@@ -79,9 +79,11 @@ export default function MobileHeader() {
               </div>
             ) : (
               <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <a href="/api/login" className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors">
-                  Giriş Yap
-                </a>
+                <form action="/api/login" method="get">
+                  <button type="submit" className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors">
+                    Giriş Yap
+                  </button>
+                </form>
               </div>
             )}
 
@@ -109,10 +111,12 @@ export default function MobileHeader() {
 
             <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
               {isAuthenticated && (
-                <a href="/api/logout" className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20">
-                  <LogOut className="w-5 h-5" />
-                  <span>Çıkış Yap</span>
-                </a>
+                <form action="/api/logout" method="get">
+                  <button type="submit" className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 w-full text-left">
+                    <LogOut className="w-5 h-5" />
+                    <span>Çıkış Yap</span>
+                  </button>
+                </form>
               )}
             </div>
           </div>

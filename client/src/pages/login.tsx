@@ -60,12 +60,12 @@ export default function Login() {
           
           <TabsContent value="social" className="pt-4">
             <CardContent className="space-y-4">
-              <Button variant="outline" className="w-full flex items-center justify-center gap-2" asChild>
-                <a href="/api/login">
+              <form action="/api/login" method="get">
+                <Button type="submit" variant="outline" className="w-full flex items-center justify-center gap-2">
                   <img src="/replit-logo.svg" alt="Replit" className="w-5 h-5" />
                   <span>Replit ile Giriş Yap</span>
-                </a>
-              </Button>
+                </Button>
+              </form>
               
               <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled>
                 <FcGoogle className="w-5 h-5" />

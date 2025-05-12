@@ -38,9 +38,11 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
           </div>
         ) : (
           <div className="flex justify-center mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
-            <a href="/api/login" className="bg-primary text-white rounded-full px-6 py-2 hover:bg-primary/90 transition-colors">
-              {t('auth.login')}
-            </a>
+            <form action="/api/login" method="get">
+              <button type="submit" className="bg-primary text-white rounded-full px-6 py-2 hover:bg-primary/90 transition-colors">
+                {t('auth.login')}
+              </button>
+            </form>
           </div>
         )}
         
