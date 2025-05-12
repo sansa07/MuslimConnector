@@ -6,10 +6,18 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/hooks/useAuth";
 import { useLocation } from "wouter";
-import { Mail, Lock, Facebook, Github } from "lucide-react";
+import { Mail, Lock, Facebook, Github, AlertCircle } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 import { useToast } from "@/hooks/use-toast";
 import { Separator } from "@/components/ui/separator";
+import { 
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter
+} from "@/components/ui/dialog";
 
 export default function Login() {
   const { t } = useTranslation();
@@ -20,6 +28,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [showReplitAuthDialog, setShowReplitAuthDialog] = useState(false);
   
   // Kullanıcı zaten giriş yapmışsa ana sayfaya yönlendir
   if (isAuthenticated) {
@@ -63,26 +72,57 @@ export default function Login() {
               <Button 
                 variant="outline" 
                 className="w-full flex items-center justify-center gap-2"
-                onClick={() => {
-                  // Yeni sekme/pencere açma
-                  const loginWindow = window.open('/api/login', '_blank');
-                  
-                  // 30 saniye sonra pencereyi kontrol et, hala açıksa kapat
-                  setTimeout(() => {
-                    if (loginWindow && !loginWindow.closed) {
-                      loginWindow.close();
-                      toast({
-                        title: "Giriş işlemi tamamlanamadı",
-                        description: "Giriş işlemi için açılan pencere otomatik olarak kapatıldı.",
-                        variant: "destructive",
-                      });
-                    }
-                  }, 30000);
-                }}
+                onClick={() => setShowReplitAuthDialog(true)}
               >
                 <img src="/replit-logo.svg" alt="Replit" className="w-5 h-5" />
                 <span>Replit ile Giriş Yap</span>
               </Button>
+              
+              {/* Replit Kimlik Doğrulama Açıklama Dialogu */}
+              <Dialog open={showReplitAuthDialog} onOpenChange={setShowReplitAuthDialog}>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <AlertCircle className="h-5 w-5 text-amber-500" />
+                      Replit Kimlik Doğrulama
+                    </DialogTitle>
+                    <DialogDescription className="pt-2">
+                      Replit ile giriş yapmak için yeni bir pencere açılacaktır. 
+                      Bu pencerede Replit hesabınızla giriş yapmanız gerekecek.
+                      <br /><br />
+                      Giriş işlemi tamamlandıktan sonra ana sayfaya yönlendirileceksiniz.
+                      <br /><br />
+                      <strong>Not:</strong> Giriş işlemi tamamlanmazsa pencere 30 saniye sonra otomatik kapanır.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter className="flex flex-col sm:flex-row gap-2">
+                    <Button variant="outline" onClick={() => setShowReplitAuthDialog(false)}>
+                      İptal
+                    </Button>
+                    <Button 
+                      onClick={() => {
+                        setShowReplitAuthDialog(false);
+                        // Yeni sekme/pencere açma
+                        const loginWindow = window.open('/api/login', '_blank');
+                        
+                        // 30 saniye sonra pencereyi kontrol et, hala açıksa kapat
+                        setTimeout(() => {
+                          if (loginWindow && !loginWindow.closed) {
+                            loginWindow.close();
+                            toast({
+                              title: "Giriş işlemi tamamlanamadı",
+                              description: "Giriş işlemi için açılan pencere otomatik olarak kapatıldı.",
+                              variant: "destructive",
+                            });
+                          }
+                        }, 30000);
+                      }}
+                    >
+                      Devam Et
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
               
               <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled>
                 <FcGoogle className="w-5 h-5" />
