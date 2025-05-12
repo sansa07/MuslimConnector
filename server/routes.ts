@@ -22,26 +22,22 @@ import { sendEmail, getVerificationEmailHtml, generateToken } from "./api/email"
 import { handleFacebookAuth, handleGoogleAuth, handleGitHubAuth } from "./api/social-auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // API rotaları için v1 prefix ekleyelim
-  const apiRouter = Router();
-  app.use('/api/v1', apiRouter);
-  
-  // API rotalarını düzgün yönlendirmek için middleware
-  app.use((req, res, next) => {
-    // Vite rotalarını engelleme - API çağrıları için özel işlem yap
-    if (req.path.startsWith('/api/') && !req.path.startsWith('/api/v1/')) {
-      // Eski rotayı logla
-      console.log(`API redirect: ${req.originalUrl} -> ${req.originalUrl.replace('/api/', '/api/v1/')}`);
-      
-      // Rotayı güncelle ve devam et
-      req.url = req.url.replace('/api/', '/api/v1/');
-    }
-    
-    // Devam et
+  // API rotalarını düzgün yönlendirmek için middleware - bu TÜM API rotalarını önce yakalamalı
+  app.use('/api/login', (req, res, next) => {
+    console.log('Doğrudan login API isteği yakalandı:', req.method, req.url);
     next();
   });
 
-  // Auth middleware - sadece ana uygulamaya uygula
+  app.use('/api/register/user', (req, res, next) => {
+    console.log('Doğrudan register API isteği yakalandı:', req.method, req.url);
+    next();
+  });
+  
+  // API rotaları için v1 prefix ekleyelim
+  const apiRouter = Router();
+  app.use('/api/v1', apiRouter);
+
+  // ÖNEMLİ: Auth middleware'i önce çağırarak rotaları kaydet
   await setupAuth(app);
 
   // Auth routes

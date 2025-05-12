@@ -110,7 +110,7 @@ export function setupAuth(app: Express) {
   });
 
   // API rotaları
-  // E-posta ile kayıt ol
+  // E-posta ile kayıt ol - V1 rotası
   app.post("/api/v1/register/user", async (req, res, next) => {
     try {
       console.log("Register API called with:", req.body);
@@ -181,9 +181,79 @@ export function setupAuth(app: Express) {
       next(error);
     }
   });
+  
+  // E-posta ile kayıt ol - Direkt rota
+  app.post("/api/register/user", async (req, res, next) => {
+    try {
+      console.log("Direct Register API called with:", req.body);
+      const { email, username, password, firstName, lastName } = req.body;
 
-  // E-posta ile giriş yap
+      // E-posta veya kullanıcı adı zaten var mı kontrol et
+      const existingByEmail = await storage.getUserByEmail(email);
+      if (existingByEmail) {
+        console.log("Email already exists:", email);
+        return res.status(400).json({ message: "Bu e-posta adresi zaten kullanılıyor" });
+      }
+
+      const existingByUsername = await storage.getUserByUsername(username);
+      if (existingByUsername) {
+        console.log("Username already exists:", username);
+        return res.status(400).json({ message: "Bu kullanıcı adı zaten kullanılıyor" });
+      }
+
+      // Şifreyi hashleme
+      const hashedPassword = await hashPassword(password);
+      
+      // Kullanıcı oluşturma zamanı
+      const now = new Date();
+      const userId = `email_${Date.now().toString()}`;
+      
+      console.log("Creating user with ID:", userId);
+
+      // Yeni kullanıcı oluştur
+      const user = await storage.createUser({
+        id: userId,
+        email,
+        username,
+        password: hashedPassword,
+        firstName,
+        lastName,
+        authProvider: "email",
+        role: "user",
+        isActive: true,
+        isBanned: false,
+        warningCount: 0,
+        createdAt: now,
+        updatedAt: now
+      });
+
+      // Hassas bilgileri temizle
+      const userResponse = { ...user };
+      delete userResponse.password;
+
+      console.log("User created successfully:", userResponse);
+
+      // Kullanıcıyı otomatik giriş yap
+      req.login(user, (err) => {
+        if (err) {
+          console.error("Auto-login error:", err);
+          return next(err);
+        }
+        console.log("User logged in automatically");
+        
+        // JSON yanıtını düzgün formatta gönder
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(201).json(userResponse);
+      });
+    } catch (error) {
+      console.error("Register API error:", error);
+      next(error);
+    }
+  });
+
+  // E-posta ile giriş yap - V1 rotası
   app.post("/api/v1/login", (req, res, next) => {
+    console.log("API V1 Login rotası çağrıldı");
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
@@ -196,6 +266,29 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) return next(err);
+        return res.json(userResponse);
+      });
+    })(req, res, next);
+  });
+  
+  // Direkt rotası (/api/login)
+  app.post("/api/login", (req, res, next) => {
+    console.log("Direkt Login rotası çağrıldı");
+    passport.authenticate("local", (err, user, info) => {
+      if (err) return next(err);
+      if (!user) {
+        return res.status(401).json({ message: info?.message || "Kimlik doğrulama başarısız" });
+      }
+      
+      // Hassas bilgileri temizle
+      const userResponse = { ...user };
+      delete userResponse.password;
+
+      req.login(user, (err) => {
+        if (err) return next(err);
+        
+        // content-type header'ını ayarla
+        res.setHeader('Content-Type', 'application/json');
         return res.json(userResponse);
       });
     })(req, res, next);

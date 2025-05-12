@@ -37,8 +37,21 @@ app.use((req, res, next) => {
 });
 
 (async () => {
+  // API istekleri için özel middleware
+  app.use('/api/login', (req, res, next) => {
+    log(`Önemli API isteği yakalandı: ${req.method} ${req.path}`);
+    next();
+  });
+  
+  app.use('/api/register', (req, res, next) => {
+    log(`Önemli API isteği yakalandı: ${req.method} ${req.path}`);
+    next();
+  });
+
+  // Tüm rotaları kaydet
   const server = await registerRoutes(app);
 
+  // Hata yakalama middleware
   app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
@@ -47,9 +60,8 @@ app.use((req, res, next) => {
     throw err;
   });
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
+  // Vite'ı sadece geliştirme ortamında ve TÜM API rotalarını kaydettikten SONRA ayarla
+  // bu şekilde catch-all rotası diğer rotaları etkilemez
   if (app.get("env") === "development") {
     await setupVite(app, server);
   } else {
