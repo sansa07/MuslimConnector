@@ -1,4 +1,4 @@
-import { useTheme } from "@/components/ui/theme-provider";
+import { createContext, useContext, useEffect, useState } from "react";
 import { Moon, Sun, Palette } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { 
@@ -8,6 +8,79 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useTranslation } from "@/hooks/use-translation-with-defaults";
+
+type Theme = "dark" | "light" | "system" | "islamic-green" | "islamic-gold" | "islamic-navy";
+
+type ThemeProviderProps = {
+  children: React.ReactNode;
+  defaultTheme?: Theme;
+  storageKey?: string;
+};
+
+type ThemeProviderState = {
+  theme: Theme;
+  setTheme: (theme: Theme) => void;
+};
+
+const initialState: ThemeProviderState = {
+  theme: "system",
+  setTheme: () => null,
+};
+
+const ThemeProviderContext = createContext<ThemeProviderState>(initialState);
+
+export function ThemeProvider({
+  children,
+  defaultTheme = "system",
+  storageKey = "vite-ui-theme",
+  ...props
+}: ThemeProviderProps) {
+  const [theme, setTheme] = useState<Theme>(
+    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
+  );
+
+  useEffect(() => {
+    const root = window.document.documentElement;
+    // Tüm tema sınıflarını kaldır
+    root.classList.remove("light", "dark", "islamic-green", "islamic-gold", "islamic-navy");
+
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
+
+      root.classList.add(systemTheme);
+      return;
+    }
+
+    // Tema sınıfını ekle - basit ve direkt
+    root.classList.add(theme);
+  }, [theme]);
+
+  const value = {
+    theme,
+    setTheme: (theme: Theme) => {
+      localStorage.setItem(storageKey, theme);
+      setTheme(theme);
+    },
+  };
+
+  return (
+    <ThemeProviderContext.Provider {...props} value={value}>
+      {children}
+    </ThemeProviderContext.Provider>
+  );
+}
+
+export function useTheme() {
+  const context = useContext(ThemeProviderContext);
+
+  if (context === undefined)
+    throw new Error("useTheme must be used within a ThemeProvider");
+
+  return context;
+}
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
@@ -19,7 +92,7 @@ export function ThemeToggle() {
         <Button 
           variant="ghost" 
           size="icon" 
-          className="rounded-full hover:bg-gray-100 dark:hover:bg-slate-800"
+          className="rounded-full hover:bg-gray-100 dark:hover:bg-navy"
         >
           {theme === "light" && (
             <Sun className="h-5 w-5 text-gray-600" />

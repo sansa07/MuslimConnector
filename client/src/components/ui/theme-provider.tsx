@@ -66,15 +66,14 @@ export function ThemeProvider({
   );
 }
 
-// useTheme export - önemli: useTheme'in export default veya named export oluşu değişmemelidir
-export const useTheme = (): ThemeProviderState => {
+export function useTheme() {
   const context = useContext(ThemeProviderContext);
 
   if (context === undefined)
     throw new Error("useTheme must be used within a ThemeProvider");
 
   return context;
-};
+}
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
