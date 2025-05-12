@@ -182,6 +182,35 @@ export type InsertQuranVerse = typeof quranVerses.$inferInsert;
 export type Hadith = typeof hadiths.$inferSelect;
 export type InsertHadith = typeof hadiths.$inferInsert;
 
+// Notifications model
+export const notifications = pgTable("notifications", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  type: varchar("type").notNull(), // 'like', 'comment', 'follow', 'dua', 'event', 'admin', 'system'
+  message: text("message").notNull(),
+  linkUrl: text("link_url"),
+  isRead: boolean("is_read").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+// User verification tokens
+export const verificationTokens = pgTable("verification_tokens", {
+  id: serial("id").primaryKey(),
+  userId: varchar("user_id").notNull().references(() => users.id),
+  token: varchar("token").notNull(),
+  type: varchar("type").notNull(), // 'email', 'password-reset'
+  expiresAt: timestamp("expires_at").notNull(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertNotificationSchema = createInsertSchema(notifications);
+export const insertVerificationTokenSchema = createInsertSchema(verificationTokens);
+
+export type Notification = typeof notifications.$inferSelect;
+export type InsertNotification = typeof notifications.$inferInsert;
+export type VerificationToken = typeof verificationTokens.$inferSelect;
+export type InsertVerificationToken = typeof verificationTokens.$inferInsert;
+
 // Define additional types for daily content not stored in database
 export interface DailyDua {
   id: number;

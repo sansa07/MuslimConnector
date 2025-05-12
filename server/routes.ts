@@ -448,6 +448,274 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Notification routes
+  app.get('/api/notifications', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const notifications = await getUserNotifications(userId);
+      res.json(notifications);
+    } catch (error) {
+      console.error('Error fetching notifications:', error);
+      res.status(500).json({ message: 'Failed to fetch notifications' });
+    }
+  });
+  
+  app.post('/api/notifications/:id/read', isAuthenticated, async (req: any, res) => {
+    try {
+      const notificationId = parseInt(req.params.id);
+      await markNotificationAsRead(notificationId);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error marking notification as read:', error);
+      res.status(500).json({ message: 'Failed to mark notification as read' });
+    }
+  });
+  
+  app.post('/api/notifications/read-all', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      await markAllNotificationsAsRead(userId);
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error);
+      res.status(500).json({ message: 'Failed to mark all notifications as read' });
+    }
+  });
+  
+  // Content reports
+  app.post('/api/posts/:id/report', isAuthenticated, async (req: any, res) => {
+    try {
+      const postId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      const { reason, details } = req.body;
+      
+      if (!reason) {
+        return res.status(400).json({ message: 'Report reason is required' });
+      }
+      
+      // Get post
+      const post = await storage.getPostById(postId);
+      if (!post) {
+        return res.status(404).json({ message: 'Post not found' });
+      }
+      
+      // Update post to flag it
+      await storage.updatePost(postId, {
+        flaggedForContent: true,
+        flagReason: reason + (details ? `: ${details}` : '')
+      });
+      
+      // Notify moderators
+      const moderators = await storage.listUsersWithRole('moderator');
+      const admins = await storage.listUsersWithRole('admin');
+      
+      // Combine users with appropriate roles
+      const notifyUsers = [...moderators, ...admins];
+      
+      // Send notifications
+      for (const user of notifyUsers) {
+        await createNotification(
+          user.id,
+          'report',
+          `Bir gönderi uygunsuz içerik nedeniyle rapor edildi: ${reason}`,
+          `/admin/flagged-posts/${postId}`
+        );
+      }
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error reporting post:', error);
+      res.status(500).json({ message: 'Failed to report post' });
+    }
+  });
+  
+  app.post('/api/comments/:id/report', isAuthenticated, async (req: any, res) => {
+    try {
+      const commentId = parseInt(req.params.id);
+      const userId = req.user.claims.sub;
+      const { reason, details } = req.body;
+      
+      if (!reason) {
+        return res.status(400).json({ message: 'Report reason is required' });
+      }
+      
+      // Get comment
+      const comment = await storage.getCommentById(commentId);
+      if (!comment) {
+        return res.status(404).json({ message: 'Comment not found' });
+      }
+      
+      // Update comment to flag it
+      await storage.updateComment(commentId, {
+        flaggedForContent: true,
+        flagReason: reason + (details ? `: ${details}` : '')
+      });
+      
+      // Notify moderators
+      const moderators = await storage.listUsersWithRole('moderator');
+      const admins = await storage.listUsersWithRole('admin');
+      
+      // Combine users with appropriate roles
+      const notifyUsers = [...moderators, ...admins];
+      
+      // Send notifications
+      for (const user of notifyUsers) {
+        await createNotification(
+          user.id,
+          'report',
+          `Bir yorum uygunsuz içerik nedeniyle rapor edildi: ${reason}`,
+          `/admin/flagged-comments/${commentId}`
+        );
+      }
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error reporting comment:', error);
+      res.status(500).json({ message: 'Failed to report comment' });
+    }
+  });
+  
+  // Email verification
+  app.post('/api/verify-email', async (req, res) => {
+    try {
+      const { token } = req.body;
+      
+      if (!token) {
+        return res.status(400).json({ message: 'Token is required' });
+      }
+      
+      // Find token in database
+      const [verificationToken] = await db
+        .select()
+        .from(verificationTokens)
+        .where(eq(verificationTokens.token, token))
+        .where(eq(verificationTokens.type, 'email'));
+      
+      if (!verificationToken) {
+        return res.status(400).json({ 
+          message: 'Invalid verification token',
+          reason: 'invalid'
+        });
+      }
+      
+      // Check if token is expired
+      if (new Date() > new Date(verificationToken.expiresAt)) {
+        return res.status(400).json({ 
+          message: 'Verification token has expired',
+          reason: 'expired'
+        });
+      }
+      
+      // Get user
+      const user = await storage.getUser(verificationToken.userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Check if already verified
+      if (user.isVerified) {
+        return res.status(400).json({ 
+          message: 'Email is already verified',
+          reason: 'already_verified'
+        });
+      }
+      
+      // Update user
+      const updatedUser = await storage.updateUserProfile(user.id, {
+        isVerified: true
+      });
+      
+      // Delete used token
+      await db
+        .delete(verificationTokens)
+        .where(eq(verificationTokens.id, verificationToken.id));
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error verifying email:', error);
+      res.status(500).json({ message: 'Failed to verify email' });
+    }
+  });
+  
+  app.post('/api/resend-verification-email', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      
+      // Get user
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: 'User not found' });
+      }
+      
+      // Check if already verified
+      if (user.isVerified) {
+        return res.status(400).json({ message: 'Email is already verified' });
+      }
+      
+      // Delete any existing token
+      await db
+        .delete(verificationTokens)
+        .where(eq(verificationTokens.userId, userId))
+        .where(eq(verificationTokens.type, 'email'));
+      
+      // Create new token
+      const token = generateToken();
+      const expiresAt = new Date();
+      expiresAt.setHours(expiresAt.getHours() + 24); // 24 hours
+      
+      await db
+        .insert(verificationTokens)
+        .values({
+          userId,
+          token,
+          type: 'email',
+          expiresAt
+        });
+      
+      // Send email
+      const username = user.firstName || user.username || 'Değerli Kullanıcı';
+      await sendEmail({
+        to: user.email,
+        subject: 'E-posta Adresinizi Doğrulayın - İslami Sosyal Ağ',
+        html: getVerificationEmailHtml(username, token)
+      });
+      
+      res.status(200).json({ success: true });
+    } catch (error) {
+      console.error('Error resending verification email:', error);
+      res.status(500).json({ message: 'Failed to resend verification email' });
+    }
+  });
+  
+  // Social authentication
+  app.post('/api/auth/facebook', async (req, res) => {
+    try {
+      await handleFacebookAuth(req, res);
+    } catch (error) {
+      console.error('Facebook auth error:', error);
+      res.status(500).json({ message: 'Authentication failed' });
+    }
+  });
+  
+  app.post('/api/auth/google', async (req, res) => {
+    try {
+      await handleGoogleAuth(req, res);
+    } catch (error) {
+      console.error('Google auth error:', error);
+      res.status(500).json({ message: 'Authentication failed' });
+    }
+  });
+  
+  app.get('/api/auth/github/callback', async (req, res) => {
+    try {
+      await handleGitHubAuth(req, res);
+    } catch (error) {
+      console.error('GitHub auth error:', error);
+      res.status(500).json({ message: 'Authentication failed' });
+    }
+  });
+  
+  // User profile
   app.put('/api/users/profile', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
