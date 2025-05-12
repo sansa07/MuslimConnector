@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { IconMoon, IconSun } from "@/lib/icons";
+import { IconMoon, IconSun, IconPlus } from "@/lib/icons";
 
 type Theme = "dark" | "light" | "system" | "islamic-green" | "islamic-gold" | "islamic-navy";
 
@@ -66,49 +66,66 @@ export function ThemeProvider({
   );
 }
 
-export function useTheme() {
+export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
 
   if (context === undefined)
     throw new Error("useTheme must be used within a ThemeProvider");
 
   return context;
-}
+};
 
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-
-  // İslami temalar için gösterilen simgeler ve renkler
-  const getThemeIcon = () => {
-    switch (theme) {
-      case "dark":
-        return <IconSun className="text-yellow-300" />;
-      case "islamic-green":
-        return <div className="w-5 h-5 rounded-full bg-[#1e8449]" />;
-      case "islamic-gold":
-        return <div className="w-5 h-5 rounded-full bg-[#d4af37]" />;
-      case "islamic-navy":
-        return <div className="w-5 h-5 rounded-full bg-[#143459]" />;
-      default:
-        return <IconMoon className="text-gray-600" />;
-    }
+  
+  const themes = [
+    { name: "light", label: "Açık Tema", icon: <IconMoon className="text-gray-600" /> },
+    { name: "dark", label: "Koyu Tema", icon: <IconSun className="text-yellow-300" /> },
+    { name: "islamic-green", label: "İslami Yeşil", color: "#1e8449" },
+    { name: "islamic-gold", label: "İslami Altın", color: "#d4af37" },
+    { name: "islamic-navy", label: "İslami Lacivert", color: "#143459" }
+  ];
+  
+  // Geçerli tema için simgeyi döndür
+  const getCurrentIcon = () => {
+    const currentTheme = themes.find(t => t.name === theme) || themes[0];
+    if (currentTheme.icon) return currentTheme.icon;
+    if (currentTheme.color) return <div className="w-5 h-5 rounded-full" style={{ backgroundColor: currentTheme.color }} />;
+    return <IconMoon className="text-gray-600" />;
   };
-
-  // Bir sonraki tema döngüsü
-  const cycleTheme = () => {
-    const themes: Theme[] = ["light", "dark", "islamic-green", "islamic-gold", "islamic-navy"];
-    const currentIndex = themes.indexOf(theme === "system" ? "light" : theme);
-    const nextIndex = (currentIndex + 1) % themes.length;
-    setTheme(themes[nextIndex]);
-  };
-
+  
   return (
-    <button
-      onClick={cycleTheme}
-      className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
-      title="Temayı değiştir"
-    >
-      {getThemeIcon()}
-    </button>
+    <div className="relative group">
+      <button 
+        className="flex items-center justify-center p-2 rounded-full bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all"
+      >
+        {getCurrentIcon()}
+      </button>
+      
+      <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded shadow-xl border border-gray-200 dark:border-gray-700 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50">
+        <p className="px-4 pb-2 pt-1 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">Tema Seçenekleri</p>
+        
+        {themes.map((t) => (
+          <button 
+            key={t.name}
+            onClick={() => setTheme(t.name as Theme)}
+            className="flex items-center w-full px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            {t.icon ? (
+              t.icon
+            ) : (
+              <div 
+                className="w-4 h-4 rounded-full mr-3" 
+                style={{ backgroundColor: t.color }}
+              />
+            )}
+            <span className="ml-3">{t.label}</span>
+            {theme === t.name && (
+              <span className="ml-auto text-primary">✓</span>
+            )}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
