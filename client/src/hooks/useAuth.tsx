@@ -34,14 +34,28 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const { toast } = useToast();
+  // Oturum durumunu takip eden state
+  const storedUserData = localStorage.getItem('userData');
+  const cachedUser = storedUserData ? JSON.parse(storedUserData) : null;
+  
+  // Kullanıcı verilerini çek
   const {
     data: user,
     error,
     isLoading,
   } = useQuery<User | null, Error>({
     queryKey: ["/api/auth/user"], 
+    initialData: cachedUser, // Başlangıçta önbelleği kullan
     queryFn: async () => {
       try {
+        // Önce localStorage'dan kontrol edelim
+        const storedUser = localStorage.getItem('userData');
+        if (storedUser) {
+          const userData = JSON.parse(storedUser);
+          console.log("LocalStorage'dan kullanıcı alındı:", userData);
+          return userData;
+        }
+        
         // Direkt API rotasını kullanalım - doğru rotayı kullan
         console.log("Kullanıcı bilgisi için API isteği yapılıyor");
         const res = await fetch("/api/auth/user", {
@@ -59,6 +73,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         // Yanıtı doğrudan JSON olarak alalım
         const userData = await res.json();
         console.log("User API response data:", userData);
+        
+        // Kullanıcı verisini localStorage'a kaydet
+        if (userData) {
+          localStorage.setItem('userData', JSON.stringify(userData));
+        }
+        
         return userData;
       } catch (err) {
         console.error('Kullanıcı bilgisi alma hatası:', err);
@@ -72,11 +92,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login form values:", credentials);
       
       try {
-        // Test kullanıcı giriş bilgileri kontrolü
+        // Test kullanıcı giriş bilgileri kontrolü - admin123 şifresi ile admin kullanıcısı
         if (credentials.username === "admin" && credentials.password === "admin123") {
           console.log("Test admin girişi tespit edildi");
-          // Test admin kullanıcı bilgileri ile bir yanıt simüle edelim
-          return {
+          // Test admin kullanıcı bilgileri
+          const adminUser = {
             id: "1",
             username: "admin",
             email: "admin@example.com",
@@ -88,6 +108,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             isActive: true,
             isBanned: false
           };
+          
+          // Kullanıcı verilerini localStorage'a kaydet
+          localStorage.setItem('userData', JSON.stringify(adminUser));
+          
+          // Kullanıcı verilerini döndür
+          return adminUser;
         }
         
         // Normal giriş işlemi
@@ -114,6 +140,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (!res.ok) {
             throw new Error(data.message || "Giriş başarısız");
           }
+          
+          // Kullanıcı verilerini localStorage'a kaydet
+          localStorage.setItem('userData', JSON.stringify(data));
           
           return data;
         } catch (e) {
