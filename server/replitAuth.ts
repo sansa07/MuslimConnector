@@ -128,12 +128,57 @@ export async function setupAuth(app: Express) {
 
   app.get("/api/logout", (req, res) => {
     try {
+      // HTML sayfası döndür - localStorage'ı temizlesin ve login sayfasına yönlendirsin
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>Çıkış yapılıyor...</title>
+            <script>
+              // LocalStorage'dan kullanıcı verisini temizle
+              localStorage.removeItem('userData');
+              
+              // 1 saniye sonra giriş sayfasına yönlendir
+              setTimeout(function() {
+                window.location.href = '/auth';
+              }, 1000);
+            </script>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 100vh;
+                margin: 0;
+                background-color: #f5f5f5;
+              }
+              .logout-container {
+                text-align: center;
+                padding: 20px;
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+              }
+            </style>
+          </head>
+          <body>
+            <div class="logout-container">
+              <h2>Çıkış Yapılıyor</h2>
+              <p>Güvenli bir şekilde çıkış yapılıyor, lütfen bekleyin...</p>
+            </div>
+          </body>
+        </html>
+      `);
+      
+      // Oturumu da kapat
       req.logout(() => {
-        res.redirect("/");
+        // HTML sayfası döndürdüğümüz için burada yönlendirme yapmıyoruz
+        console.log("Oturum başarıyla kapatıldı");
       });
     } catch (error) {
       console.error("Logout error:", error);
-      res.redirect("/");
+      res.redirect("/auth");
     }
   });
 }
