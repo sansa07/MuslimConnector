@@ -28,13 +28,23 @@ export async function apiRequest(
   data?: unknown | undefined,
 ): Promise<Response> {
   console.log(`Request to ${url}:`, data);
-  const res = await fetch(url, {
+  
+  // API isteği path'ını oluştur - prefix kontrolü
+  const isApiCall = url.startsWith('/api');
+  
+  // Tüm API isteklerinin /api/v1 ile başlamasını sağla
+  // Bu, Vite'ın bunları ele geçirmesini önlemek için gerekli
+  const apiUrl = isApiCall ? url.replace('/api/', '/api/v1/') : url;
+  
+  console.log(`Processed URL: ${apiUrl}`);
+  
+  const res = await fetch(apiUrl, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
-  console.log(`Response from ${url}:`, res.status, res.statusText);
+  console.log(`Response from ${apiUrl}:`, res.status, res.statusText);
 
   await throwIfResNotOk(res);
   return res;

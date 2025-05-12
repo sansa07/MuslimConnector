@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import express, { type Express, Router } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
@@ -22,7 +22,11 @@ import { sendEmail, getVerificationEmailHtml, generateToken } from "./api/email"
 import { handleFacebookAuth, handleGoogleAuth, handleGitHubAuth } from "./api/social-auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
-  // Auth middleware
+  // API rotaları için v1 prefix ekleyelim
+  const apiRouter = Router();
+  app.use('/api/v1', apiRouter);
+
+  // Auth middleware - sadece ana uygulamaya uygula
   await setupAuth(app);
 
   // Auth routes
