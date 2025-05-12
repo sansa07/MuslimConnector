@@ -177,10 +177,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
       
       console.log("Login başarılı, user cache güncelleniyor:", user);
+      // Tüm potansiyel queryKey'leri güncelle
+      queryClient.setQueryData(["/api/auth/user"], user);
       queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Giriş başarılı",
-        description: "Hoş geldiniz!",
+        description: "Hoş geldiniz, " + (user.firstName || user.username || "Kullanıcı") + "!",
       });
       
       // Ana sayfaya yönlendir
@@ -269,27 +271,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       console.log("Çıkış yapılıyor");
-      await fetch("/api/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include"
-      });
+      
+      // LocalStorage'dan kullanıcı bilgilerini temizle
+      localStorage.removeItem('userData');
+      
+      try {
+        // API'ye çıkış isteği gönder
+        await fetch("/api/logout", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include"
+        });
+      } catch (error) {
+        console.error("Logout API hatası:", error);
+        // Hata olsa bile devam et - oturum zaten temizlendi
+      }
     },
     onSuccess: () => {
+      // React Query önbelleğini temizle
+      queryClient.setQueryData(["/api/auth/user"], null);
       queryClient.setQueryData(["/api/user"], null);
+      
       toast({
         title: "Çıkış yapıldı",
         description: "Güvenli bir şekilde çıkış yaptınız",
       });
+      
+      // Kullanıcıyı giriş sayfasına yönlendir
+      window.location.href = "/auth";
     },
     onError: (error: Error) => {
+      // Hataya rağmen önbelleği temizle
+      queryClient.setQueryData(["/api/auth/user"], null);
+      queryClient.setQueryData(["/api/user"], null);
+      
       toast({
-        title: "Çıkış başarısız",
-        description: error.message || "Çıkış yapılırken bir hata oluştu",
-        variant: "destructive",
+        title: "Çıkış yapıldı",
+        description: "Oturum kapatıldı fakat sunucu işleminde bir hata oluştu.",
       });
+      
+      // Kullanıcıyı giriş sayfasına yönlendir
+      window.location.href = "/auth";
     },
   });
 

@@ -32,18 +32,18 @@ function Router() {
   return (
     <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Yükleniyor...</div>}>
       <Switch>
-        <Route path="/" component={HomePage} />
+        <ProtectedRoute path="/" component={HomePage} />
         <Route path="/auth" component={AuthPage} />
         <Route path="/verify-email" component={VerifyEmail} />
         <ProtectedRoute path="/admin" component={AdminPanel} />
-        <Route path="/prayer-times" component={PrayerTimes} />
-        <Route path="/daily-wisdom" component={DailyWisdom} />
-        <Route path="/quran-hadith" component={QuranHadith} />
-        <Route path="/dua-requests" component={DuaRequests} />
-        <Route path="/communities" component={Communities} />
-        <Route path="/events" component={Events} />
-        <Route path="/profile/:id?" component={Profile} />
-        <Route path="/explore" component={Explore} />
+        <ProtectedRoute path="/prayer-times" component={PrayerTimes} />
+        <ProtectedRoute path="/daily-wisdom" component={DailyWisdom} />
+        <ProtectedRoute path="/quran-hadith" component={QuranHadith} />
+        <ProtectedRoute path="/dua-requests" component={DuaRequests} />
+        <ProtectedRoute path="/communities" component={Communities} />
+        <ProtectedRoute path="/events" component={Events} />
+        <ProtectedRoute path="/profile/:id?" component={Profile} />
+        <ProtectedRoute path="/explore" component={Explore} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
