@@ -39,13 +39,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/api/v1/user"],
+    queryKey: ["/api/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/v1/login", credentials);
+      const res = await apiRequest("POST", "/api/login", credentials);
       try {
         // Yanıtı text olarak alıp kontrol edelim
         const text = await res.text();
@@ -83,7 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      queryClient.setQueryData(["/api/v1/user"], user);
+      queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Giriş başarılı",
         description: "Hoş geldiniz!",
@@ -146,8 +146,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      queryClient.setQueryData(["/api/v1/user"], user);
-      queryClient.invalidateQueries({ queryKey: ["/api/v1/user"] });
+      queryClient.setQueryData(["/api/user"], user);
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
         title: "Kayıt başarılı",
         description: "Hesabınız oluşturuldu!",

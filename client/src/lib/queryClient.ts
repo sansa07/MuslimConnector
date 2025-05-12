@@ -32,9 +32,12 @@ export async function apiRequest(
   // API isteği path'ını oluştur - prefix kontrolü
   const isApiCall = url.startsWith('/api');
   
-  // Tüm API isteklerinin /api/v1 ile başlamasını sağla
-  // Bu, Vite'ın bunları ele geçirmesini önlemek için gerekli
-  const apiUrl = isApiCall ? url.replace('/api/', '/api/v1/') : url;
+  // Eğer URL zaten /api/v1 ile başlıyorsa değişiklik yapma
+  // Değilse ve /api/ ile başlıyorsa, /api/v1/ ile değiştir
+  let apiUrl = url;
+  if (isApiCall && !url.startsWith('/api/v1/')) {
+    apiUrl = url.replace('/api/', '/api/v1/');
+  }
   
   console.log(`Processed URL: ${apiUrl}`);
   
