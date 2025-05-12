@@ -26,7 +26,15 @@ export interface IStorage {
   updateUserWarningCount(id: string, increment: boolean): Promise<User | undefined>;
   banUser(id: string, reason: string): Promise<User | undefined>;
   unbanUser(id: string): Promise<User | undefined>;
+  getAllUsers(limit?: number, offset?: number): Promise<User[]>;
   listUsersWithRole(role: string): Promise<User[]>;
+  
+  // Content moderation
+  updatePost(id: number, data: Partial<Post>): Promise<Post | undefined>;
+  updateComment(id: number, data: Partial<Comment>): Promise<Comment | undefined>;
+  getCommentById(id: number): Promise<Comment | undefined>;
+  getFlaggedPosts(limit?: number, offset?: number): Promise<Post[]>;
+  getFlaggedComments(limit?: number, offset?: number): Promise<Comment[]>;
   
   // Post operations
   createPost(post: InsertPost): Promise<Post>;
@@ -178,6 +186,70 @@ export class DatabaseStorage implements IStorage {
       .select()
       .from(users)
       .where(eq(users.role, role));
+  }
+  
+  async getAllUsers(limit: number = 50, offset: number = 0): Promise<User[]> {
+    return await db
+      .select()
+      .from(users)
+      .limit(limit)
+      .offset(offset);
+  }
+  
+  // Content moderation methods
+  async updatePost(id: number, data: Partial<Post>): Promise<Post | undefined> {
+    const [post] = await db
+      .update(posts)
+      .set({ 
+        ...data,
+        updatedAt: new Date() 
+      })
+      .where(eq(posts.id, id))
+      .returning();
+    
+    return post;
+  }
+  
+  async getCommentById(id: number): Promise<Comment | undefined> {
+    const [comment] = await db
+      .select()
+      .from(comments)
+      .where(eq(comments.id, id));
+    
+    return comment;
+  }
+  
+  async updateComment(id: number, data: Partial<Comment>): Promise<Comment | undefined> {
+    const [comment] = await db
+      .update(comments)
+      .set({ 
+        ...data,
+        updatedAt: new Date() 
+      })
+      .where(eq(comments.id, id))
+      .returning();
+    
+    return comment;
+  }
+  
+  async getFlaggedPosts(limit: number = 20, offset: number = 0): Promise<Post[]> {
+    return await db
+      .select()
+      .from(posts)
+      .where(eq(posts.flaggedForContent, true))
+      .orderBy(desc(posts.createdAt))
+      .limit(limit)
+      .offset(offset);
+  }
+  
+  async getFlaggedComments(limit: number = 20, offset: number = 0): Promise<Comment[]> {
+    return await db
+      .select()
+      .from(comments)
+      .where(eq(comments.flaggedForContent, true))
+      .orderBy(desc(comments.createdAt))
+      .limit(limit)
+      .offset(offset);
   }
 
   // Post operations
