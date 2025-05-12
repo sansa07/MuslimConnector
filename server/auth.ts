@@ -88,8 +88,8 @@ export function setupAuth(app: Express) {
               // verificationTokenExpiry: null,
               // resetPasswordToken: null,
               // resetPasswordTokenExpiry: null,
-              authProvider: "email",
-              authProviderId: null,
+              // authProvider: "email",
+              // authProviderId: null,
               lastLoginAt: new Date(),
               createdAt: new Date(),
               updatedAt: new Date()

@@ -33,8 +33,8 @@ export const users = pgTable("users", {
   // verificationTokenExpiry: timestamp("verification_token_expiry"),
   // resetPasswordToken: varchar("reset_password_token"),
   // resetPasswordTokenExpiry: timestamp("reset_password_token_expiry"),
-  authProvider: varchar("auth_provider").default("email"), // "email", "google", "facebook", "github", "replit"
-  authProviderId: varchar("auth_provider_id"), // ID from OAuth provider
+  // authProvider: varchar("auth_provider").default("email"), // "email", "google", "facebook", "github", "replit"
+  // authProviderId: varchar("auth_provider_id"), // ID from OAuth provider
   lastLoginAt: timestamp("last_login_at"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
