@@ -10,9 +10,16 @@ import {
   getDailyStoryForDay,
   getCurrentDayOfYear
 } from "./api/daily-wisdom";
-import { quranVerses, hadiths } from "@shared/schema";
-import { insertPostSchema, insertCommentSchema, insertLikeSchema, insertEventSchema, insertDuaRequestSchema } from "@shared/schema";
+import { 
+  quranVerses, hadiths, verificationTokens, 
+  insertPostSchema, insertCommentSchema, insertLikeSchema, 
+  insertEventSchema, insertDuaRequestSchema
+} from "@shared/schema";
 import { z } from "zod";
+import { db } from "./db";
+import { createNotification, getUserNotifications, markNotificationAsRead, markAllNotificationsAsRead } from "./api/notifications";
+import { sendEmail, getVerificationEmailHtml, generateToken } from "./api/email";
+import { handleFacebookAuth, handleGoogleAuth, handleGitHubAuth } from "./api/social-auth";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware

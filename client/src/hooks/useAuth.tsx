@@ -5,7 +5,7 @@ import {
   UseMutationResult,
 } from "@tanstack/react-query";
 import { User } from "@shared/schema";
-import { getQueryFn, apiRequest, queryClient } from "@/lib/queryClient";
+import { getQueryFn, apiRequest, queryClient } from "../lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
 type AuthContextType = {
@@ -18,7 +18,7 @@ type AuthContextType = {
 };
 
 type LoginData = {
-  email: string;
+  username: string;
   password: string;
 };
 
@@ -57,16 +57,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onError: (error: Error) => {
       toast({
-        title: "Giriş yapılamadı",
-        description: error.message,
+        title: "Giriş başarısız",
+        description: error.message || "Kullanıcı adı veya şifre hatalı",
         variant: "destructive",
       });
     },
   });
 
   const registerMutation = useMutation({
-    mutationFn: async (userData: RegisterData) => {
-      const res = await apiRequest("POST", "/api/register", userData);
+    mutationFn: async (credentials: RegisterData) => {
+      const res = await apiRequest("POST", "/api/register", credentials);
       return await res.json();
     },
     onSuccess: (user: User) => {
@@ -78,8 +78,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
     onError: (error: Error) => {
       toast({
-        title: "Kayıt yapılamadı",
-        description: error.message,
+        title: "Kayıt başarısız",
+        description: error.message || "Kayıt işlemi sırasında bir hata oluştu",
         variant: "destructive",
       });
     },
@@ -93,13 +93,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       queryClient.setQueryData(["/api/auth/user"], null);
       toast({
         title: "Çıkış yapıldı",
-        description: "Güvenli bir şekilde çıkış yaptınız.",
+        description: "Güvenli bir şekilde çıkış yaptınız",
       });
     },
     onError: (error: Error) => {
       toast({
-        title: "Çıkış yapılamadı",
-        description: error.message,
+        title: "Çıkış başarısız",
+        description: error.message || "Çıkış yapılırken bir hata oluştu",
         variant: "destructive",
       });
     },
@@ -108,7 +108,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        user,
+        user: user ?? null,
         isLoading,
         error,
         loginMutation,

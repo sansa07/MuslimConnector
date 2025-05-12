@@ -1,83 +1,63 @@
-import { Switch, Route } from "wouter";
-import { queryClient } from "./lib/queryClient";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { Suspense, lazy } from "react";
+import { Route, Switch, useLocation } from "wouter";
 import { Toaster } from "@/components/ui/toaster";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { ThemeProvider } from "@/components/theme-toggle";
+import { ThemeProvider } from "@/components/ui/theme-provider";
+import { AuthProvider } from "@/hooks/useAuth";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { queryClient } from "@/lib/queryClient";
+import { ProtectedRoute } from "@/lib/protected-route";
+
+// Pages
+import HomePage from "@/pages/home";
+import AuthPage from "@/pages/auth-page";
+import VerifyEmail from "@/pages/verify-email";
 import NotFound from "@/pages/not-found";
-import Home from "@/pages/home";
-import Profile from "@/pages/profile";
-import Explore from "@/pages/explore";
-import Events from "@/pages/events";
-import Duas from "@/pages/duas";
-import Quran from "@/pages/quran";
-import Login from "@/pages/login";
-import Register from "@/pages/register";
-import PrayerTimes from "@/pages/PrayerTimes";
-import DailyWisdom from "@/pages/DailyWisdom";
-import MobileHeader from "@/components/layout/mobile-header";
-import Sidebar from "@/components/layout/sidebar";
-import MobileNavigation from "@/components/layout/mobile-navigation";
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+
+// Lazy loaded pages
+const AdminPanel = lazy(() => import("@/pages/admin"));
+const PrayerTimes = lazy(() => import("@/pages/PrayerTimes"));
+const DailyWisdom = lazy(() => import("@/pages/DailyWisdom"));
+const QuranHadith = lazy(() => import("@/pages/QuranHadith"));
+const DuaRequests = lazy(() => import("@/pages/DuaRequests"));
+const Communities = lazy(() => import("@/pages/Communities"));
+const Events = lazy(() => import("@/pages/Events"));
+const Profile = lazy(() => import("@/pages/Profile"));
+const Explore = lazy(() => import("@/pages/Explore"));
 
 function Router() {
   return (
-    <Switch>
-      <Route path="/" component={Home} />
-      <Route path="/profile" component={Profile} />
-      <Route path="/explore" component={Explore} />
-      <Route path="/events" component={Events} />
-      <Route path="/duas" component={Duas} />
-      <Route path="/quran" component={Quran} />
-      <Route path="/prayer-times" component={PrayerTimes} />
-      <Route path="/daily-wisdom" component={DailyWisdom} />
-      <Route path="/login" component={Login} />
-      <Route path="/register" component={Register} />
-      <Route component={NotFound} />
-    </Switch>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center">Yükleniyor...</div>}>
+      <Switch>
+        <Route path="/" component={HomePage} />
+        <Route path="/auth" component={AuthPage} />
+        <Route path="/verify-email" component={VerifyEmail} />
+        <ProtectedRoute path="/admin" component={AdminPanel} />
+        <Route path="/prayer-times" component={PrayerTimes} />
+        <Route path="/daily-wisdom" component={DailyWisdom} />
+        <Route path="/quran-hadith" component={QuranHadith} />
+        <Route path="/dua-requests" component={DuaRequests} />
+        <Route path="/communities" component={Communities} />
+        <Route path="/events" component={Events} />
+        <Route path="/profile/:id?" component={Profile} />
+        <Route path="/explore" component={Explore} />
+        <Route component={NotFound} />
+      </Switch>
+    </Suspense>
   );
 }
 
 function App() {
-  const { i18n } = useTranslation();
-  const [direction, setDirection] = useState<"ltr" | "rtl">("ltr");
-  
-  // Dil değiştiğinde yönlendirmeyi güncelle
-  useEffect(() => {
-    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
-    setDirection(dir);
-    document.documentElement.dir = dir;
-    document.documentElement.lang = i18n.language;
-  }, [i18n.language]);
+  const [location] = useLocation();
+  const isAuthPage = location === "/auth" || location === "/verify-email";
 
   return (
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="müslimnet-theme">
-        <TooltipProvider>
-          <div className={`relative min-h-screen ${direction === "rtl" ? "rtl" : ""}`}>
-            {/* Pattern Overlay */}
-            <div className="pattern-overlay"></div>
-            
-            {/* Mobile Header - visible on mobile only */}
-            <MobileHeader />
-            
-            {/* Desktop Sidebar - visible on desktop only */}
-            <Sidebar direction={direction} />
-            
-            {/* Main Content */}
-            <main className={`pb-20 lg:pb-10 ${direction === "rtl" ? "lg:mr-64" : "lg:ml-64"}`}>
-              <div className="container mx-auto px-4 py-6">
-                <Toaster />
-                <Router />
-              </div>
-            </main>
-            
-            {/* Mobile Bottom Navigation - visible on mobile only */}
-            <MobileNavigation />
-          </div>
-        </TooltipProvider>
-      </ThemeProvider>
+      <AuthProvider>
+        <ThemeProvider defaultTheme="light" storageKey="theme-mode">
+          <Router />
+          <Toaster />
+        </ThemeProvider>
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
