@@ -39,14 +39,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/api/user"],
-    queryFn: getQueryFn({ on401: "returnNull" }),
+    queryKey: ["/___api/user"],
+    queryFn: () => fetch("/___api/user", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      credentials: "include"
+    }).then(res => {
+      if (res.status === 401) return null;
+      return res.json();
+    }),
   });
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      // apiRequest yerine doğrudan fetch kullanıyoruz
-      const res = await fetch("/api/login", {
+      // Vite'ın yakalamayacağı özel ___api rotasını kullanalım
+      const res = await fetch("/___api/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -92,7 +101,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      queryClient.setQueryData(["/api/user"], user);
+      queryClient.setQueryData(["/___api/user"], user);
       toast({
         title: "Giriş başarılı",
         description: "Hoş geldiniz!",
@@ -114,8 +123,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (credentials: RegisterData) => {
       try {
         console.log("Starting register API request");
-        // Doğrudan fetch kullanarak kayıt isteği gönderiyoruz
-        const res = await fetch("/api/register/user", {
+        // Özel ___api rotasını kullanıyoruz - Vite bunu yakalayamaz
+        const res = await fetch("/___api/register/user", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -163,8 +172,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      queryClient.setQueryData(["/api/user"], user);
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.setQueryData(["/___api/user"], user);
+      queryClient.invalidateQueries({ queryKey: ["/___api/user"] });
       toast({
         title: "Kayıt başarılı",
         description: "Hesabınız oluşturuldu!",
@@ -183,7 +192,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await fetch("/api/logout", {
+      await fetch("/___api/logout", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -192,7 +201,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     },
     onSuccess: () => {
-      queryClient.setQueryData(["/api/v1/user"], null);
+      queryClient.setQueryData(["/___api/user"], null);
       toast({
         title: "Çıkış yapıldı",
         description: "Güvenli bir şekilde çıkış yaptınız",

@@ -37,14 +37,13 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // API istekleri için özel middleware
-  app.use('/api/login', (req, res, next) => {
-    log(`Önemli API isteği yakalandı: ${req.method} ${req.path}`);
-    next();
-  });
-  
-  app.use('/api/register', (req, res, next) => {
-    log(`Önemli API isteği yakalandı: ${req.method} ${req.path}`);
+  // API istekleri için özel path yaratma
+  // Bu "/api" yerine "/___api" gibi farklı bir path prefix kullanarak
+  // Vite'ın hiç yakalamayacağı özel bir rota oluşturuyoruz
+  app.use('/___api', (req, res, next) => {
+    log(`Özel API rota yakalayıcısı aktif: ${req.method} ${req.path}`);
+    // API'ın aslında ne istediğini anlayıp yönlendirebiliriz
+    req.url = `/api${req.url}`;
     next();
   });
 
