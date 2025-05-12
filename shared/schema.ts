@@ -18,10 +18,17 @@ export const users = pgTable("users", {
   id: varchar("id").primaryKey().notNull(),
   username: varchar("username").unique(),
   email: varchar("email").unique(),
+  password: text("password"),
   firstName: varchar("first_name"),
   lastName: varchar("last_name"),
   profileImageUrl: varchar("profile_image_url"),
   bio: text("bio"),
+  role: varchar("role").default("user"), // "user", "moderator", "admin"
+  isActive: boolean("is_active").default(true),
+  isBanned: boolean("is_banned").default(false),
+  banReason: text("ban_reason"),
+  warningCount: integer("warning_count").default(0),
+  authProvider: varchar("auth_provider").default("email"), // "email", "google", "facebook", "github", "replit"
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -33,6 +40,11 @@ export const posts = pgTable("posts", {
   type: varchar("type").notNull(), // 'regular', 'dua', 'ayet', 'hadith', 'event'
   content: text("content").notNull(),
   imageUrl: text("image_url"),
+  isApproved: boolean("is_approved").default(true),
+  isModerated: boolean("is_moderated").default(false),
+  flaggedForContent: boolean("flagged_for_content").default(false),
+  flagReason: text("flag_reason"),
+  moderationComment: text("moderation_comment"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -43,6 +55,11 @@ export const comments = pgTable("comments", {
   postId: integer("post_id").notNull().references(() => posts.id),
   userId: varchar("user_id").notNull().references(() => users.id),
   content: text("content").notNull(),
+  isApproved: boolean("is_approved").default(true),
+  isModerated: boolean("is_moderated").default(false),
+  flaggedForContent: boolean("flagged_for_content").default(false),
+  flagReason: text("flag_reason"),
+  moderationComment: text("moderation_comment"),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
