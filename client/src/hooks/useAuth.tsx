@@ -39,19 +39,53 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/xhr-api/user"],
-    queryFn: () => fetch("/xhr-api/user", {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Accept": "application/json",
-        "X-Requested-With": "XMLHttpRequest" // Bu Vite'a XHR isteği olduğunu bildirir
-      },
-      credentials: "include"
-    }).then(res => {
-      if (res.status === 401) return null;
-      return res.json();
-    }),
+    queryKey: ["/api/user"], 
+    queryFn: async () => {
+      try {
+        // Vite'ın engellemediği özel bir path kullanarak kullanıcı bilgilerini al
+        const res = await fetch("/__auth__/user", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+          },
+          credentials: "include",
+          cache: "no-store"
+        });
+        
+        if (res.status === 401) return null;
+        
+        // Yanıtı text olarak al
+        const text = await res.text();
+        if (!text || !text.trim()) return null;
+        
+        // HTML mı diye kontrol et
+        if (text.includes('<!DOCTYPE html>')) {
+          console.log('HTML yanıtı alındı, doğrudan API isteği yapılıyor...');
+          
+          // Direkt API çağrısı yap
+          const directRes = await fetch("/api/user", {
+            method: "GET",
+            headers: { "Accept": "application/json" },
+            credentials: "include"
+          });
+          
+          if (directRes.status === 401) return null;
+          return await directRes.json();
+        }
+        
+        // JSON olarak parse et
+        try {
+          return JSON.parse(text);
+        } catch (e) {
+          console.error('JSON parse hatası:', e);
+          return null;
+        }
+      } catch (err) {
+        console.error('Kullanıcı bilgisi alma hatası:', err);
+        return null;
+      }
+    },
   });
 
   const loginMutation = useMutation({
@@ -59,36 +93,74 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login form values:", credentials);
       
       try {
-        // XHR API rotasını kullan - bu Vite middleware'imiz tarafından işlenecek
-        const requestUrl = `/xhr-api/login`;
+        // Vite'ın asla yakalamayacağı, geçersiz bir URL formatı kullanıyoruz
+        // __auth__ dizisi içeren pathler API tarafından algılanacak
+        const requestUrl = `/__auth__/login?ts=${Date.now()}`;
         console.log(`Şu URL'e istek gönderiliyor: ${requestUrl}`);
         
         // Headers'ı detaylı ayarla
         const headers = new Headers();
         headers.append("Content-Type", "application/json");
         headers.append("Accept", "application/json");
-        headers.append("X-Requested-With", "XMLHttpRequest"); // XHR olduğunu belirt
         
+        // Özel bir istekte bulun - post yöntemi yerine options kullanarak önce izin iste
+        await fetch(requestUrl, {
+          method: "OPTIONS",
+          headers: {
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "Content-Type, Accept"
+          }
+        });
+        
+        // Şimdi gerçek isteği yap
         const res = await fetch(requestUrl, {
           method: "POST",
           headers,
           body: JSON.stringify(credentials),
           credentials: "include",
-          cache: "no-store" // Önbelleğe almamayı sağla
+          cache: "no-store",
+          redirect: "manual" // Yönlendirmeleri kabul etme
         });
 
         // Ham cevabı debug için konsola yazdıralım
-        const text = await res.text();
-        console.log("Login API raw response:", text);
+        let text;
+        try {
+          text = await res.text();
+          console.log("Login API raw response:", text);
+        } catch (err) {
+          console.error("API yanıtı okunamadı:", err);
+          throw new Error("API yanıtı okunamadı");
+        }
         
         // Başlangıçta HTML içeriyor mu kontrol et
-        if (text.includes("<!DOCTYPE html>")) {
+        if (text && text.includes("<!DOCTYPE html>")) {
           console.error("Vite müdahale ediyor, HTML döndürüyor");
-          throw new Error("API HTML döndürüyor, JSON bekleniyordu");
+          
+          // HTML yanıttan oturum bilgisini parse etmeyi dene
+          try {
+            // Buraya geldiyse doğrudan API'ye ayrı bir istek atalım
+            const directApiCall = await fetch("/api/user", {
+              method: "GET",
+              headers: {
+                "Accept": "application/json"
+              },
+              credentials: "include"
+            });
+            
+            const userData = await directApiCall.json();
+            if (userData && userData.id) {
+              console.log("Login sonrası kullanıcı verisi alındı:", userData);
+              return userData;
+            }
+          } catch (err) {
+            console.error("Direkt API isteği başarısız:", err);
+          }
+          
+          throw new Error("API yanıtı okunamadı: HTML içeriği alındı");
         }
         
         // Eğer boş bir yanıt gelirse hata ver
-        if (!text.trim()) {
+        if (!text || !text.trim()) {
           console.log("Empty response from login API");
           throw new Error("API boş yanıt döndürdü");
         }
@@ -124,7 +196,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      queryClient.setQueryData(["/___api/user"], user);
+      console.log("Login başarılı, user cache güncelleniyor:", user);
+      queryClient.setQueryData(["/api/user"], user);
       toast({
         title: "Giriş başarılı",
         description: "Hoş geldiniz!",
@@ -224,7 +297,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       });
     },
     onSuccess: () => {
-      queryClient.setQueryData(["/___api/user"], null);
+      queryClient.setQueryData(["/api/user"], null);
       toast({
         title: "Çıkış yapıldı",
         description: "Güvenli bir şekilde çıkış yaptınız",

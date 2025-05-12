@@ -45,35 +45,43 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // XHR requestleri için bir kontrol ekleyeceğiz, bunlar direkt API server tarafından işlenecek
+  // Tüm istekleri ele alacak ve özellikle API isteklerini yönlendireceğiz
   app.use((req, res, next) => {
-    // XHR isteği mi kontrol et (özel bir header veya query param ile)
-    const isXhr = req.headers['x-requested-with'] === 'XMLHttpRequest' || 
-                 req.query.xhr === 'true' ||
-                 req.path.startsWith('/xhr-api/');
-
-    // API isteği mi kontrol et
-    const isApiRequest = req.path.startsWith('/api/') || 
-                         req.path.startsWith('/___api/') ||
-                         isXhr;
-
-    if (isApiRequest) {
-      log(`API isteği yakalandı: ${req.method} ${req.path}`);
-      
-      // Yeni /xhr-api rotası için dönüştürme işlemi
-      if (req.path.startsWith('/xhr-api/')) {
-        const newPath = req.path.replace('/xhr-api/', '/api/');
-        req.url = newPath;
-        log(`XHR-API rotası dönüştürüldü: ${req.path} -> ${newPath}`);
-      }
-      
-      // ___api isteklerini api'ye dönüştür
-      if (req.path.startsWith('/___api/')) {
-        const newPath = req.path.replace('/___api/', '/api/');
-        req.url = newPath;
-        log(`___API rotası dönüştürüldü: ${req.path} -> ${newPath}`);
-      }
-      
+    // URL içindeki özel karakterleri analiz et
+    // Bu, Vite'ın araya girmemesi için tasarlanmış bir hacktir
+    const urlParts = req.path.split('/');
+    
+    // Özel API isteklerini ele al
+    if (req.path.includes('__auth__')) {
+      console.log('Özel auth isteği yakalandı:', req.method, req.path);
+      const realPath = req.path.replace('__auth__', 'api');
+      req.url = realPath;
+      console.log(`URL dönüştürüldü: ${req.path} -> ${realPath}`);
+      res.setHeader('Content-Type', 'application/json');
+    }
+    
+    // XHR API yönlendirmesi 
+    if (req.path.startsWith('/xhr-api/')) {
+      console.log('XHR isteği yakalandı:', req.method, req.path);
+      const realPath = `/api${req.path.substring('/xhr-api'.length)}`;
+      req.url = realPath;
+      console.log(`URL dönüştürüldü: ${req.path} -> ${realPath}`);
+      res.setHeader('Content-Type', 'application/json');
+    }
+    
+    // Escape edilmiş API yönlendirmesi
+    if (req.path.includes('%5F%5Fapi%5F%5F')) {
+      console.log('Escape edilmiş API isteği yakalandı:', req.method, req.path);
+      const realPath = req.path.replace('%5F%5Fapi%5F%5F', 'api');
+      req.url = realPath;
+      console.log(`URL dönüştürüldü: ${req.path} -> ${realPath}`);
+      res.setHeader('Content-Type', 'application/json');
+    }
+    
+    // Normal API isteklerini işle
+    if (req.path.startsWith('/api/')) {
+      // API isteği olduğunu logla
+      console.log('Direkt API isteği yakalandı:', req.method, req.path);
       // İçerik türünü ayarla
       res.setHeader('Content-Type', 'application/json');
     }

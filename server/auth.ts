@@ -326,6 +326,42 @@ export function setupAuth(app: Express) {
       });
     })(req, res, next);
   });
+  
+  // Auth hack URL - Vite'ı atlatmak için
+  app.post("/__auth__/login", (req, res, next) => {
+    console.log("__auth__ Login rotası çağrıldı:", req.body);
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error("Login auth error:", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("Login failed:", info?.message);
+        return res.status(401).json({ message: info?.message || "Kimlik doğrulama başarısız" });
+      }
+      
+      console.log("User authenticated successfully:", user.username);
+      
+      // Hassas bilgileri temizle
+      const userResponse = { ...user };
+      delete userResponse.password;
+
+      req.login(user, (err) => {
+        if (err) {
+          console.error("Login session error:", err);
+          return next(err);
+        }
+        
+        // Content-Type header'ını ayarla
+        res.setHeader('Content-Type', 'application/json');
+        res.setHeader('Access-Control-Allow-Origin', '*');
+        res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
+        res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Accept');
+        console.log("Sending login response");
+        return res.json(userResponse);
+      });
+    })(req, res, next);
+  });
 
   // Kullanıcı bilgilerini al - V1 rotası
   app.get("/api/v1/user", (req, res) => {
@@ -340,9 +376,24 @@ export function setupAuth(app: Express) {
     res.json(userResponse);
   });
   
-  // XHR-API rotası için özel handler - bu Vite'ı atlatacak
+  // XHR-API rotası için özel handler
   app.get("/xhr-api/user", (req, res) => {
     console.log("XHR Kullanıcı API'ı çağrıldı");
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Oturum açılmamış" });
+    }
+    
+    // Hassas bilgileri temizle
+    const userResponse = { ...req.user };
+    delete userResponse.password;
+    
+    res.setHeader('Content-Type', 'application/json');
+    res.json(userResponse);
+  });
+  
+  // Auth hack rotası
+  app.get("/__auth__/user", (req, res) => {
+    console.log("__auth__ Kullanıcı API'ı çağrıldı");
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Oturum açılmamış" });
     }
