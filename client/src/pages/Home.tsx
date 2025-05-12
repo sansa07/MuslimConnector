@@ -84,7 +84,7 @@ const Home = () => {
             İslami içerikler paylaşmak, dua isteklerinde bulunmak ve etkinliklere katılmak için hesap oluşturun.
           </p>
           <a 
-            href="/api/login"
+            href="/auth"
             className="inline-block py-2 px-6 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
           >
             Giriş Yap

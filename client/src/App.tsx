@@ -6,6 +6,8 @@ import { AuthProvider } from "@/hooks/useAuth.tsx";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { ProtectedRoute } from "@/lib/protected-route";
+import Sidebar from "@/components/layout/Sidebar";
+import MobileHeader from "@/components/layout/MobileHeader";
 
 // Pages
 import HomePage from "@/pages/home";
@@ -54,7 +56,21 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <ThemeProvider defaultTheme="light" storageKey="theme-mode">
-          <Router />
+          {isAuthPage ? (
+            <Router />
+          ) : (
+            <div className="flex min-h-screen bg-gray-50 dark:bg-navy-dark">
+              <main className="flex-1">
+                <div className="lg:pl-64">
+                  <MobileHeader />
+                  <Sidebar />
+                  <div className="container mx-auto px-4 py-6">
+                    <Router />
+                  </div>
+                </div>
+              </main>
+            </div>
+          )}
           <Toaster />
         </ThemeProvider>
       </AuthProvider>
