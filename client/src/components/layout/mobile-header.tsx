@@ -31,9 +31,6 @@ export default function MobileHeader() {
             <Link to="/prayer-times" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
               <Clock className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </Link>
-            <Link to="/daily-wisdom" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
-              <SunMoon className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-            </Link>
             <Link to="/profile" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
               <User className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </Link>

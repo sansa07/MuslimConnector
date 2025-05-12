@@ -15,7 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 export default function Register() {
   const { t } = useTranslation();
   const { isAuthenticated } = useAuth();
-  const [, navigate] = useNavigate();
+  const [, navigate] = useLocation();
   const { toast } = useToast();
   const [registerMethod, setRegisterMethod] = useState<"email" | "social">("social");
   const [email, setEmail] = useState("");

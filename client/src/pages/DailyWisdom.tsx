@@ -74,7 +74,7 @@ const DailyWisdom = () => {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">{t('dailyWisdom.title')}</h1>
+      <h1 className="text-2xl font-bold mb-6">Hakikat</h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Daily Verse Card */}
@@ -82,7 +82,7 @@ const DailyWisdom = () => {
           <CardHeader className="pb-3">
             <CardTitle className="flex items-center">
               <BookOpen className="mr-2 h-5 w-5 text-primary" />
-              {t('dailyWisdom.quranVerse')}
+              Günün Ayeti
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -93,10 +93,7 @@ const DailyWisdom = () => {
               </>
             ) : (
               <>
-                <p className="text-xl mb-2 font-arabic text-right leading-loose">
-                  {verseData?.arabicText}
-                </p>
-                <p className="mb-2 italic">
+                <p className="mb-2 text-lg">
                   {verseData?.translation}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -150,10 +147,7 @@ const DailyWisdom = () => {
               </>
             ) : (
               <>
-                <p className="text-xl mb-2 font-arabic text-right leading-loose">
-                  {duaData?.arabicText}
-                </p>
-                <p className="mb-2">
+                <p className="mb-2 text-lg">
                   {duaData?.translation}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
