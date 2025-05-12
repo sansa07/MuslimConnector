@@ -30,7 +30,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
   // Auth routes
-  apiRouter.get('/v1/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/v1/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -158,7 +158,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/posts/:id', async (req, res) => {
+  app.get('/api/posts/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const post = await storage.getPostById(id);
@@ -173,7 +173,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Comments API
-  apiRouter.get('/posts/:id/comments', async (req, res) => {
+  app.get('/api/posts/:id/comments', async (req, res) => {
     try {
       const postId = parseInt(req.params.id);
       const comments = await storage.getCommentsByPostId(postId);
@@ -202,7 +202,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Likes API
-  apiRouter.get('/posts/:id/likes', async (req, res) => {
+  app.get('/api/posts/:id/likes', async (req, res) => {
     try {
       const postId = parseInt(req.params.id);
       const likesCount = await storage.getLikesCountByPostId(postId);
@@ -242,7 +242,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Events API
-  apiRouter.get('/events', async (req, res) => {
+  app.get('/api/events', async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 10;
       const offset = parseInt(req.query.offset as string) || 0;
@@ -270,7 +270,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/events/:id', async (req, res) => {
+  app.get('/api/events/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const event = await storage.getEventById(id);
@@ -307,7 +307,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/events/:id/participants/count', async (req, res) => {
+  app.get('/api/events/:id/participants/count', async (req, res) => {
     try {
       const eventId = parseInt(req.params.id);
       const count = await storage.getParticipantCount(eventId);
@@ -319,7 +319,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Dua Requests API
-  apiRouter.get('/dua-requests', async (req, res) => {
+  app.get('/api/dua-requests', async (req, res) => {
     try {
       const limit = parseInt(req.query.limit as string) || 10;
       const offset = parseInt(req.query.offset as string) || 0;
@@ -347,7 +347,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/dua-requests/:id', async (req, res) => {
+  app.get('/api/dua-requests/:id', async (req, res) => {
     try {
       const id = parseInt(req.params.id);
       const duaRequest = await storage.getDuaRequestById(id);
@@ -384,7 +384,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/dua-requests/:id/supporters/count', async (req, res) => {
+  app.get('/api/dua-requests/:id/supporters/count', async (req, res) => {
     try {
       const duaRequestId = parseInt(req.params.id);
       const count = await storage.getDuaSupportCount(duaRequestId);
@@ -396,7 +396,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // User profile API
-  apiRouter.get('/users/:id/posts', async (req, res) => {
+  app.get('/api/users/:id/posts', async (req, res) => {
     try {
       const userId = req.params.id;
       const limit = parseInt(req.query.limit as string) || 10;
@@ -409,7 +409,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/users/:id/followers', async (req, res) => {
+  app.get('/api/users/:id/followers', async (req, res) => {
     try {
       const userId = req.params.id;
       const followers = await storage.getFollowers(userId);
@@ -420,7 +420,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  apiRouter.get('/users/:id/following', async (req, res) => {
+  app.get('/api/users/:id/following', async (req, res) => {
     try {
       const userId = req.params.id;
       const following = await storage.getFollowing(userId);
@@ -460,7 +460,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Notification routes
-  apiRouter.get('/notifications', isAuthenticated, async (req: any, res) => {
+  app.get('/api/notifications', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const notifications = await getUserNotifications(userId);
@@ -717,7 +717,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
   
-  apiRouter.get('/auth/github/callback', async (req, res) => {
+  app.get('/api/auth/github/callback', async (req, res) => {
     try {
       await handleGitHubAuth(req, res);
     } catch (error) {
