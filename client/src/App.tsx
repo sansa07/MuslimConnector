@@ -61,7 +61,7 @@ function App() {
           {isAuthPage ? (
             <Router />
           ) : (
-            <div className="min-h-screen bg-gray-50 dark:bg-navy-dark islamic-green:bg-[#eaf5ed] islamic-gold:bg-[#f9f5e8] islamic-navy:bg-[#12233f] relative">
+            <div className="min-h-screen bg-background relative">
               <PatternOverlay />
               <Sidebar />
               <MobileHeader />

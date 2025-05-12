@@ -98,24 +98,25 @@ export function ThemeToggle() {
     <div className="relative group">
       <button 
         className="flex items-center justify-center p-2 rounded-full bg-white dark:bg-gray-800 shadow-sm hover:shadow-md transition-all"
+        aria-label="Tema Değiştir"
       >
         {getCurrentIcon()}
       </button>
       
-      <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 rounded shadow-xl border border-gray-200 dark:border-gray-700 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50">
+      <div className="absolute right-0 mt-2 w-48 py-2 bg-white dark:bg-gray-800 text-foreground rounded-md shadow-xl border border-gray-200 dark:border-gray-700 invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 z-50">
         <p className="px-4 pb-2 pt-1 text-xs font-medium text-gray-500 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700">Tema Seçenekleri</p>
         
         {themes.map((t) => (
           <button 
             key={t.name}
             onClick={() => setTheme(t.name as Theme)}
-            className="flex items-center w-full px-4 py-2 text-sm text-left hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="flex items-center w-full px-4 py-2 text-sm text-left text-foreground hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-200"
           >
             {t.icon ? (
-              t.icon
+              <span className="w-6 flex justify-center">{t.icon}</span>
             ) : (
               <div 
-                className="w-4 h-4 rounded-full mr-3" 
+                className="w-4 h-4 rounded-full mx-1" 
                 style={{ backgroundColor: t.color }}
               />
             )}
