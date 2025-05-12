@@ -175,9 +175,26 @@ const DailyWisdom = () => {
             ) : (
               <>
                 <h3 className="font-bold mb-2">{storyData?.title}</h3>
-                <p className="mb-2">
-                  {storyData?.content}
-                </p>
+                <div className="mb-2 relative">
+                  <div className="text-sm line-clamp-4 mb-2" id="story-content">
+                    {storyData?.content}
+                  </div>
+                  <button 
+                    className="text-primary hover:underline text-sm font-medium mt-1"
+                    onClick={() => {
+                      const content = document.getElementById('story-content');
+                      if (content) {
+                        content.classList.toggle('line-clamp-4');
+                        const btn = content.nextElementSibling as HTMLElement;
+                        if (btn) {
+                          btn.textContent = content.classList.contains('line-clamp-4') ? 'Devamını Oku' : 'Daha Az Göster';
+                        }
+                      }
+                    }}
+                  >
+                    Devamını Oku
+                  </button>
+                </div>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
                   {storyData?.source} {storyData?.reference}
                 </p>

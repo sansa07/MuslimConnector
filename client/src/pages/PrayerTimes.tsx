@@ -7,6 +7,9 @@ import { useTranslation } from "@/hooks/use-translation-with-defaults";
 import { Clock, MapPin } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-mobile";
+import QiblaDirection from "@/components/qibla-direction";
+import HijriCalendar from "@/components/hijri-calendar";
 
 interface PrayerTimesData {
   imsak: string;
@@ -19,7 +22,12 @@ interface PrayerTimesData {
 
 const PrayerTimes = () => {
   const { t } = useTranslation();
-  const [city, setCity] = useState<string>("istanbul");
+  const isMobile = useIsMobile();
+  // Kayıtlı şehri localStorage'dan al veya varsayılan olarak istanbul kullan
+  const [city, setCity] = useState<string>(() => {
+    const savedCity = localStorage.getItem("prayerTimesCity");
+    return savedCity || "istanbul";
+  });
   const [locationPermission, setLocationPermission] = useState<boolean>(false);
   const [searchCity, setSearchCity] = useState<string>("");
 
@@ -53,7 +61,10 @@ const PrayerTimes = () => {
                 data.address.state || 
                 "istanbul";
               
-              setCity(cityName.toLowerCase());
+              const newCity = cityName.toLowerCase();
+              setCity(newCity);
+              // Şehri localStorage'a kaydet
+              localStorage.setItem("prayerTimesCity", newCity);
               refetchPrayerTimes();
             }
             
@@ -108,7 +119,10 @@ const PrayerTimes = () => {
   const handleSearchCity = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchCity.trim()) {
-      setCity(searchCity.trim().toLowerCase());
+      const newCity = searchCity.trim().toLowerCase();
+      setCity(newCity);
+      // Şehri localStorage'a kaydet
+      localStorage.setItem("prayerTimesCity", newCity);
       refetchPrayerTimes();
     }
   };
@@ -218,23 +232,13 @@ const PrayerTimes = () => {
       
       {/* Additional prayer-related information could be added here */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <Card className="islamic-border">
-          <CardHeader>
-            <CardTitle>{t('prayerTimes.qiblaDirection')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{t('prayerTimes.qiblaInfo')}</p>
-          </CardContent>
-        </Card>
+        {/* Kıble yönü mobil ve tablet cihazlarda görünür */}
+        {isMobile && (
+          <QiblaDirection />
+        )}
         
-        <Card className="islamic-border">
-          <CardHeader>
-            <CardTitle>{t('prayerTimes.hijriCalendar')}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p>{t('prayerTimes.hijriInfo')}</p>
-          </CardContent>
-        </Card>
+        {/* Hicri takvim tüm cihazlarda görünür */}
+        <HijriCalendar />
       </div>
     </div>
   );
