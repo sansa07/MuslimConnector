@@ -119,23 +119,23 @@ export default function PostCard({ post }: PostCardProps) {
     const likesCount = likes?.like || 0;
     
     return (
-      <div className="flex space-x-2">
+      <div className="flex flex-wrap gap-2">
         <Button
           variant="ghost"
           size="sm"
           className="flex items-center py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-full bg-red-50 dark:bg-red-900 dark:bg-opacity-30 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:bg-opacity-50"
           onClick={() => handleLike('like')}
         >
-          <Heart className="sm:mr-1 h-4 w-4" />
-          <span className="hidden xs:inline ml-1">{likesCount}</span>
+          <Heart className="h-4 w-4" />
+          <span className="inline ml-1 text-xs">{likesCount}</span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
           className="flex items-center py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
-          <MessageSquare className="sm:mr-1 h-4 w-4" />
-          <span className="hidden xs:inline ml-1">{comments?.length || 0}</span>
+          <MessageSquare className="h-4 w-4" />
+          <span className="inline ml-1 text-xs">{comments?.length || 0}</span>
         </Button>
       </div>
     );
@@ -146,7 +146,7 @@ export default function PostCard({ post }: PostCardProps) {
     const masallahCount = likes?.masallah || 0;
     
     return (
-      <div className="flex space-x-2 mt-2 sm:mt-0">
+      <div className="flex flex-wrap gap-2 mt-0">
         <Button
           variant="ghost"
           size="sm"
@@ -154,8 +154,7 @@ export default function PostCard({ post }: PostCardProps) {
           onClick={() => handleLike('amin')}
         >
           <span className="text-xs sm:text-sm">🤲</span>
-          <span className="hidden xs:inline ml-1">Amin</span>
-          <span className="hidden xs:inline ml-1">({aminCount})</span>
+          <span className="inline ml-1 text-xs">Amin {aminCount > 0 ? `(${aminCount})` : ''}</span>
         </Button>
         <Button
           variant="ghost"
@@ -164,8 +163,7 @@ export default function PostCard({ post }: PostCardProps) {
           onClick={() => handleLike('masallah')}
         >
           <span className="text-xs sm:text-sm">✨</span>
-          <span className="hidden xs:inline ml-1">Maşallah</span>
-          <span className="hidden xs:inline ml-1">({masallahCount})</span>
+          <span className="inline ml-1 text-xs">Maşallah {masallahCount > 0 ? `(${masallahCount})` : ''}</span>
         </Button>
       </div>
     );
