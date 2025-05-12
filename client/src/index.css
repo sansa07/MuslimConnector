@@ -167,34 +167,39 @@
   --shadow: 0 8px 30px rgba(217, 119, 6, 0.1);
 }
 
-/* İslami Lacivert Tema */
+/* İslami Lacivert Tema - Geliştirilmiş */
 .islamic-navy {
-  --background: 217 75% 11%;
-  --foreground: 210 20% 98%;
+  --background: 220 30% 97%;
+  --foreground: 220 75% 15%;
   
-  --card: 217 75% 14%;
-  --card-foreground: 210 20% 98%;
+  --card: 0 0% 100%;
+  --card-foreground: 220 75% 15%;
   
-  --popover: 217 75% 11%;
-  --popover-foreground: 210 20% 98%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 220 75% 15%;
   
-  --primary: 210 80% 56%;
-  --primary-foreground: 210 20% 98%;
+  --primary: 220 60% 25%;
+  --primary-foreground: 0 0% 100%;
   
-  --secondary: 217 60% 22%;
-  --secondary-foreground: 210 20% 98%;
+  --secondary: 40 85% 45%; /* Altın vurgu */
+  --secondary-foreground: 220 75% 15%;
   
-  --muted: 217 60% 20%;
-  --muted-foreground: 210 15% 70%;
+  --muted: 220 20% 90%;
+  --muted-foreground: 220 35% 40%;
   
-  --accent: 45 93% 47%;
-  --accent-foreground: 0 0% 20%;
+  --accent: 40 85% 45%; /* Altın vurgu */
+  --accent-foreground: 220 75% 15%;
   
-  --border: 217 60% 27%;
-  --input: 217 60% 27%;
-  --ring: 210 80% 56%;
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 98%;
   
-  --pattern-color: rgba(20, 52, 89, 0.25);
+  --border: 220 30% 90%;
+  --input: 220 30% 90%;
+  --ring: 220 60% 40%;
+
+  /* Özel gölge ve desen rengi */
+  --pattern-color: rgba(30, 58, 138, 0.15);
+  --shadow: 0 8px 30px rgba(30, 58, 138, 0.1);
 }
 
 @layer base {
@@ -203,18 +208,85 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground transition-colors duration-300;
     font-family: 'Roboto', sans-serif;
     color: hsl(var(--foreground));
+    background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 50L50 0L0 0ZM50 50L100 50L100 100ZM50 50L0 100L0 50ZM50 50L100 0L50 0Z' fill='rgba(128, 128, 128, 0.03)' /%3E%3C/svg%3E");
+    background-size: 30px 30px;
+    background-repeat: repeat;
+    background-attachment: fixed;
+    box-shadow: inset 0 0 100px hsla(var(--primary), 0.05);
   }
   
   .font-amiri {
     font-family: 'Amiri', serif;
   }
+
+  .font-arabic {
+    font-family: 'Noto Sans Arabic', sans-serif;
+    direction: rtl;
+  }
   
   /* Improve text visibility */
   h1, h2, h3, h4, h5, h6, p, span, a, button, input, label, div {
     @apply text-foreground dark:text-white;
+  }
+
+  /* İslami Desenler */
+  .islamic-pattern {
+    position: relative;
+  }
+
+  .islamic-pattern::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20L20 0L0 0ZM20 20L40 20L40 40ZM20 20L0 40L0 20ZM20 20L40 0L20 0Z' fill='hsla(var(--pattern-color), 0.1)' /%3E%3C/svg%3E");
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Card stilleri iyileştirme */
+  .card {
+    box-shadow: var(--shadow, 0 4px 20px rgba(0, 0, 0, 0.05));
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    overflow: hidden;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  }
+  
+  /* İslami tema için kart başlıkları */
+  .card-title {
+    font-family: 'Amiri', serif;
+    font-weight: 700;
+    color: hsl(var(--primary));
+    position: relative;
+    padding-bottom: 0.5rem;
+  }
+  
+  .card-title::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 40px;
+    height: 2px;
+    background-color: hsl(var(--accent));
+  }
+
+  /* Tema geçişleri daha yumuşak */
+  .theme-transition * {
+    transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease, box-shadow 0.5s ease, transform 0.3s ease;
   }
 }
 
@@ -235,25 +307,27 @@
 
 /* Tema renk desenleri için özel arka planlar */
 .islamic-green .pattern-overlay {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(30, 132, 73, 0.15)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(30, 132, 73, 0.15)" fill="none" stroke-width="0.5" /><path d="M70,100 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" stroke="rgba(30, 132, 73, 0.15)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(30, 132, 73, 0.15)" fill="none" stroke-width="0.5" /></svg>');
-  opacity: 0.15;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(21, 128, 61, 0.1)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(21, 128, 61, 0.1)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(21, 128, 61, 0.1)" fill="none" stroke-width="0.5" /><path d="M70,100 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" stroke="rgba(21, 128, 61, 0.1)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(21, 128, 61, 0.1)" fill="none" stroke-width="0.5" /></svg>');
+  opacity: 0.1;
 }
 
 .islamic-gold .pattern-overlay {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(212, 175, 55, 0.15)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(212, 175, 55, 0.15)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(212, 175, 55, 0.15)" fill="none" stroke-width="0.5" /></svg>');
-  opacity: 0.15;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(217, 119, 6, 0.1)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(217, 119, 6, 0.1)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(217, 119, 6, 0.1)" fill="none" stroke-width="0.5" /><path d="M70,100 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" stroke="rgba(217, 119, 6, 0.1)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(217, 119, 6, 0.1)" fill="none" stroke-width="0.5" /></svg>');
+  opacity: 0.1;
 }
 
 .islamic-navy .pattern-overlay {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(20, 52, 89, 0.25)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(20, 52, 89, 0.25)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(20, 52, 89, 0.25)" fill="none" stroke-width="0.5" /></svg>');
-  opacity: 0.25;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 200 200"><defs><pattern id="smallGrid" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M 20 0 L 0 0 0 20" fill="none" stroke="rgba(30, 58, 138, 0.1)" stroke-width="0.5"/></pattern><pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse"><rect width="100" height="100" fill="url(%23smallGrid)"/><path d="M 100 0 L 0 0 0 100" fill="none" stroke="rgba(30, 58, 138, 0.1)" stroke-width="1"/></pattern></defs><rect width="200" height="200" fill="url(%23grid)" /><circle cx="100" cy="100" r="50" stroke="rgba(30, 58, 138, 0.1)" fill="none" stroke-width="0.5" /><path d="M70,100 a30,30 0 1,0 60,0 a30,30 0 1,0 -60,0" stroke="rgba(30, 58, 138, 0.1)" fill="none" stroke-width="0.5" /><polygon points="100,50 129,119 58,80 142,80 71,119" stroke="rgba(30, 58, 138, 0.1)" fill="none" stroke-width="0.5" /></svg>');
+  opacity: 0.1;
 }
 
-/* Islamic Border Style */
+/* İslami Kenarlık Stili - Geometrik Desene Sahip */
 .islamic-border {
   position: relative;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow);
 }
 
 .islamic-border::before {
@@ -263,7 +337,40 @@
   left: 0;
   right: 0;
   height: 4px;
-  background: linear-gradient(90deg, hsl(var(--primary)), hsl(var(--accent)), hsl(var(--primary)));
+  background: linear-gradient(90deg, 
+    hsl(var(--primary)), 
+    hsl(var(--accent)), 
+    hsl(var(--primary))
+  );
+  z-index: 1;
+}
+
+/* Daha belirgin ve güzel kenarlık */
+.islamic-border-fancy {
+  position: relative;
+  border-radius: 12px;
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.islamic-border-fancy::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 2px solid transparent;
+  border-radius: 12px;
+  background: linear-gradient(45deg, 
+    hsl(var(--primary)), 
+    hsl(var(--accent)/0.5), 
+    hsl(var(--primary))
+  ) border-box;
+  -webkit-mask: 
+    linear-gradient(#fff 0 0) padding-box, 
+    linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  z-index: 1;
 }
 
 /* Right-to-left text for Arabic */
