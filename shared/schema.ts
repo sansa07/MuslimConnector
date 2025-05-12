@@ -29,10 +29,10 @@ export const users = pgTable("users", {
   isBanned: boolean("is_banned").default(false),
   banReason: text("ban_reason"),
   warningCount: integer("warning_count").default(0),
-  verificationToken: varchar("verification_token"),
-  verificationTokenExpiry: timestamp("verification_token_expiry"),
-  resetPasswordToken: varchar("reset_password_token"),
-  resetPasswordTokenExpiry: timestamp("reset_password_token_expiry"),
+  // verificationToken: varchar("verification_token"),
+  // verificationTokenExpiry: timestamp("verification_token_expiry"),
+  // resetPasswordToken: varchar("reset_password_token"),
+  // resetPasswordTokenExpiry: timestamp("reset_password_token_expiry"),
   authProvider: varchar("auth_provider").default("email"), // "email", "google", "facebook", "github", "replit"
   authProviderId: varchar("auth_provider_id"), // ID from OAuth provider
   lastLoginAt: timestamp("last_login_at"),
