@@ -57,7 +57,7 @@ const Sidebar = () => {
           </div>
         ) : (
           <div className="mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
-            <Link href="/api/login">
+            <Link href="/auth">
               <a className="w-full flex items-center justify-center py-2 px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors">
                 Giriş Yap
               </a>

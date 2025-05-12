@@ -60,7 +60,7 @@ const MobileHeader = () => {
                 </a>
               </Link>
             ) : (
-              <Link href="/api/login">
+              <Link href="/auth">
                 <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
                   <IconUser />
                 </a>
@@ -105,7 +105,7 @@ const MobileHeader = () => {
               </div>
             ) : (
               <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <Link href="/api/login">
+                <Link href="/auth">
                   <a className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors">
                     Giriş Yap
                   </a>
