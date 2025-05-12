@@ -79,11 +79,11 @@ export default function CreatePost() {
     <Card className="islamic-border mb-6 overflow-hidden">
       <CardContent className="p-4">
         <form onSubmit={handleSubmit}>
-          <div className="flex items-center space-x-3 mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-3 mb-4">
             <img 
               src={user?.profileImageUrl || "https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100"} 
               alt="Profil Fotoğrafı" 
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover mb-2 sm:mb-0"
             />
             <Textarea 
               value={content}
@@ -96,55 +96,61 @@ export default function CreatePost() {
                 ? "Bir ayet veya hadis paylaş..." 
                 : "Bir etkinlik paylaş..."
               }
-              className="resize-none focus-visible:ring-primary"
+              className="resize-none focus-visible:ring-primary min-h-[80px]"
             />
           </div>
           
-          <div className="flex flex-wrap justify-between items-center pt-2 border-t border-gray-100 dark:border-gray-700">
-            <Button 
-              type="button"
-              variant="ghost" 
-              className={`flex items-center p-2 ${postType === "regular" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md mt-2 sm:mt-0`}
-              onClick={() => handleTypeChange("regular")}
-            >
-              <Image className="mr-2 h-4 w-4" />
-              <span className="text-sm">Görsel</span>
-            </Button>
-            
-            <Button 
-              type="button"
-              variant="ghost" 
-              className={`flex items-center p-2 ${postType === "ayet" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md mt-2 sm:mt-0`}
-              onClick={() => handleTypeChange("ayet")}
-            >
-              <Quote className="mr-2 h-4 w-4" />
-              <span className="text-sm">Ayet/Hadis</span>
-            </Button>
-            
-            <Button 
-              type="button"
-              variant="ghost" 
-              className={`flex items-center p-2 ${postType === "dua" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md mt-2 sm:mt-0`}
-              onClick={() => handleTypeChange("dua")}
-            >
-              <HandHelping className="mr-2 h-4 w-4" />
-              <span className="text-sm">Dua</span>
-            </Button>
-            
-            <Button 
-              type="button"
-              variant="ghost" 
-              className={`flex items-center p-2 ${postType === "event" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md mt-2 sm:mt-0`}
-              onClick={() => handleTypeChange("event")}
-            >
-              <Calendar className="mr-2 h-4 w-4" />
-              <span className="text-sm">Etkinlik</span>
-            </Button>
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center pt-2 border-t border-gray-100 dark:border-gray-700">
+            <div className="grid grid-cols-2 sm:flex sm:flex-row gap-1 mb-2 sm:mb-0">
+              <Button 
+                type="button"
+                variant="ghost" 
+                size="sm"
+                className={`flex items-center justify-center ${postType === "regular" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md px-2 py-1`}
+                onClick={() => handleTypeChange("regular")}
+              >
+                <Image className="h-4 w-4 sm:mr-1" />
+                <span className="text-xs sm:text-sm hidden sm:inline">Görsel</span>
+              </Button>
+              
+              <Button 
+                type="button"
+                variant="ghost" 
+                size="sm"
+                className={`flex items-center justify-center ${postType === "ayet" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md px-2 py-1`}
+                onClick={() => handleTypeChange("ayet")}
+              >
+                <Quote className="h-4 w-4 sm:mr-1" />
+                <span className="text-xs sm:text-sm hidden sm:inline">Ayet/Hadis</span>
+              </Button>
+              
+              <Button 
+                type="button"
+                variant="ghost" 
+                size="sm"
+                className={`flex items-center justify-center ${postType === "dua" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md px-2 py-1`}
+                onClick={() => handleTypeChange("dua")}
+              >
+                <HandHelping className="h-4 w-4 sm:mr-1" />
+                <span className="text-xs sm:text-sm hidden sm:inline">Dua</span>
+              </Button>
+              
+              <Button 
+                type="button"
+                variant="ghost" 
+                size="sm"
+                className={`flex items-center justify-center ${postType === "event" ? "text-primary dark:text-primary-light" : "text-gray-600 dark:text-gray-300"} hover:bg-gray-100 dark:hover:bg-navy rounded-md px-2 py-1`}
+                onClick={() => handleTypeChange("event")}
+              >
+                <Calendar className="h-4 w-4 sm:mr-1" />
+                <span className="text-xs sm:text-sm hidden sm:inline">Etkinlik</span>
+              </Button>
+            </div>
             
             <Button 
               type="submit"
               disabled={isPending || !content.trim()}
-              className="ml-auto mt-2 bg-primary hover:bg-primary/90 text-white"
+              className="w-full sm:w-auto bg-primary hover:bg-primary/90 text-white"
             >
               {isPending ? "Paylaşılıyor..." : "Paylaş"}
             </Button>

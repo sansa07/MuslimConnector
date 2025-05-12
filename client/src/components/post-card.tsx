@@ -123,44 +123,49 @@ export default function PostCard({ post }: PostCardProps) {
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center py-1 px-3 text-sm rounded-full bg-red-50 dark:bg-red-900 dark:bg-opacity-30 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:bg-opacity-50"
+          className="flex items-center py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-full bg-red-50 dark:bg-red-900 dark:bg-opacity-30 text-red-600 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900 dark:hover:bg-opacity-50"
           onClick={() => handleLike('like')}
         >
-          <Heart className="mr-1 h-4 w-4" />
-          <span>{likesCount}</span>
+          <Heart className="sm:mr-1 h-4 w-4" />
+          <span className="hidden xs:inline ml-1">{likesCount}</span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center py-1 px-3 text-sm rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+          className="flex items-center py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-full bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
         >
-          <MessageSquare className="mr-1 h-4 w-4" />
-          <span>{comments?.length || 0}</span>
+          <MessageSquare className="sm:mr-1 h-4 w-4" />
+          <span className="hidden xs:inline ml-1">{comments?.length || 0}</span>
         </Button>
       </div>
     );
   };
 
   const renderIslamicReactions = () => {
+    const aminCount = likes?.amin || 0;
+    const masallahCount = likes?.masallah || 0;
+    
     return (
       <div className="flex space-x-2 mt-2 sm:mt-0">
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center py-1 px-3 text-sm rounded-full bg-green-50 dark:bg-green-900 dark:bg-opacity-30 text-green-600 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900 dark:hover:bg-opacity-50"
+          className="flex items-center py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-full bg-green-50 dark:bg-green-900 dark:bg-opacity-30 text-green-600 dark:text-green-300 hover:bg-green-100 dark:hover:bg-green-900 dark:hover:bg-opacity-50"
           onClick={() => handleLike('amin')}
         >
-          <span className="mr-1">🤲</span>
-          <span>Amin</span>
+          <span className="text-xs sm:text-sm">🤲</span>
+          <span className="hidden xs:inline ml-1">Amin</span>
+          <span className="hidden xs:inline ml-1">({aminCount})</span>
         </Button>
         <Button
           variant="ghost"
           size="sm"
-          className="flex items-center py-1 px-3 text-sm rounded-full bg-amber-50 dark:bg-amber-900 dark:bg-opacity-30 text-amber-600 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900 dark:hover:bg-opacity-50"
+          className="flex items-center py-1 px-2 sm:px-3 text-xs sm:text-sm rounded-full bg-amber-50 dark:bg-amber-900 dark:bg-opacity-30 text-amber-600 dark:text-amber-300 hover:bg-amber-100 dark:hover:bg-amber-900 dark:hover:bg-opacity-50"
           onClick={() => handleLike('masallah')}
         >
-          <span className="mr-1">✨</span>
-          <span>Maşallah</span>
+          <span className="text-xs sm:text-sm">✨</span>
+          <span className="hidden xs:inline ml-1">Maşallah</span>
+          <span className="hidden xs:inline ml-1">({masallahCount})</span>
         </Button>
       </div>
     );
@@ -249,18 +254,22 @@ export default function PostCard({ post }: PostCardProps) {
         </div>
         
         {/* Post Actions */}
-        <div className="flex flex-wrap justify-between items-center pb-2">
-          {isLoadingLikes ? (
-            <Skeleton className="h-8 w-24" />
-          ) : (
-            renderLikeButtons()
-          )}
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-2 pb-2">
+          <div className="flex justify-center sm:justify-start">
+            {isLoadingLikes ? (
+              <Skeleton className="h-8 w-24" />
+            ) : (
+              renderLikeButtons()
+            )}
+          </div>
           
-          {isLoadingLikes ? (
-            <Skeleton className="h-8 w-36" />
-          ) : (
-            renderIslamicReactions()
-          )}
+          <div className="flex justify-center sm:justify-end">
+            {isLoadingLikes ? (
+              <Skeleton className="h-8 w-36" />
+            ) : (
+              renderIslamicReactions()
+            )}
+          </div>
         </div>
         
         {/* Comments Section */}
@@ -268,28 +277,30 @@ export default function PostCard({ post }: PostCardProps) {
           {renderComments()}
           
           {/* Add Comment */}
-          <form onSubmit={handleAddComment} className="flex items-center mt-2">
-            <Avatar className="w-8 h-8 mr-2">
+          <form onSubmit={handleAddComment} className="flex flex-col sm:flex-row items-start sm:items-center mt-2 gap-2">
+            <Avatar className="w-8 h-8 hidden sm:block">
               <AvatarImage src={user?.profileImageUrl} />
               <AvatarFallback>{user ? getInitials(user.firstName + ' ' + user.lastName) : 'UK'}</AvatarFallback>
             </Avatar>
-            <Input
-              type="text"
-              placeholder="Yorum yap..."
-              className="flex-grow p-2 bg-gray-100 dark:bg-navy text-gray-700 dark:text-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
-              value={comment}
-              onChange={(e) => setComment(e.target.value)}
-              disabled={isAddingComment}
-            />
-            <Button 
-              type="submit" 
-              variant="ghost" 
-              size="sm" 
-              className="ml-2"
-              disabled={isAddingComment || !comment.trim()}
-            >
-              Gönder
-            </Button>
+            <div className="flex items-center w-full">
+              <Input
+                type="text"
+                placeholder="Yorum yap..."
+                className="flex-grow p-2 bg-gray-100 dark:bg-navy text-gray-700 dark:text-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                value={comment}
+                onChange={(e) => setComment(e.target.value)}
+                disabled={isAddingComment}
+              />
+              <Button 
+                type="submit" 
+                variant="ghost" 
+                size="sm" 
+                className="ml-2"
+                disabled={isAddingComment || !comment.trim()}
+              >
+                Gönder
+              </Button>
+            </div>
           </form>
         </div>
       </CardContent>
