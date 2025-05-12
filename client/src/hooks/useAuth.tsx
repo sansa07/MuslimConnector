@@ -12,6 +12,7 @@ type AuthContextType = {
   user: User | null;
   isLoading: boolean;
   error: Error | null;
+  isAuthenticated: boolean; // isAuthenticated özelliğini ekle
   loginMutation: UseMutationResult<User, Error, LoginData>;
   logoutMutation: UseMutationResult<void, Error, void>;
   registerMutation: UseMutationResult<User, Error, RegisterData>;
@@ -44,7 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/api/v1/auth/user"], 
+    queryKey: ["/api/auth/user"], // Doğru API endpoint
     initialData: cachedUser, // Başlangıçta önbelleği kullan
     queryFn: async () => {
       try {
@@ -58,7 +59,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         // Direkt API rotasını kullanalım - doğru rotayı kullan
         console.log("Kullanıcı bilgisi için API isteği yapılıyor");
-        const res = await fetch("/api/v1/auth/user", {
+        // Doğru endpoint: /api/auth/user (API endpoint hatası düzeltildi)
+        const res = await fetch("/api/auth/user", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -317,12 +319,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  // Kullanıcının kimliği doğrulanmış olup olmadığını belirleyen hesaplanmış değer
+  const isAuthenticated = !!user;
+
   return (
     <AuthContext.Provider
       value={{
         user: user ?? null,
         isLoading,
         error,
+        isAuthenticated, // isAuthenticated değerini ekle
         loginMutation,
         logoutMutation,
         registerMutation,
