@@ -168,7 +168,13 @@ export function setupAuth(app: Express) {
           return next(err);
         }
         console.log("User logged in automatically");
-        return res.status(201).json(userResponse);
+        
+        // JSON yanıtını düzgün formatta gönder
+        const jsonResponse = JSON.stringify(userResponse);
+        console.log("Sending JSON response:", jsonResponse);
+        
+        res.setHeader('Content-Type', 'application/json');
+        return res.status(201).send(jsonResponse);
       });
     } catch (error) {
       console.error("Register API error:", error);

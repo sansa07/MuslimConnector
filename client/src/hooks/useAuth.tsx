@@ -67,23 +67,55 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: async (credentials: RegisterData) => {
       try {
+        console.log("Starting register API request");
         const res = await apiRequest("POST", "/api/register/user", credentials);
-        const result = await res.json();
-        console.log("Register API response:", result);
-        return result;
+        
+        // Yanıtı text olarak alıp kontrol edelim
+        const text = await res.text();
+        console.log("Register API raw response:", text);
+        
+        // Eğer boş bir yanıt gelirse boş bir nesne döndür
+        if (!text.trim()) {
+          console.log("Empty response from register API");
+          return {};
+        }
+        
+        try {
+          // JSON olarak işlemeyi dene
+          const result = JSON.parse(text);
+          console.log("Register API parsed response:", result);
+          return result;
+        } catch (jsonError) {
+          console.error("JSON parse error:", jsonError);
+          // JSON parse hatası olursa boş bir nesne döndür
+          return {};
+        }
       } catch (err) {
         console.error("Register API error:", err);
         throw err;
       }
     },
-    onSuccess: (user: User) => {
+    onSuccess: (user: any) => {
       console.log("Register success, setting user:", user);
+      // Eğer user undefined veya boş nesne ise işlemi durdur
+      if (!user || Object.keys(user).length === 0) {
+        console.log("No valid user data received from register");
+        toast({
+          title: "Kayıt işlemi tamamlandı",
+          description: "Ancak oturum açılmadı. Lütfen giriş yapın.",
+        });
+        // Ana sayfaya yönlendir
+        window.location.href = "/auth";
+        return;
+      }
+      
       queryClient.setQueryData(["/api/user"], user);
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
         title: "Kayıt başarılı",
         description: "Hesabınız oluşturuldu!",
       });
+      window.location.href = "/";
     },
     onError: (error: Error) => {
       console.error("Register mutation error:", error);
