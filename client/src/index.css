@@ -1,51 +1,45 @@
-@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Roboto:wght@300;400;500;700&family=Noto+Sans+Arabic:wght@300;400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Roboto:wght@300;400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  /* Daha sıcak ve daha İslami bir renk paleti */
-  --background: 36 25% 98%;
-  --foreground: 220 25% 20%;
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
 
   --card: 0 0% 100%;
-  --card-foreground: 220 25% 20%;
+  --card-foreground: 222.2 84% 4.9%;
 
   --popover: 0 0% 100%;
-  --popover-foreground: 220 25% 20%;
+  --popover-foreground: 222.2 84% 4.9%;
 
-  /* Klasik İslami yeşil tonu */
-  --primary: 142.1 70% 32.3%;
+  --primary: 142.1 76.2% 36.3%;
   --primary-foreground: 355.7 100% 97.3%;
 
-  /* Altın tonunu biraz daha zengin hale getiriyoruz */
-  --secondary: 40 92% 50%;
-  --secondary-foreground: 220 25% 20%;
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
 
-  --muted: 36 20% 92%;
-  --muted-foreground: 220 15% 40%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
 
-  /* Altın vurgu rengi */
-  --accent: 40 92% 50%;
-  --accent-foreground: 220 25% 20%;
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 24 9.8% 10%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
 
-  /* Daha sıcak bir sınır rengi */
-  --border: 40 30% 88%;
-  --input: 40 30% 88%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
   --ring: 142.1 76.2% 36.3%;
 
-  --radius: 0.75rem;
+  --radius: 0.5rem;
 
-  /* Islamic colors - refined */
-  --islamic-green: 142.1 70% 32.3%;
-  --islamic-gold: 40 92% 50%;
-  --islamic-navy: 220 60% 25%;
-  --islamic-white: 36 25% 98%;
-  --islamic-cream: 36 30% 92%;
+  /* Islamic colors */
+  --islamic-green: 142.1 76.2% 36.3%;
+  --islamic-gold: 48 96.5% 50%;
+  --islamic-navy: 217 70.3% 22.9%;
+  --islamic-white: 0 0% 100%;
   
   /* Chart colors for Islamic theme */
   --chart-1: var(--islamic-green);
@@ -56,153 +50,130 @@
 }
 
 .dark {
-  /* Koyu lacivert arka plan - geleneksel İslami motiflerde kullanılan */
-  --background: 220 65% 10%;
-  --foreground: 36 25% 92%;
+  --background: 217 70.3% 12.9%;
+  --foreground: 0 0% 98%;
 
-  --card: 220 65% 13%;
-  --card-foreground: 36 25% 92%;
+  --card: 217 70.3% 15.9%;
+  --card-foreground: 0 0% 98%;
 
-  --popover: 220 65% 13%;
-  --popover-foreground: 36 25% 92%;
+  --popover: 217 70.3% 12.9%;
+  --popover-foreground: 0 0% 98%;
 
-  /* Koyu modda biraz daha parlak İslami yeşil */
-  --primary: 142.1 65% 40%;
-  --primary-foreground: 355.7 100% 97.3%;
+  --primary: 142.1 70.6% 45.3%;
+  --primary-foreground: 144.9 80.4% 10%;
 
-  /* Altın tonu koyu modda */
-  --secondary: 40 80% 45%;
-  --secondary-foreground: 220 5% 98%;
+  --secondary: 217 70.3% 22.9%;
+  --secondary-foreground: 0 0% 98%;
 
-  --muted: 220 50% 18%;
-  --muted-foreground: 36 15% 75%;
+  --muted: 217 70.3% 22.9%;
+  --muted-foreground: 217 10% 64.9%;
 
-  /* Daha göz alıcı altın vurgu rengi */
-  --accent: 40 85% 50%;
-  --accent-foreground: 220 5% 98%;
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 0 0% 98%;
 
-  --destructive: 0 70% 35%;
+  --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 0 0% 98%;
 
-  /* Koyu sınırlar */
-  --border: 220 40% 25%;
-  --input: 220 40% 25%;
-  --ring: 142.1 65% 40%;
-  
-  /* Daha iyi gölge efekti */
-  --shadow: 0 8px 30px rgba(0, 0, 0, 0.7);
+  --border: 217 70.3% 25.9%;
+  --input: 217 70.3% 25.9%;
+  --ring: 142.1 76.2% 36.3%;
 
   /* Chart colors for Islamic theme - dark mode */
-  --chart-1: 142.1 65% 40%;
-  --chart-2: 40 85% 50%;
-  --chart-3: 220 40% 60%;
-  --chart-4: 0 80% 50%;
-  --chart-5: 265 70% 60%;
+  --chart-1: 142.1 70.6% 45.3%;
+  --chart-2: 48 90% 60%;
+  --chart-3: 217 70.3% 50.9%;
+  --chart-4: 0 84.2% 60.2%;
+  --chart-5: 217 91% 60%;
 }
 
-/* İslami Yeşil Tema - Geliştirilmiş */
+/* İslami Yeşil Tema */
 .islamic-green {
-  --background: 142.1 35% 97%;
-  --foreground: 142.1 80% 10%;
+  --background: 142.1 30% 96%;
+  --foreground: 142.1 70% 10%;
   
   --card: 0 0% 100%;
-  --card-foreground: 142.1 80% 10%;
+  --card-foreground: 142.1 70% 10%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 142.1 80% 10%;
+  --popover-foreground: 142.1 70% 10%;
   
-  --primary: 142.1 70% 32.3%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 142.1 76.2% 36.3%;
+  --primary-foreground: 355.7 100% 97.3%;
   
-  --secondary: 40 80% 50%; /* Altın vurgu */
-  --secondary-foreground: 142.1 80% 10%;
+  --secondary: 142.1 30% 92%;
+  --secondary-foreground: 142.1 70% 20%;
   
-  --muted: 142.1 20% 90%;
-  --muted-foreground: 142.1 60% 25%;
+  --muted: 142.1 20% 94%;
+  --muted-foreground: 142.1 40% 30%;
   
-  --accent: 40 80% 50%; /* Altın vurgu */
-  --accent-foreground: 142.1 80% 10%;
+  --accent: 48 96.5% 50%;
+  --accent-foreground: 0 0% 20%;
   
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 98%;
-  
-  --border: 142.1 30% 90%;
-  --input: 142.1 30% 90%;
-  --ring: 142.1 70% 40%;
+  --border: 142.1 30% 88%;
+  --input: 142.1 30% 88%;
+  --ring: 142.1 76.2% 36.3%;
 
-  /* Özel gölge ve desen rengi */
-  --pattern-color: rgba(21, 128, 61, 0.15);
-  --shadow: 0 8px 30px rgba(21, 128, 61, 0.1);
+  --pattern-color: rgba(30, 132, 73, 0.15);
 }
 
-/* İslami Altın Tema - Geliştirilmiş */
+/* İslami Altın Tema */
 .islamic-gold {
-  --background: 40 30% 97%;
-  --foreground: 30 95% 10%;
+  --background: 43 50% 96%;
+  --foreground: 30 30% 15%;
   
   --card: 0 0% 100%;
-  --card-foreground: 30 95% 10%;
+  --card-foreground: 30 30% 15%;
   
   --popover: 0 0% 100%;
-  --popover-foreground: 30 95% 10%;
+  --popover-foreground: 30 30% 15%;
   
-  --primary: 40 85% 45%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 45 93% 47%;
+  --primary-foreground: 0 0% 20%;
   
-  --secondary: 142.1 65% 35%; /* Yeşil vurgu */
-  --secondary-foreground: 30 95% 10%;
+  --secondary: 42 30% 90%;
+  --secondary-foreground: 42 60% 20%;
   
-  --muted: 40 20% 90%;
-  --muted-foreground: 40 60% 25%;
+  --muted: 43 20% 90%;
+  --muted-foreground: 43 15% 40%;
   
-  --accent: 142.1 65% 35%; /* Yeşil vurgu */
-  --accent-foreground: 30 95% 10%;
+  --accent: 217 75% 36%;
+  --accent-foreground: 0 0% 98%;
   
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 98%;
+  --border: 43 30% 85%;
+  --input: 43 30% 85%;
+  --ring: 45 93% 47%;
   
-  --border: 40 30% 90%;
-  --input: 40 30% 90%;
-  --ring: 40 85% 45%;
-
-  /* Özel gölge ve desen rengi */
-  --pattern-color: rgba(217, 119, 6, 0.15);
-  --shadow: 0 8px 30px rgba(217, 119, 6, 0.1);
+  --pattern-color: rgba(212, 175, 55, 0.15);
 }
 
-/* İslami Lacivert Tema - Geliştirilmiş */
+/* İslami Lacivert Tema */
 .islamic-navy {
-  --background: 220 30% 97%;
-  --foreground: 220 95% 10%;
+  --background: 217 75% 11%;
+  --foreground: 210 20% 98%;
   
-  --card: 0 0% 100%;
-  --card-foreground: 220 95% 10%;
+  --card: 217 75% 14%;
+  --card-foreground: 210 20% 98%;
   
-  --popover: 0 0% 100%;
-  --popover-foreground: 220 95% 10%;
+  --popover: 217 75% 11%;
+  --popover-foreground: 210 20% 98%;
   
-  --primary: 220 60% 25%;
-  --primary-foreground: 0 0% 100%;
+  --primary: 210 80% 56%;
+  --primary-foreground: 210 20% 98%;
   
-  --secondary: 40 85% 45%; /* Altın vurgu */
-  --secondary-foreground: 220 95% 10%;
+  --secondary: 217 60% 22%;
+  --secondary-foreground: 210 20% 98%;
   
-  --muted: 220 20% 90%;
-  --muted-foreground: 220 65% 30%;
+  --muted: 217 60% 20%;
+  --muted-foreground: 210 15% 70%;
   
-  --accent: 40 85% 45%; /* Altın vurgu */
-  --accent-foreground: 220 95% 10%;
+  --accent: 45 93% 47%;
+  --accent-foreground: 0 0% 20%;
   
-  --destructive: 0 84% 60%;
-  --destructive-foreground: 0 0% 98%;
+  --border: 217 60% 27%;
+  --input: 217 60% 27%;
+  --ring: 210 80% 56%;
   
-  --border: 220 30% 90%;
-  --input: 220 30% 90%;
-  --ring: 220 60% 40%;
-
-  /* Özel gölge ve desen rengi */
-  --pattern-color: rgba(30, 58, 138, 0.15);
-  --shadow: 0 8px 30px rgba(30, 58, 138, 0.1);
+  --pattern-color: rgba(20, 52, 89, 0.25);
 }
 
 @layer base {
