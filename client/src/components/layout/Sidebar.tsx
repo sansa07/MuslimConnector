@@ -36,11 +36,11 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-navy-dark shadow-md z-40">
+    <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] shadow-md z-40">
       <div className="p-4">
         <div className="flex items-center mb-8">
-          <i className="fas fa-mosque text-primary text-2xl mr-2"></i>
-          <h1 className="font-amiri text-2xl font-bold text-primary dark:text-primary-light">MüslimNet</h1>
+          <i className="fas fa-mosque text-primary text-2xl mr-2 islamic-gold:text-amber-500 islamic-navy:text-blue-300"></i>
+          <h1 className="font-amiri text-2xl font-bold text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300">MüslimNet</h1>
         </div>
         
         {isAuthenticated ? (
@@ -73,8 +73,8 @@ const Sidebar = () => {
               href={item.path}
               className={`flex items-center space-x-3 p-3 rounded-lg ${
                 isActiveRoute(item.path) 
-                  ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" 
-                  : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"
+                  ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light islamic-gold:text-amber-700 islamic-navy:text-blue-200" 
+                  : "hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900 text-gray-700 dark:text-gray-200 islamic-gold:text-amber-900 islamic-navy:text-blue-300"
               }`}
             >
               <span className="w-5 text-center">{item.icon}</span>
@@ -84,15 +84,15 @@ const Sidebar = () => {
         </nav>
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700">
+      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 islamic-navy:border-blue-800">
         <div className="flex items-center justify-between">
           <ThemeToggle />
-          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
-            <IconSettings className="text-gray-600 dark:text-gray-300" />
+          <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">
+            <IconSettings className="text-gray-600 dark:text-gray-300 islamic-navy:text-blue-300" />
           </button>
           {isAuthenticated && (
-            <a href="/api/logout" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
-              <IconLogout className="text-gray-600 dark:text-gray-300" />
+            <a href="/api/logout" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">
+              <IconLogout className="text-gray-600 dark:text-gray-300 islamic-navy:text-blue-300" />
             </a>
           )}
         </div>

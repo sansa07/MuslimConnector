@@ -57,7 +57,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <ThemeProvider defaultTheme="light" storageKey="theme-mode">
+        <ThemeProvider defaultTheme="islamic-navy" storageKey="theme-mode">
           {isAuthPage ? (
             <Router />
           ) : (
