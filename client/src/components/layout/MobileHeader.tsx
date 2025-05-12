@@ -29,37 +29,38 @@ const MobileHeader = () => {
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white dark:bg-navy-dark shadow-sm lg:hidden">
+      <header className="sticky top-0 z-50 bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] shadow-sm lg:hidden">
         <div className="container mx-auto px-4 py-3 flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center">
             <IconMosque className="text-primary text-xl mr-2" />
-            <h1 className="font-amiri text-xl font-bold text-primary dark:text-primary-light">MüslimNet</h1>
+            <h1 className="font-amiri text-xl font-bold text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300">MüslimNet</h1>
           </div>
           
           {/* Quick Access & Icons */}
           <div className="flex items-center space-x-2">
-            <Link href="/prayer-times" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+            <Link href="/prayer-times" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900 text-gray-600 dark:text-gray-300">
                 <IconPrayerTimes />
             </Link>
-            <Link href="/daily-wisdom" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+            <Link href="/daily-wisdom" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900 text-gray-600 dark:text-gray-300">
                 <IconWisdom />
             </Link>
             {isAuthenticated ? (
-              <Link href="/profile" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
+              <Link href="/profile" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">
                 <img 
                   src={user?.profileImageUrl || "https://via.placeholder.com/32"} 
                   alt="Profil" 
-                  className="w-6 h-6 rounded-full object-cover border border-primary"
+                  className="w-6 h-6 rounded-full object-cover border border-primary islamic-gold:border-amber-500 islamic-navy:border-blue-400"
                 />
               </Link>
             ) : (
-              <Link href="/auth" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+              <Link href="/auth" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900 text-gray-600 dark:text-gray-300">
                 <IconUser />
               </Link>
             )}
+            <ThemeToggle />
             <button 
-              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900"
               onClick={toggleMenu}
             >
               {menuOpen ? (
@@ -75,9 +76,9 @@ const MobileHeader = () => {
       {/* Mobile Menu Overlay */}
       {menuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden">
-          <div className="bg-white dark:bg-navy-dark w-3/4 h-full ml-auto py-4 px-6 overflow-y-auto">
+          <div className="bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] w-3/4 h-full ml-auto py-4 px-6 overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h2 className="font-amiri text-xl font-bold text-primary dark:text-primary-light">Menu</h2>
+              <h2 className="font-amiri text-xl font-bold text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300">Menu</h2>
               <button onClick={toggleMenu}>
                 <IconClose className="text-gray-600 dark:text-gray-300" />
               </button>
@@ -111,7 +112,7 @@ const MobileHeader = () => {
                 <Link 
                   key={item.path} 
                   href={item.path}
-                  className="block py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-navy rounded-lg"
+                  className="block py-2 px-3 text-gray-700 dark:text-gray-200 islamic-gold:text-amber-800 islamic-navy:text-blue-100 hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900 rounded-lg"
                   onClick={toggleMenu}
                 >
                   {item.label}

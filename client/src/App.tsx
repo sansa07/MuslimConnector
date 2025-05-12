@@ -61,10 +61,11 @@ function App() {
           {isAuthPage ? (
             <Router />
           ) : (
-            <div className="min-h-screen bg-gray-50 dark:bg-navy-dark">
+            <div className="min-h-screen bg-gray-50 dark:bg-navy-dark islamic-green:bg-[#eaf5ed] islamic-gold:bg-[#f9f5e8] islamic-navy:bg-[#12233f] relative">
+              <PatternOverlay />
               <Sidebar />
               <MobileHeader />
-              <main className="lg:ml-64 pb-20 lg:pb-10">
+              <main className="lg:ml-64 pb-20 lg:pb-10 relative z-10">
                 <div className="container mx-auto px-4 py-6">
                   <Router />
                 </div>
