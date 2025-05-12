@@ -60,13 +60,13 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(
       {
-        usernameField: "email",
+        usernameField: "username", // Kullanıcı adı olarak değiştirildi
         passwordField: "password"
       },
-      async (email, password, done) => {
+      async (username, password, done) => {
         try {
-          // E-posta ile kullanıcıyı bul
-          const user = await storage.getUserByEmail(email);
+          // Kullanıcı adı ile kullanıcıyı bul
+          const user = await storage.getUserByUsername(username);
           
           if (!user) {
             return done(null, false, { message: "Kullanıcı bulunamadı" });
