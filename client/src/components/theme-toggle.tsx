@@ -54,13 +54,7 @@ export function ThemeProvider({
       return;
     }
 
-    // İslami temaları özel olarak işle
-    if (theme.startsWith("islamic-")) {
-      // Temel aydınlık/karanlık mod için
-      const baseTheme = theme.includes("navy") ? "dark" : "light";
-      root.classList.add(baseTheme);
-    }
-    
+    // Tema sınıfını ekle - basit ve direkt
     root.classList.add(theme);
   }, [theme]);
 
