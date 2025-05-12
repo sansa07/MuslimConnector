@@ -13,6 +13,7 @@ interface QuranVerse {
   arabicText: string;
   translation: string;
   surahName: string;
+  reference: string;
 }
 
 interface Hadith {
