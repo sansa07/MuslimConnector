@@ -60,15 +60,16 @@ function App() {
           {isAuthPage ? (
             <Router />
           ) : (
-            <>
+            <div className="min-h-screen bg-gray-50 dark:bg-navy-dark">
               <Sidebar />
-              <div className="lg:pl-64">
-                <MobileHeader />
-                <main className="container mx-auto px-4 py-6">
+              <MobileHeader />
+              <main className="lg:ml-64 pb-20 lg:pb-10">
+                <div className="container mx-auto px-4 py-6">
                   <Router />
-                </main>
-              </div>
-            </>
+                </div>
+              </main>
+              <MobileNav />
+            </div>
           )}
           <Toaster />
         </ThemeProvider>
