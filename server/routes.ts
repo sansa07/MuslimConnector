@@ -25,6 +25,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API rotaları için v1 prefix ekleyelim
   const apiRouter = Router();
   app.use('/api/v1', apiRouter);
+  
+  // API rotalarını düzgün yönlendirmek için middleware
+  app.use((req, res, next) => {
+    // Vite rotalarını engelleme - API çağrıları için özel işlem yap
+    if (req.path.startsWith('/api/') && !req.path.startsWith('/api/v1/')) {
+      // Eski rotayı logla
+      console.log(`API redirect: ${req.originalUrl} -> ${req.originalUrl.replace('/api/', '/api/v1/')}`);
+      
+      // Rotayı güncelle ve devam et
+      req.url = req.url.replace('/api/', '/api/v1/');
+    }
+    
+    // Devam et
+    next();
+  });
 
   // Auth middleware - sadece ana uygulamaya uygula
   await setupAuth(app);

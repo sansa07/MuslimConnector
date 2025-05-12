@@ -105,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (credentials: RegisterData) => {
       try {
         console.log("Starting register API request");
-        const res = await apiRequest("POST", "/api/v1/register/user", credentials);
+        const res = await apiRequest("POST", "/api/register/user", credentials);
         
         // Yanıtı text olarak alıp kontrol edelim
         const text = await res.text();

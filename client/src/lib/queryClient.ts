@@ -29,15 +29,8 @@ export async function apiRequest(
 ): Promise<Response> {
   console.log(`Request to ${url}:`, data);
   
-  // API isteği path'ını oluştur - prefix kontrolü
-  const isApiCall = url.startsWith('/api');
-  
-  // Eğer URL zaten /api/v1 ile başlıyorsa değişiklik yapma
-  // Değilse ve /api/ ile başlıyorsa, /api/v1/ ile değiştir
-  let apiUrl = url;
-  if (isApiCall && !url.startsWith('/api/v1/')) {
-    apiUrl = url.replace('/api/', '/api/v1/');
-  }
+  // API isteği path'ını doğrudan kullan - prefix dönüşümü devre dışı
+  const apiUrl = url;
   
   console.log(`Processed URL: ${apiUrl}`);
   
