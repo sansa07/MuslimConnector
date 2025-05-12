@@ -54,40 +54,62 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      // Vite'ın yakalamayacağı özel ___api rotasını kullanalım
-      const res = await fetch("/___api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(credentials),
-        credentials: "include"
-      });
+      console.log("Login form values:", credentials);
       
       try {
-        // Yanıtı text olarak alıp kontrol edelim
+        // Direkt Express API rotasını çağır, Vite'ı atlatmak için özel rotayı kullan
+        const requestUrl = `/api/login?nocache=${Date.now()}`;
+        console.log(`Şu URL'e istek gönderiliyor: ${requestUrl}`);
+        
+        // Headers'ı detaylı ayarla
+        const headers = new Headers();
+        headers.append("Content-Type", "application/json");
+        headers.append("Accept", "application/json");
+        headers.append("X-Requested-With", "XMLHttpRequest");
+        
+        const res = await fetch(requestUrl, {
+          method: "POST",
+          headers,
+          body: JSON.stringify(credentials),
+          credentials: "include",
+          // Vite'ın araya girmesini engellemek için
+          cache: "no-store"
+        });
+
+        // Ham cevabı debug için konsola yazdıralım
         const text = await res.text();
         console.log("Login API raw response:", text);
         
-        // Eğer boş bir yanıt gelirse boş bir nesne döndür
+        // Başlangıçta HTML içeriyor mu kontrol et
+        if (text.includes("<!DOCTYPE html>")) {
+          console.error("Vite müdahale ediyor, HTML döndürüyor");
+          throw new Error("API HTML döndürüyor, JSON bekleniyordu");
+        }
+        
+        // Eğer boş bir yanıt gelirse hata ver
         if (!text.trim()) {
           console.log("Empty response from login API");
-          return {};
+          throw new Error("API boş yanıt döndürdü");
         }
         
         try {
           // JSON olarak işlemeyi dene
-          const result = JSON.parse(text);
-          console.log("Login API parsed response:", result);
-          return result;
+          const userData = JSON.parse(text);
+          console.log("Login API parsed response:", userData);
+          
+          // İçerdiği bilgileri kontrol edelim
+          if (!userData || !userData.id) {
+            throw new Error("Geçersiz kullanıcı verisi alındı");
+          }
+          
+          return userData;
         } catch (jsonError) {
           console.error("JSON parse error:", jsonError);
-          // JSON parse hatası olursa boş bir nesne döndür
-          return {};
+          throw new Error("API yanıtı geçersiz JSON formatında");
         }
       } catch (error) {
-        console.error("Error parsing login response:", error);
-        return {};
+        console.error("Login error:", error);
+        throw error;
       }
     },
     onSuccess: (user: User) => {

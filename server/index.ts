@@ -42,8 +42,27 @@ app.use((req, res, next) => {
   // Vite'ın hiç yakalamayacağı özel bir rota oluşturuyoruz
   app.use('/___api', (req, res, next) => {
     log(`Özel API rota yakalayıcısı aktif: ${req.method} ${req.path}`);
-    // API'ın aslında ne istediğini anlayıp yönlendirebiliriz
-    req.url = `/api${req.url}`;
+    
+    // İstenen rotayı belirleyelim ve doğrudan işleyelim
+    const originalPath = req.path;
+    const apiPath = `/api${originalPath}`;
+    
+    log(`İstek yönlendiriliyor: ${req.originalUrl} -> ${apiPath}`);
+    
+    // URL'i API rotasına çevirelim
+    req.url = apiPath;
+    
+    // Eğer POST isteği ise content-type'ı kontrol edelim
+    if (req.method === 'POST' || req.method === 'PUT') {
+      res.setHeader('Content-Type', 'application/json');
+    }
+    
+    // CORS headerlarını ekleyelim
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    
+    // Bir sonraki middleware'e geçelim
     next();
   });
 

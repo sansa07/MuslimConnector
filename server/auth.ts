@@ -293,8 +293,41 @@ export function setupAuth(app: Express) {
       });
     })(req, res, next);
   });
+  
+  // Özel API rotası - Vite'ı atlatmak için
+  app.post("/___api/login", (req, res, next) => {
+    console.log("___api Login rotası çağrıldı:", req.body);
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error("Login auth error:", err);
+        return next(err);
+      }
+      if (!user) {
+        console.log("Login failed:", info?.message);
+        return res.status(401).json({ message: info?.message || "Kimlik doğrulama başarısız" });
+      }
+      
+      console.log("User authenticated successfully:", user.username);
+      
+      // Hassas bilgileri temizle
+      const userResponse = { ...user };
+      delete userResponse.password;
 
-  // Kullanıcı bilgilerini al
+      req.login(user, (err) => {
+        if (err) {
+          console.error("Login session error:", err);
+          return next(err);
+        }
+        
+        // Content-Type header'ını ayarla
+        res.setHeader('Content-Type', 'application/json');
+        console.log("Sending login response");
+        return res.json(userResponse);
+      });
+    })(req, res, next);
+  });
+
+  // Kullanıcı bilgilerini al - V1 rotası
   app.get("/api/v1/user", (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Oturum açılmamış" });
@@ -304,6 +337,21 @@ export function setupAuth(app: Express) {
     const userResponse = { ...req.user };
     delete userResponse.password;
     
+    res.json(userResponse);
+  });
+  
+  // ___api rotası için özel handler - bu Vite'ı atlatacak
+  app.get("/___api/user", (req, res) => {
+    console.log("Özel kullanıcı API'ı çağrıldı");
+    if (!req.isAuthenticated()) {
+      return res.status(401).json({ message: "Oturum açılmamış" });
+    }
+    
+    // Hassas bilgileri temizle
+    const userResponse = { ...req.user };
+    delete userResponse.password;
+    
+    res.setHeader('Content-Type', 'application/json');
     res.json(userResponse);
   });
 
