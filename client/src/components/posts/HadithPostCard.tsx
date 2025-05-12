@@ -69,7 +69,7 @@ const HadithPostCard = ({ post }: HadithPostCardProps) => {
 
   const handleLike = () => {
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      window.location.href = "/auth";
       return;
     }
     likeMutation.mutate();
@@ -77,7 +77,7 @@ const HadithPostCard = ({ post }: HadithPostCardProps) => {
 
   const handleSave = () => {
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      window.location.href = "/auth";
       return;
     }
     saveMutation.mutate();

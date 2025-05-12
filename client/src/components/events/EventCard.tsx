@@ -42,7 +42,7 @@ const EventCard = ({ event }: EventCardProps) => {
 
   const handleAttend = () => {
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      window.location.href = "/auth";
       return;
     }
     attendMutation.mutate();

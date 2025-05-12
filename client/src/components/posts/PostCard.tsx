@@ -86,7 +86,7 @@ const PostCard = ({ post }: PostCardProps) => {
 
   const handleLike = () => {
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      window.location.href = "/auth";
       return;
     }
     likeMutation.mutate();
@@ -95,7 +95,7 @@ const PostCard = ({ post }: PostCardProps) => {
   const handleComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      window.location.href = "/auth";
       return;
     }
     if (newComment.trim()) {
