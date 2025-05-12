@@ -109,12 +109,23 @@ export default function MobileHeader() {
 
             <div className="mt-6 pt-4 border-t border-gray-200 dark:border-gray-700">
               {isAuthenticated && (
-                <form action="/api/logout" method="get">
-                  <button type="submit" className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 w-full text-left">
-                    <LogOut className="w-5 h-5" />
-                    <span>Çıkış Yap</span>
-                  </button>
-                </form>
+                <button 
+                  onClick={() => {
+                    const logoutWindow = window.open('/api/logout', '_blank');
+                    
+                    // 5 saniye sonra pencereyi kapat
+                    setTimeout(() => {
+                      if (logoutWindow && !logoutWindow.closed) {
+                        logoutWindow.close();
+                        window.location.reload(); // Sayfayı yenile
+                      }
+                    }, 5000);
+                  }}
+                  className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 w-full text-left"
+                >
+                  <LogOut className="w-5 h-5" />
+                  <span>Çıkış Yap</span>
+                </button>
               )}
             </div>
           </div>

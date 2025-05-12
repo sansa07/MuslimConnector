@@ -96,9 +96,22 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
               <Settings className="h-5 w-5 text-gray-600 dark:text-gray-300" />
             </button>
             {isAuthenticated && (
-              <a href="/api/logout" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy">
+              <button
+                onClick={() => {
+                  const logoutWindow = window.open('/api/logout', '_blank');
+                  
+                  // 5 saniye sonra pencereyi kapat
+                  setTimeout(() => {
+                    if (logoutWindow && !logoutWindow.closed) {
+                      logoutWindow.close();
+                      window.location.reload(); // Sayfayı yenile
+                    }
+                  }, 5000);
+                }}
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy"
+              >
                 <LogOut className="h-5 w-5 text-gray-600 dark:text-gray-300" />
-              </a>
+              </button>
             )}
           </div>
         </div>

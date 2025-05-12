@@ -60,16 +60,29 @@ export default function Login() {
           
           <TabsContent value="social" className="pt-4">
             <CardContent className="space-y-4">
-              <form action="/api/login" method="get">
-                <Button 
-                  type="submit"
-                  variant="outline" 
-                  className="w-full flex items-center justify-center gap-2"
-                >
-                  <img src="/replit-logo.svg" alt="Replit" className="w-5 h-5" />
-                  <span>Replit ile Giriş Yap</span>
-                </Button>
-              </form>
+              <Button 
+                variant="outline" 
+                className="w-full flex items-center justify-center gap-2"
+                onClick={() => {
+                  // Yeni sekme/pencere açma
+                  const loginWindow = window.open('/api/login', '_blank');
+                  
+                  // 30 saniye sonra pencereyi kontrol et, hala açıksa kapat
+                  setTimeout(() => {
+                    if (loginWindow && !loginWindow.closed) {
+                      loginWindow.close();
+                      toast({
+                        title: "Giriş işlemi tamamlanamadı",
+                        description: "Giriş işlemi için açılan pencere otomatik olarak kapatıldı.",
+                        variant: "destructive",
+                      });
+                    }
+                  }, 30000);
+                }}
+              >
+                <img src="/replit-logo.svg" alt="Replit" className="w-5 h-5" />
+                <span>Replit ile Giriş Yap</span>
+              </Button>
               
               <Button variant="outline" className="w-full flex items-center justify-center gap-2" disabled>
                 <FcGoogle className="w-5 h-5" />
