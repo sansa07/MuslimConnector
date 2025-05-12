@@ -9,6 +9,7 @@ import { ProtectedRoute } from "@/lib/protected-route";
 import Sidebar from "@/components/layout/Sidebar";
 import MobileHeader from "@/components/layout/MobileHeader";
 import MobileNav from "@/components/layout/MobileNav";
+import PatternOverlay from "@/components/layout/PatternOverlay";
 
 // Pages
 import HomePage from "@/pages/home";

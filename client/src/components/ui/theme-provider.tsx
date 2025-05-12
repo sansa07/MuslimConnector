@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { IconMoon, IconSun } from "@/lib/icons";
 
-type Theme = "dark" | "light" | "system";
+type Theme = "dark" | "light" | "system" | "islamic-green" | "islamic-gold" | "islamic-navy";
 
 type ThemeProviderProps = {
   children: React.ReactNode;
@@ -34,7 +34,8 @@ export function ThemeProvider({
   useEffect(() => {
     const root = window.document.documentElement;
 
-    root.classList.remove("light", "dark");
+    // Tüm tema sınıflarını kaldır
+    root.classList.remove("light", "dark", "islamic-green", "islamic-gold", "islamic-navy");
 
     if (theme === "system") {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
@@ -46,6 +47,7 @@ export function ThemeProvider({
       return;
     }
 
+    // Tema sınıfını ekle
     root.classList.add(theme);
   }, [theme]);
 
@@ -64,7 +66,8 @@ export function ThemeProvider({
   );
 }
 
-export const useTheme = () => {
+// useTheme export - önemli: useTheme'in export default veya named export oluşu değişmemelidir
+export const useTheme = (): ThemeProviderState => {
   const context = useContext(ThemeProviderContext);
 
   if (context === undefined)
@@ -76,16 +79,37 @@ export const useTheme = () => {
 export function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
+  // İslami temalar için gösterilen simgeler ve renkler
+  const getThemeIcon = () => {
+    switch (theme) {
+      case "dark":
+        return <IconSun className="text-yellow-300" />;
+      case "islamic-green":
+        return <div className="w-5 h-5 rounded-full bg-[#1e8449]" />;
+      case "islamic-gold":
+        return <div className="w-5 h-5 rounded-full bg-[#d4af37]" />;
+      case "islamic-navy":
+        return <div className="w-5 h-5 rounded-full bg-[#143459]" />;
+      default:
+        return <IconMoon className="text-gray-600" />;
+    }
+  };
+
+  // Bir sonraki tema döngüsü
+  const cycleTheme = () => {
+    const themes: Theme[] = ["light", "dark", "islamic-green", "islamic-gold", "islamic-navy"];
+    const currentIndex = themes.indexOf(theme === "system" ? "light" : theme);
+    const nextIndex = (currentIndex + 1) % themes.length;
+    setTheme(themes[nextIndex]);
+  };
+
   return (
     <button
-      onClick={() => setTheme(theme === "light" ? "dark" : "light")}
-      className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy"
+      onClick={cycleTheme}
+      className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-slate-800 transition-colors"
+      title="Temayı değiştir"
     >
-      {theme === "light" ? (
-        <IconMoon className="text-gray-600" />
-      ) : (
-        <IconSun className="text-yellow-300" />
-      )}
+      {getThemeIcon()}
     </button>
   );
 }
