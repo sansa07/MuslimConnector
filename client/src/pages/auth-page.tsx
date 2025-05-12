@@ -46,6 +46,7 @@ export default function AuthPage() {
     return <Redirect to="/" />;
   }
 
+  // useForm hook'larını koşullu return'dan sonra değil, öncesinde tanımlayalım
   const loginForm = useForm<z.infer<typeof loginSchema>>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useEffect } from "react";
 import PrayerTimesWidget from "@/components/prayer-times-widget";
 import DailyVerse from "@/components/daily-verse";
 import CreatePost from "@/components/create-post";
@@ -15,31 +16,55 @@ import { type Post, type Event, type DuaRequest } from "@shared/schema";
 export default function Home() {
   const { isAuthenticated } = useAuth();
 
-  // Fetch posts
+  // Fetch posts with error handling and fallback
   const { 
-    data: posts, 
+    data: posts = [], // varsayılan değer olarak boş dizi
     isLoading: isLoadingPosts,
     isError: isErrorPosts,
     refetch: refetchPosts 
   } = useQuery({
     queryKey: ['/api/posts'],
+    retry: 3,
+    retryDelay: 1000,
+    // TanStack Query 5'te select kullanabiliriz, ancak onError 
+    // query options içinde kullanılamaz, useEffect içinde kullanılabilir
+    select: (data) => {
+      return data || [];
+    }
   });
 
-  // Fetch events
+  // Fetch events with error handling
   const { 
-    data: events,
+    data: events = [], // varsayılan değer olarak boş dizi
     isLoading: isLoadingEvents
   } = useQuery({
     queryKey: ['/api/events'],
+    retry: 3,
+    retryDelay: 1000,
+    select: (data) => {
+      return data || [];
+    }
   });
 
-  // Fetch dua requests
+  // Fetch dua requests with error handling
   const { 
-    data: duaRequests,
+    data: duaRequests = [], // varsayılan değer olarak boş dizi
     isLoading: isLoadingDuaRequests
   } = useQuery({
     queryKey: ['/api/dua-requests'],
+    retry: 3,
+    retryDelay: 1000,
+    select: (data) => {
+      return data || [];
+    }
   });
+  
+  // Hata logları için etkinlik ve dua isteklerinin yüklenmesini izleme
+  useEffect(() => {
+    if (isErrorPosts) {
+      console.error("Gönderiler yüklenirken hata oluştu");
+    }
+  }, [isErrorPosts]);
 
   const renderSkeletons = () => {
     return Array(3).fill(0).map((_, i) => (
