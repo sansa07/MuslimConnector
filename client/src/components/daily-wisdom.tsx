@@ -79,7 +79,7 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
                   <p className="text-gray-700 dark:text-gray-300 mb-1">
                     {verse?.translation || "Ben cinleri ve insanları, ancak bana kulluk etsinler diye yarattım."}
                   </p>
-                  <p className="text-primary text-right text-xs">
+                  <p className="text-primary text-right text-xs font-medium">
                     {verse?.reference || "Zariyat Suresi, 56. Ayet"}
                   </p>
                 </div>
@@ -94,10 +94,11 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
               ) : (
                 <div className="text-xs">
                   <p className="mb-1 text-gray-700 dark:text-gray-300">
-                    {hadith?.text || "İnsanlara merhamet etmeyene Allah da merhamet etmez."}
+                    {hadith?.translation || "İnsanlara merhamet etmeyene Allah da merhamet etmez."}
                   </p>
                   <p className="text-primary text-right text-xs">
-                    {hadith?.narrator || "Buhârî, Müslim"}
+                    {hadith?.source || "Buhârî, Müslim"} 
+                    {hadith?.reference ? <span className="ml-1">- {hadith.reference}</span> : null}
                   </p>
                 </div>
               )}
@@ -174,7 +175,7 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
                 <p className="text-gray-700 dark:text-gray-300 mb-3 text-lg">
                   {verse?.translation || "Ben cinleri ve insanları, ancak bana kulluk etsinler diye yarattım."}
                 </p>
-                <p className="text-sm text-primary dark:text-primary-light">
+                <p className="text-sm text-primary dark:text-primary-light font-medium">
                   {verse?.reference || "Zariyat Suresi, 56. Ayet"}
                 </p>
               </div>
@@ -193,10 +194,11 @@ export default function DailyWisdom({ isMinimal = false }: DailyWisdomProps) {
             ) : (
               <div className="text-center py-4">
                 <p className="text-lg leading-relaxed mb-3 text-gray-700 dark:text-gray-300">
-                  {hadith?.text || "İnsanlara merhamet etmeyene Allah da merhamet etmez."}
+                  {hadith?.translation || "İnsanlara merhamet etmeyene Allah da merhamet etmez."}
                 </p>
                 <p className="text-sm text-primary dark:text-primary-light">
-                  {hadith?.narrator || "Buhârî, Müslim"}
+                  {hadith?.source || "Buhârî, Müslim"} 
+                  {hadith?.reference ? <span className="ml-1">- {hadith.reference}</span> : null}
                 </p>
               </div>
             )}
