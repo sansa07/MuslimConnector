@@ -70,6 +70,7 @@ export default function AuthPage() {
   }
 
   function onRegisterSubmit(values: z.infer<typeof registerSchema>) {
+    console.log("Register form values:", values);
     registerMutation.mutate(values);
   }
 

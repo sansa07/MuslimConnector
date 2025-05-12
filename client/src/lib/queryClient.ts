@@ -2,8 +2,23 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
+    try {
+      // Try to read as JSON
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+        console.error("API error (JSON):", data);
+        throw new Error(data.message || `${res.status}: ${res.statusText}`);
+      } else {
+        // Fallback to text
+        const text = await res.text();
+        console.error("API error (TEXT):", text);
+        throw new Error(`${res.status}: ${text || res.statusText}`);
+      }
+    } catch (parseError) {
+      console.error("Failed to parse error response:", parseError);
+      throw new Error(`${res.status}: ${res.statusText}`);
+    }
   }
 }
 
@@ -12,12 +27,14 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  console.log(`Request to ${url}:`, data);
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
     credentials: "include",
   });
+  console.log(`Response from ${url}:`, res.status, res.statusText);
 
   await throwIfResNotOk(res);
   return res;
