@@ -169,13 +169,16 @@ export default function PostCard({ post }: PostCardProps) {
     );
   };
 
+  // Kullanıcıların bilgilerini zaten post sahibi için getiriyoruz
+  // Yorumlardaki kullanıcıları geçici olarak statik göstereceğiz
+
   const renderComments = () => {
     if (isLoadingComments) {
       return (
         <div className="mb-3">
           <div className="flex items-start mb-2">
             <Skeleton className="w-8 h-8 rounded-full mr-2" />
-            <div className="bg-gray-100 dark:bg-primary/10 rounded-2xl px-3 py-2 flex-grow">
+            <div className="bg-gray-200 dark:bg-gray-800 rounded-2xl px-3 py-2 flex-grow">
               <Skeleton className="h-4 w-24 mb-1" />
               <Skeleton className="h-3 w-full" />
             </div>
@@ -192,12 +195,13 @@ export default function PostCard({ post }: PostCardProps) {
       <div className="mb-3" key={comment.id}>
         <div className="flex items-start mb-2">
           <Avatar className="w-8 h-8 mr-2">
-            <AvatarImage src="https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=100&h=100" />
             <AvatarFallback>UK</AvatarFallback>
           </Avatar>
-          <div className="bg-gray-100 dark:bg-navy rounded-2xl px-3 py-2 flex-grow">
-            <h4 className="font-medium text-sm">Kullanıcı</h4>
-            <p className="text-sm text-gray-700 dark:text-gray-300">{comment.content}</p>
+          <div className="bg-gray-200 dark:bg-gray-800 rounded-2xl px-3 py-2 flex-grow">
+            <h4 className="font-medium text-sm text-gray-900 dark:text-white">
+              Kullanıcı
+            </h4>
+            <p className="text-sm text-gray-800 dark:text-gray-200">{comment.content}</p>
           </div>
         </div>
       </div>
@@ -284,7 +288,7 @@ export default function PostCard({ post }: PostCardProps) {
               <Input
                 type="text"
                 placeholder="Yorum yap..."
-                className="flex-grow p-2 bg-gray-100 dark:bg-navy text-gray-700 dark:text-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
+                className="flex-grow p-2 bg-gray-200 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary"
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
                 disabled={isAddingComment}
