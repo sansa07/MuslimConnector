@@ -1,8 +1,16 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cors from "cors";
 
 const app = express();
+
+// CORS'u etkinleştir
+app.use(cors({
+  origin: true, // Tüm originlere izin ver (development için)
+  credentials: true, // Cookie/session kullanımı için gerekli
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -37,32 +45,39 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  // API istekleri için özel path yaratma
-  // Bu "/api" yerine "/___api" gibi farklı bir path prefix kullanarak
-  // Vite'ın hiç yakalamayacağı özel bir rota oluşturuyoruz
-  app.use('/___api', (req, res, next) => {
-    log(`Özel API rota yakalayıcısı aktif: ${req.method} ${req.path}`);
-    
-    // İstenen rotayı belirleyelim ve doğrudan işleyelim
-    const originalPath = req.path;
-    const apiPath = `/api${originalPath}`;
-    
-    log(`İstek yönlendiriliyor: ${req.originalUrl} -> ${apiPath}`);
-    
-    // URL'i API rotasına çevirelim
-    req.url = apiPath;
-    
-    // Eğer POST isteği ise content-type'ı kontrol edelim
-    if (req.method === 'POST' || req.method === 'PUT') {
+  // XHR requestleri için bir kontrol ekleyeceğiz, bunlar direkt API server tarafından işlenecek
+  app.use((req, res, next) => {
+    // XHR isteği mi kontrol et (özel bir header veya query param ile)
+    const isXhr = req.headers['x-requested-with'] === 'XMLHttpRequest' || 
+                 req.query.xhr === 'true' ||
+                 req.path.startsWith('/xhr-api/');
+
+    // API isteği mi kontrol et
+    const isApiRequest = req.path.startsWith('/api/') || 
+                         req.path.startsWith('/___api/') ||
+                         isXhr;
+
+    if (isApiRequest) {
+      log(`API isteği yakalandı: ${req.method} ${req.path}`);
+      
+      // Yeni /xhr-api rotası için dönüştürme işlemi
+      if (req.path.startsWith('/xhr-api/')) {
+        const newPath = req.path.replace('/xhr-api/', '/api/');
+        req.url = newPath;
+        log(`XHR-API rotası dönüştürüldü: ${req.path} -> ${newPath}`);
+      }
+      
+      // ___api isteklerini api'ye dönüştür
+      if (req.path.startsWith('/___api/')) {
+        const newPath = req.path.replace('/___api/', '/api/');
+        req.url = newPath;
+        log(`___API rotası dönüştürüldü: ${req.path} -> ${newPath}`);
+      }
+      
+      // İçerik türünü ayarla
       res.setHeader('Content-Type', 'application/json');
     }
     
-    // CORS headerlarını ekleyelim
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-    
-    // Bir sonraki middleware'e geçelim
     next();
   });
 

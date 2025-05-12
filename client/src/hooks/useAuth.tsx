@@ -39,11 +39,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/___api/user"],
-    queryFn: () => fetch("/___api/user", {
+    queryKey: ["/xhr-api/user"],
+    queryFn: () => fetch("/xhr-api/user", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
+        "Accept": "application/json",
+        "X-Requested-With": "XMLHttpRequest" // Bu Vite'a XHR isteği olduğunu bildirir
       },
       credentials: "include"
     }).then(res => {
@@ -57,23 +59,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       console.log("Login form values:", credentials);
       
       try {
-        // Direkt Express API rotasını çağır, Vite'ı atlatmak için özel rotayı kullan
-        const requestUrl = `/api/login?nocache=${Date.now()}`;
+        // XHR API rotasını kullan - bu Vite middleware'imiz tarafından işlenecek
+        const requestUrl = `/xhr-api/login`;
         console.log(`Şu URL'e istek gönderiliyor: ${requestUrl}`);
         
         // Headers'ı detaylı ayarla
         const headers = new Headers();
         headers.append("Content-Type", "application/json");
         headers.append("Accept", "application/json");
-        headers.append("X-Requested-With", "XMLHttpRequest");
+        headers.append("X-Requested-With", "XMLHttpRequest"); // XHR olduğunu belirt
         
         const res = await fetch(requestUrl, {
           method: "POST",
           headers,
           body: JSON.stringify(credentials),
           credentials: "include",
-          // Vite'ın araya girmesini engellemek için
-          cache: "no-store"
+          cache: "no-store" // Önbelleğe almamayı sağla
         });
 
         // Ham cevabı debug için konsola yazdıralım

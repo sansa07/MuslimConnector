@@ -294,9 +294,9 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
   
-  // Özel API rotası - Vite'ı atlatmak için
-  app.post("/___api/login", (req, res, next) => {
-    console.log("___api Login rotası çağrıldı:", req.body);
+  // XHR-API rotası - Vite'ı atlatmak için
+  app.post("/xhr-api/login", (req, res, next) => {
+    console.log("XHR-API Login rotası çağrıldı:", req.body);
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         console.error("Login auth error:", err);
@@ -340,9 +340,9 @@ export function setupAuth(app: Express) {
     res.json(userResponse);
   });
   
-  // ___api rotası için özel handler - bu Vite'ı atlatacak
-  app.get("/___api/user", (req, res) => {
-    console.log("Özel kullanıcı API'ı çağrıldı");
+  // XHR-API rotası için özel handler - bu Vite'ı atlatacak
+  app.get("/xhr-api/user", (req, res) => {
+    console.log("XHR Kullanıcı API'ı çağrıldı");
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Oturum açılmamış" });
     }
