@@ -202,7 +202,7 @@ export function setupAuth(app: Express) {
   });
 
   // Kullanıcı bilgilerini al
-  app.get("/api/user", (req, res) => {
+  app.get("/api/v1/user", (req, res) => {
     if (!req.isAuthenticated()) {
       return res.status(401).json({ message: "Oturum açılmamış" });
     }
@@ -215,7 +215,7 @@ export function setupAuth(app: Express) {
   });
 
   // Çıkış yap
-  app.post("/api/logout", (req, res, next) => {
+  app.post("/api/v1/logout", (req, res, next) => {
     req.logout((err) => {
       if (err) return next(err);
       res.sendStatus(200);

@@ -30,7 +30,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   await setupAuth(app);
 
   // Auth routes
-  app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
+  app.get('/api/v1/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.claims.sub;
       const user = await storage.getUser(userId);
@@ -42,7 +42,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Prayer times API
-  app.get('/api/prayer-times', async (req, res) => {
+  apiRouter.get('/prayer-times', async (req, res) => {
     try {
       const city = req.query.city as string || 'istanbul';
       const prayerTimes = await getPrayerTimes(city);
