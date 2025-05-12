@@ -39,7 +39,7 @@ const Sidebar = () => {
     <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-navy-dark shadow-md z-40">
       <div className="p-4">
         <div className="flex items-center mb-8">
-          <span className="text-primary text-2xl mr-2">&#xF6C0;</span> {/* Mosque icon */}
+          <i className="fas fa-mosque text-primary text-2xl mr-2"></i>
           <h1 className="font-amiri text-2xl font-bold text-primary dark:text-primary-light">MüslimNet</h1>
         </div>
         
