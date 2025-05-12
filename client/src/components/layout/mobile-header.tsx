@@ -111,15 +111,8 @@ export default function MobileHeader() {
               {isAuthenticated && (
                 <button 
                   onClick={() => {
-                    const logoutWindow = window.open('/api/logout', '_blank');
-                    
-                    // 5 saniye sonra pencereyi kapat
-                    setTimeout(() => {
-                      if (logoutWindow && !logoutWindow.closed) {
-                        logoutWindow.close();
-                        window.location.reload(); // Sayfayı yenile
-                      }
-                    }, 5000);
+                    // Doğrudan logout sayfasına yönlendir
+                    window.location.href = '/api/logout';
                   }}
                   className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 w-full text-left"
                 >

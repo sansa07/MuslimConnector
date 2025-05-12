@@ -98,15 +98,9 @@ export default function Sidebar({ direction = "ltr" }: SidebarProps) {
             {isAuthenticated && (
               <button
                 onClick={() => {
-                  const logoutWindow = window.open('/api/logout', '_blank');
-                  
-                  // 5 saniye sonra pencereyi kapat
-                  setTimeout(() => {
-                    if (logoutWindow && !logoutWindow.closed) {
-                      logoutWindow.close();
-                      window.location.reload(); // Sayfayı yenile
-                    }
-                  }, 5000);
+                  // Direkt logoutMutation kullan
+                  // localStorage.removeItem('userData');
+                  window.location.href = '/api/logout';
                 }}
                 className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy"
               >
