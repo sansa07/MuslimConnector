@@ -44,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/api/auth/user"], 
+    queryKey: ["/api/v1/auth/user"], 
     initialData: cachedUser, // Başlangıçta önbelleği kullan
     queryFn: async () => {
       try {
@@ -58,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         // Direkt API rotasını kullanalım - doğru rotayı kullan
         console.log("Kullanıcı bilgisi için API isteği yapılıyor");
-        const res = await fetch("/api/auth/user", {
+        const res = await fetch("/api/v1/auth/user", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

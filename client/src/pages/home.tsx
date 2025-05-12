@@ -23,7 +23,7 @@ export default function Home() {
     isError: isErrorPosts,
     refetch: refetchPosts 
   } = useQuery({
-    queryKey: ['/api/posts'],
+    queryKey: ['/api/v1/posts'],
     retry: 3,
     retryDelay: 1000,
     // TanStack Query 5'te select kullanabiliriz, ancak onError 
@@ -38,7 +38,7 @@ export default function Home() {
     data: events = [], // varsayılan değer olarak boş dizi
     isLoading: isLoadingEvents
   } = useQuery({
-    queryKey: ['/api/events'],
+    queryKey: ['/api/v1/events'],
     retry: 3,
     retryDelay: 1000,
     select: (data) => {
@@ -51,7 +51,7 @@ export default function Home() {
     data: duaRequests = [], // varsayılan değer olarak boş dizi
     isLoading: isLoadingDuaRequests
   } = useQuery({
-    queryKey: ['/api/dua-requests'],
+    queryKey: ['/api/v1/dua-requests'],
     retry: 3,
     retryDelay: 1000,
     select: (data) => {
