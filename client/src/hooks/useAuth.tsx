@@ -39,21 +39,58 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     error,
     isLoading,
   } = useQuery<User | null, Error>({
-    queryKey: ["/api/user"],
+    queryKey: ["/api/v1/user"],
     queryFn: getQueryFn({ on401: "returnNull" }),
   });
 
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
-      const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      const res = await apiRequest("POST", "/api/v1/login", credentials);
+      try {
+        // Yanıtı text olarak alıp kontrol edelim
+        const text = await res.text();
+        console.log("Login API raw response:", text);
+        
+        // Eğer boş bir yanıt gelirse boş bir nesne döndür
+        if (!text.trim()) {
+          console.log("Empty response from login API");
+          return {};
+        }
+        
+        try {
+          // JSON olarak işlemeyi dene
+          const result = JSON.parse(text);
+          console.log("Login API parsed response:", result);
+          return result;
+        } catch (jsonError) {
+          console.error("JSON parse error:", jsonError);
+          // JSON parse hatası olursa boş bir nesne döndür
+          return {};
+        }
+      } catch (error) {
+        console.error("Error parsing login response:", error);
+        return {};
+      }
     },
     onSuccess: (user: User) => {
-      queryClient.setQueryData(["/api/user"], user);
+      if (!user || Object.keys(user).length === 0) {
+        console.log("No valid user data received from login");
+        toast({
+          title: "Giriş işlemi başarısız",
+          description: "Geçersiz yanıt alındı. Lütfen tekrar deneyin.",
+          variant: "destructive"
+        });
+        return;
+      }
+      
+      queryClient.setQueryData(["/api/v1/user"], user);
       toast({
         title: "Giriş başarılı",
         description: "Hoş geldiniz!",
       });
+      
+      // Ana sayfaya yönlendir
+      window.location.href = "/";
     },
     onError: (error: Error) => {
       toast({
@@ -68,7 +105,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     mutationFn: async (credentials: RegisterData) => {
       try {
         console.log("Starting register API request");
-        const res = await apiRequest("POST", "/api/register/user", credentials);
+        const res = await apiRequest("POST", "/api/v1/register/user", credentials);
         
         // Yanıtı text olarak alıp kontrol edelim
         const text = await res.text();
@@ -109,8 +146,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
       
-      queryClient.setQueryData(["/api/user"], user);
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
+      queryClient.setQueryData(["/api/v1/user"], user);
+      queryClient.invalidateQueries({ queryKey: ["/api/v1/user"] });
       toast({
         title: "Kayıt başarılı",
         description: "Hesabınız oluşturuldu!",
@@ -129,10 +166,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest("POST", "/api/logout");
+      await apiRequest("POST", "/api/v1/logout");
     },
     onSuccess: () => {
-      queryClient.setQueryData(["/api/user"], null);
+      queryClient.setQueryData(["/api/v1/user"], null);
       toast({
         title: "Çıkış yapıldı",
         description: "Güvenli bir şekilde çıkış yaptınız",
