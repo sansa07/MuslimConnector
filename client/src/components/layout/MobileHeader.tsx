@@ -39,31 +39,23 @@ const MobileHeader = () => {
           
           {/* Quick Access & Icons */}
           <div className="flex items-center space-x-2">
-            <Link href="/prayer-times">
-              <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+            <Link href="/prayer-times" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
                 <IconPrayerTimes />
-              </a>
             </Link>
-            <Link href="/daily-wisdom">
-              <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+            <Link href="/daily-wisdom" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
                 <IconWisdom />
-              </a>
             </Link>
             {isAuthenticated ? (
-              <Link href="/profile">
-                <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
-                  <img 
-                    src={user?.profileImageUrl || "https://via.placeholder.com/32"} 
-                    alt="Profil" 
-                    className="w-6 h-6 rounded-full object-cover border border-primary"
-                  />
-                </a>
+              <Link href="/profile" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light">
+                <img 
+                  src={user?.profileImageUrl || "https://via.placeholder.com/32"} 
+                  alt="Profil" 
+                  className="w-6 h-6 rounded-full object-cover border border-primary"
+                />
               </Link>
             ) : (
-              <Link href="/auth">
-                <a className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
-                  <IconUser />
-                </a>
+              <Link href="/auth" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light text-gray-600 dark:text-gray-300">
+                <IconUser />
               </Link>
             )}
             <button 
@@ -105,23 +97,24 @@ const MobileHeader = () => {
               </div>
             ) : (
               <div className="mb-6 pb-4 border-b border-gray-200 dark:border-gray-700">
-                <Link href="/auth">
-                  <a className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors">
-                    Giriş Yap
-                  </a>
+                <Link 
+                  href="/auth"
+                  className="block w-full py-2 px-4 bg-primary hover:bg-primary-dark text-white text-center rounded-lg transition-colors"
+                >
+                  Giriş Yap
                 </Link>
               </div>
             )}
 
             <nav className="space-y-1 mb-6">
               {menuItems.map((item) => (
-                <Link key={item.path} href={item.path}>
-                  <a 
-                    className="block py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-navy rounded-lg"
-                    onClick={toggleMenu}
-                  >
-                    {item.label}
-                  </a>
+                <Link 
+                  key={item.path} 
+                  href={item.path}
+                  className="block py-2 px-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-navy rounded-lg"
+                  onClick={toggleMenu}
+                >
+                  {item.label}
                 </Link>
               ))}
             </nav>

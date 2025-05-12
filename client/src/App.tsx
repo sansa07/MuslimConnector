@@ -8,6 +8,7 @@ import { queryClient } from "@/lib/queryClient";
 import { ProtectedRoute } from "@/lib/protected-route";
 import Sidebar from "@/components/layout/Sidebar";
 import MobileHeader from "@/components/layout/MobileHeader";
+import MobileNav from "@/components/layout/MobileNav";
 
 // Pages
 import HomePage from "@/pages/home";
@@ -59,17 +60,15 @@ function App() {
           {isAuthPage ? (
             <Router />
           ) : (
-            <div className="flex min-h-screen bg-gray-50 dark:bg-navy-dark">
-              <main className="flex-1">
-                <div className="lg:pl-64">
-                  <MobileHeader />
-                  <Sidebar />
-                  <div className="container mx-auto px-4 py-6">
-                    <Router />
-                  </div>
-                </div>
-              </main>
-            </div>
+            <>
+              <Sidebar />
+              <div className="lg:pl-64">
+                <MobileHeader />
+                <main className="container mx-auto px-4 py-6">
+                  <Router />
+                </main>
+              </div>
+            </>
           )}
           <Toaster />
         </ThemeProvider>

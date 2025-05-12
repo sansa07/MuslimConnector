@@ -20,15 +20,17 @@ const MobileNav = () => {
     <nav className="fixed bottom-0 left-0 right-0 bg-white dark:bg-navy-dark shadow-md lg:hidden z-40">
       <div className="flex justify-around">
         {navItems.map((item) => (
-          <Link key={item.path} href={item.path}>
-            <a className={`flex flex-col items-center p-3 ${
+          <Link 
+            key={item.path} 
+            href={item.path}
+            className={`flex flex-col items-center p-3 ${
               isActiveRoute(item.path) 
                 ? "text-primary dark:text-primary-light" 
                 : "text-gray-500 dark:text-gray-400"
-            }`}>
-              <span className="text-lg">{item.icon}</span>
-              <span className="text-xs mt-1">{item.label}</span>
-            </a>
+            }`}
+          >
+            <span className="text-lg">{item.icon}</span>
+            <span className="text-xs mt-1">{item.label}</span>
           </Link>
         ))}
       </div>

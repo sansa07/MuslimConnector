@@ -57,27 +57,28 @@ const Sidebar = () => {
           </div>
         ) : (
           <div className="mb-8 pb-4 border-b border-gray-200 dark:border-gray-700">
-            <Link href="/auth">
-              <a className="w-full flex items-center justify-center py-2 px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors">
-                Giriş Yap
-              </a>
+            <Link 
+              href="/auth"
+              className="w-full flex items-center justify-center py-2 px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
+            >
+              Giriş Yap
             </Link>
           </div>
         )}
         
         <nav className="space-y-1">
           {menuItems.map((item) => (
-            <Link key={item.path} href={item.path}>
-              <a 
-                className={`flex items-center space-x-3 p-3 rounded-lg ${
-                  isActiveRoute(item.path) 
-                    ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" 
-                    : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"
-                }`}
-              >
-                <span className="w-5 text-center">{item.icon}</span>
-                <span>{item.label}</span>
-              </a>
+            <Link 
+              key={item.path} 
+              href={item.path}
+              className={`flex items-center space-x-3 p-3 rounded-lg ${
+                isActiveRoute(item.path) 
+                  ? "bg-primary bg-opacity-10 text-primary dark:text-primary-light" 
+                  : "hover:bg-gray-100 dark:hover:bg-navy text-gray-700 dark:text-gray-200"
+              }`}
+            >
+              <span className="w-5 text-center">{item.icon}</span>
+              <span>{item.label}</span>
             </Link>
           ))}
         </nav>
