@@ -104,7 +104,7 @@ export class DatabaseStorage implements IStorage {
         isBanned: false,
         banReason: null,
         warningCount: 0,
-        lastLoginAt: new Date(),
+        // lastLoginAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       };
@@ -168,7 +168,7 @@ export class DatabaseStorage implements IStorage {
         isBanned: false,
         banReason: null,
         warningCount: 0,
-        lastLoginAt: new Date(),
+        // lastLoginAt: new Date(),
         createdAt: new Date(),
         updatedAt: new Date()
       };
