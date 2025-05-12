@@ -113,47 +113,65 @@ export function setupAuth(app: Express) {
   // E-posta ile kayıt ol
   app.post("/api/register/user", async (req, res, next) => {
     try {
-      const { email, username, password } = req.body;
+      console.log("Register API called with:", req.body);
+      const { email, username, password, firstName, lastName } = req.body;
 
       // E-posta veya kullanıcı adı zaten var mı kontrol et
       const existingByEmail = await storage.getUserByEmail(email);
       if (existingByEmail) {
+        console.log("Email already exists:", email);
         return res.status(400).json({ message: "Bu e-posta adresi zaten kullanılıyor" });
       }
 
       const existingByUsername = await storage.getUserByUsername(username);
       if (existingByUsername) {
+        console.log("Username already exists:", username);
         return res.status(400).json({ message: "Bu kullanıcı adı zaten kullanılıyor" });
       }
 
       // Şifreyi hashleme
       const hashedPassword = await hashPassword(password);
+      
+      // Kullanıcı oluşturma zamanı
+      const now = new Date();
+      const userId = `email_${Date.now().toString()}`;
+      
+      console.log("Creating user with ID:", userId);
 
       // Yeni kullanıcı oluştur
       const user = await storage.createUser({
-        id: `email_${Date.now().toString()}`, // Benzersiz ID
+        id: userId,
         email,
         username,
         password: hashedPassword,
+        firstName,
+        lastName,
         authProvider: "email",
         role: "user",
         isActive: true,
         isBanned: false,
         warningCount: 0,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: now,
+        updatedAt: now
       });
 
       // Hassas bilgileri temizle
       const userResponse = { ...user };
       delete userResponse.password;
 
+      console.log("User created successfully:", userResponse);
+
       // Kullanıcıyı otomatik giriş yap
       req.login(user, (err) => {
-        if (err) return next(err);
-        res.status(201).json(userResponse);
+        if (err) {
+          console.error("Auto-login error:", err);
+          return next(err);
+        }
+        console.log("User logged in automatically");
+        return res.status(201).json(userResponse);
       });
     } catch (error) {
+      console.error("Register API error:", error);
       next(error);
     }
   });

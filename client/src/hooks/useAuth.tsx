@@ -66,17 +66,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: async (credentials: RegisterData) => {
-      const res = await apiRequest("POST", "/api/register/user", credentials);
-      return await res.json();
+      try {
+        const res = await apiRequest("POST", "/api/register/user", credentials);
+        const result = await res.json();
+        console.log("Register API response:", result);
+        return result;
+      } catch (err) {
+        console.error("Register API error:", err);
+        throw err;
+      }
     },
     onSuccess: (user: User) => {
+      console.log("Register success, setting user:", user);
       queryClient.setQueryData(["/api/user"], user);
+      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
         title: "Kayıt başarılı",
         description: "Hesabınız oluşturuldu!",
       });
     },
     onError: (error: Error) => {
+      console.error("Register mutation error:", error);
       toast({
         title: "Kayıt başarısız",
         description: error.message || "Kayıt işlemi sırasında bir hata oluştu",

@@ -66,12 +66,23 @@ export default function AuthPage() {
   });
 
   function onLoginSubmit(values: z.infer<typeof loginSchema>) {
-    loginMutation.mutate(values);
+    console.log("Login form values:", values);
+    loginMutation.mutate(values, {
+      onSuccess: () => {
+        // Başarılı giriş sonrası ana sayfaya yönlendir
+        window.location.href = "/";
+      }
+    });
   }
 
   function onRegisterSubmit(values: z.infer<typeof registerSchema>) {
     console.log("Register form values:", values);
-    registerMutation.mutate(values);
+    registerMutation.mutate(values, {
+      onSuccess: () => {
+        // Başarılı kayıt sonrası ana sayfaya yönlendir
+        window.location.href = "/";
+      }
+    });
   }
 
   async function handleSocialAuth(provider: string) {
