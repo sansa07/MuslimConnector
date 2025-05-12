@@ -54,7 +54,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Verse of the day API
-  app.get('/api/daily-verse', async (req, res) => {
+  apiRouter.get('/daily-verse', async (req, res) => {
     try {
       const verse = await storage.getRandomQuranVerse();
       if (!verse) {
@@ -68,7 +68,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Random hadith API
-  app.get('/api/random-hadith', async (req, res) => {
+  apiRouter.get('/random-hadith', async (req, res) => {
     try {
       const hadith = await storage.getRandomHadith();
       if (!hadith) {
