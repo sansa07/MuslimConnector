@@ -47,7 +47,7 @@ export default function CreatePost() {
           <div className="text-center p-4">
             <p className="mb-3">Paylaşım yapmak için giriş yapmalısınız.</p>
             <a 
-              href="/api/login" 
+              href="/auth" 
               className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90"
             >
               Giriş Yap

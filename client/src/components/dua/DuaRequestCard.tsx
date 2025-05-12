@@ -47,7 +47,7 @@ const DuaRequestCard = ({ duaRequest }: DuaRequestCardProps) => {
 
   const handlePray = () => {
     if (!isAuthenticated) {
-      window.location.href = "/api/login";
+      window.location.href = "/auth";
       return;
     }
     prayMutation.mutate();

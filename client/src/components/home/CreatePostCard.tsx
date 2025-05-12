@@ -60,7 +60,7 @@ const CreatePostCard = () => {
         <div className="p-4 text-center">
           <p className="text-gray-700 dark:text-gray-300 mb-3">Paylaşım yapmak için giriş yapın.</p>
           <a 
-            href="/api/login"
+            href="/auth"
             className="inline-block py-2 px-4 bg-primary hover:bg-primary-dark text-white rounded-lg transition-colors"
           >
             Giriş Yap
