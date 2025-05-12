@@ -111,7 +111,7 @@ export function setupAuth(app: Express) {
 
   // API rotaları
   // E-posta ile kayıt ol
-  app.post("/api/register/email", async (req, res, next) => {
+  app.post("/api/register", async (req, res, next) => {
     try {
       const { email, username, password } = req.body;
 
@@ -159,7 +159,7 @@ export function setupAuth(app: Express) {
   });
 
   // E-posta ile giriş yap
-  app.post("/api/login/email", (req, res, next) => {
+  app.post("/api/login", (req, res, next) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) return next(err);
       if (!user) {
