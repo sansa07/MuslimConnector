@@ -40,6 +40,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // ÖNEMLİ: Auth middleware'i önce çağırarak rotaları kaydet
   await setupAuth(app);
+  
+  // Admin rotalarını ekle
+  app.use('/api/admin', adminRoutes);
+  
+  // Veritabanı bağlantısını kontrol et ve yeniden bağlan
+  app.get('/api/db-check', async (req, res) => {
+    const result = await connectToDatabase();
+    res.json({
+      success: result,
+      message: result ? 'Veritabanı bağlantısı başarılı' : 'Veritabanı bağlantısı başarısız'
+    });
+  });
 
   // Auth routes
   // 1. /api/v1/auth/user rotası (apiRouter üzerinden)

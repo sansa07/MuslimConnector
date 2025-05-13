@@ -15,7 +15,9 @@ router.get('/users', async (req, res) => {
     // Hassas bilgileri temizle
     const safeUsers = users.map(user => {
       const safeUser = { ...user };
-      delete safeUser.password;
+      if (safeUser.password) {
+        safeUser.password = undefined;
+      }
       return safeUser;
     });
     
@@ -147,9 +149,9 @@ router.patch('/posts/:id', async (req, res) => {
     const { isFlagged, moderationStatus, moderationNote } = req.body;
     
     const post = await storage.updatePost(parseInt(id), {
-      isFlagged,
-      moderationStatus,
-      moderationNote
+      flaggedForContent: isFlagged,
+      moderationStatus: moderationStatus || 'reviewed',
+      moderationComment: moderationNote
     });
     
     if (!post) {
@@ -180,9 +182,9 @@ router.patch('/comments/:id', async (req, res) => {
     const { isFlagged, moderationStatus, moderationNote } = req.body;
     
     const comment = await storage.updateComment(parseInt(id), {
-      isFlagged,
-      moderationStatus,
-      moderationNote
+      flaggedForContent: isFlagged,
+      moderationStatus: moderationStatus || 'reviewed',
+      moderationComment: moderationNote
     });
     
     if (!comment) {
