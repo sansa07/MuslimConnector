@@ -1,388 +1,356 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
+import { useNavigate } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
-import { useQuery, useMutation } from "@tanstack/react-query";
-import { apiRequest, queryClient } from "@/lib/queryClient";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useForm } from "react-hook-form";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Skeleton } from "@/components/ui/skeleton";
-import PostCard from "@/components/post-card";
-import { Calendar, MessageSquare, HandHelping, Users } from "lucide-react";
-import type { Post } from "@shared/schema";
 
-export default function Profile() {
-  const { user, isAuthenticated, isLoading: isLoadingAuth } = useAuth();
+import { 
+  Card, 
+  CardContent, 
+  CardDescription, 
+  CardFooter, 
+  CardHeader, 
+  CardTitle 
+} from "@/components/ui/card";
+import { 
+  Form, 
+  FormControl, 
+  FormDescription, 
+  FormField, 
+  FormItem, 
+  FormLabel, 
+  FormMessage 
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { IconCamera, IconProfile, IconSave, IconSettings } from "@/lib/icons";
+
+// Form şeması
+const profileFormSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  email: z.string().email("Geçerli bir e-posta adresi giriniz").optional(),
+  bio: z.string().max(500, "Biyografi en fazla 500 karakter olabilir").optional(),
+  profileImageUrl: z.string().optional(),
+});
+
+type ProfileFormValues = z.infer<typeof profileFormSchema>;
+
+function ProfilePage() {
+  const [, navigate] = useNavigate();
+  const { user, isAuthenticated, isLoading } = useAuth();
   const { toast } = useToast();
-  const [isEditing, setIsEditing] = useState(false);
-  const [formData, setFormData] = useState({
-    username: "",
-    firstName: "",
-    lastName: "",
-    bio: ""
-  });
+  const queryClient = useQueryClient();
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  // Fetch user posts
-  const {
-    data: posts,
-    isLoading: isLoadingPosts,
-    refetch: refetchPosts
-  } = useQuery({
-    queryKey: [`/api/users/${user?.id}/posts`],
-    enabled: !!user?.id
-  });
-
-  // Fetch followers
-  const {
-    data: followers,
-    isLoading: isLoadingFollowers
-  } = useQuery({
-    queryKey: [`/api/users/${user?.id}/followers`],
-    enabled: !!user?.id
-  });
-
-  // Fetch following
-  const {
-    data: following,
-    isLoading: isLoadingFollowing
-  } = useQuery({
-    queryKey: [`/api/users/${user?.id}/following`],
-    enabled: !!user?.id
-  });
-
-  // Profile update mutation
-  const { mutate: updateProfile, isPending } = useMutation({
-    mutationFn: async () => {
-      return await apiRequest("PUT", "/api/users/profile", formData);
-    },
-    onSuccess: () => {
-      toast({
-        title: "Profil güncellendi",
-        description: "Profiliniz başarıyla güncellendi."
-      });
-      queryClient.invalidateQueries({ queryKey: ['/api/auth/user'] });
-      setIsEditing(false);
-    },
-    onError: () => {
-      toast({
-        title: "Hata",
-        description: "Profil güncellenirken bir hata oluştu.",
-        variant: "destructive"
-      });
+  useEffect(() => {
+    if (!isLoading && !isAuthenticated) {
+      navigate("/auth");
     }
+  }, [isAuthenticated, isLoading, navigate]);
+
+  const form = useForm<ProfileFormValues>({
+    resolver: zodResolver(profileFormSchema),
+    defaultValues: {
+      firstName: user?.firstName || "",
+      lastName: user?.lastName || "",
+      email: user?.email || "",
+      bio: user?.bio || "",
+      profileImageUrl: user?.profileImageUrl || "",
+    },
   });
 
-  // Update form data when user data is available
+  // Form değerleri kullanıcı verisi yüklendiğinde güncellenir
   useEffect(() => {
     if (user) {
-      setFormData({
-        username: user.username || "",
+      form.reset({
         firstName: user.firstName || "",
         lastName: user.lastName || "",
-        bio: user.bio || ""
+        email: user.email || "",
+        bio: user.bio || "",
+        profileImageUrl: user.profileImageUrl || "",
+      });
+      
+      if (user.profileImageUrl) {
+        setImagePreview(user.profileImageUrl);
+      }
+    }
+  }, [user, form]);
+
+  const updateProfileMutation = useMutation({
+    mutationFn: async (values: ProfileFormValues) => {
+      const res = await apiRequest("PATCH", `/api/users/${user?.id}`, values);
+      if (!res.ok) {
+        throw new Error("Profil güncellenirken bir hata oluştu");
+      }
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/auth/user"] });
+      toast({
+        title: "Profil güncellendi",
+        description: "Profiliniz başarıyla güncellendi",
+      });
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Hata",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  const onSubmit = (values: ProfileFormValues) => {
+    if (imagePreview && imagePreview !== user?.profileImageUrl) {
+      values.profileImageUrl = imagePreview;
+    }
+    updateProfileMutation.mutate(values);
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Normalde burada gerçek bir dosya yükleme işlemi yapılacak
+    // Şimdilik basit bir önizleme gösterelim
+    setUploadingImage(true);
+    try {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImagePreview(reader.result as string);
+        setUploadingImage(false);
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error("Dosya yüklenirken hata:", error);
+      setUploadingImage(false);
+      toast({
+        title: "Hata",
+        description: "Profil resmi yüklenirken bir hata oluştu",
+        variant: "destructive",
       });
     }
-  }, [user]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    updateProfile();
-  };
-
-  // Get initials for avatar fallback
-  const getInitials = (firstName: string, lastName: string) => {
-    if (!firstName && !lastName) return "UK";
-    return `${firstName?.[0] || ""}${lastName?.[0] || ""}`.toUpperCase();
-  };
-
-  if (isLoadingAuth) {
+  if (isLoading) {
     return (
-      <div className="space-y-6">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex flex-col items-center sm:flex-row sm:items-start">
-              <Skeleton className="w-24 h-24 rounded-full mb-4 sm:mb-0 sm:mr-6" />
-              <div className="flex-1 text-center sm:text-left">
-                <Skeleton className="h-7 w-48 mb-2 mx-auto sm:mx-0" />
-                <Skeleton className="h-4 w-72 mb-4 mx-auto sm:mx-0" />
-                <div className="flex justify-center sm:justify-start space-x-4 mb-4">
-                  <Skeleton className="h-10 w-20" />
-                  <Skeleton className="h-10 w-20" />
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
       </div>
     );
   }
 
   if (!isAuthenticated) {
-    return (
-      <Card>
-        <CardContent className="p-6 text-center">
-          <h2 className="text-xl font-semibold mb-4">Profil sayfasına erişim için giriş yapmalısınız</h2>
-          <p className="mb-6 text-gray-600 dark:text-gray-400">
-            Profil sayfanızı görüntülemek, paylaşımlarınızı yönetmek ve diğer özelliklerden yararlanmak için lütfen giriş yapın.
-          </p>
-          <a 
-            href="/api/login" 
-            className="inline-flex items-center justify-center px-4 py-2 rounded-md bg-primary text-white hover:bg-primary/90"
-          >
-            Giriş Yap
-          </a>
-        </CardContent>
-      </Card>
-    );
+    return null; // useEffect bizi /auth'a yönlendirecek
   }
 
+  const getInitials = (firstName?: string | null, lastName?: string | null) => {
+    const first = firstName?.charAt(0) || "";
+    const last = lastName?.charAt(0) || "";
+    return (first + last).toUpperCase() || "KU";
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Profile Header */}
-      <Card className="islamic-border overflow-hidden">
-        <CardContent className="p-6">
-          {isEditing ? (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="flex flex-col items-center sm:flex-row sm:items-start">
-                <Avatar className="w-24 h-24 mb-4 sm:mb-0 sm:mr-6">
-                  <AvatarImage src={user?.profileImageUrl} />
-                  <AvatarFallback>{getInitials(user?.firstName || "", user?.lastName || "")}</AvatarFallback>
-                </Avatar>
-                <div className="flex-1 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div>
-                      <label htmlFor="firstName" className="block text-sm font-medium mb-1">Ad</label>
-                      <Input 
-                        id="firstName"
+    <div className="container mx-auto px-4 py-8">
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold mb-8 text-center">Profil Sayfası</h1>
+        
+        <Tabs defaultValue="profile" className="w-full">
+          <TabsList className="grid grid-cols-2 mb-8">
+            <TabsTrigger value="profile" className="flex items-center gap-2">
+              <IconProfile className="w-4 h-4" />
+              <span>Profil Bilgileri</span>
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="flex items-center gap-2">
+              <IconSettings className="w-4 h-4" />
+              <span>Ayarlar</span>
+            </TabsTrigger>
+          </TabsList>
+          
+          <TabsContent value="profile">
+            <Card>
+              <CardHeader>
+                <CardTitle>Profil Bilgileri</CardTitle>
+                <CardDescription>
+                  Profilinizi güncelleyin ve diğer kullanıcıların sizi nasıl gördüğünü yönetin
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Form {...form}>
+                  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                    <div className="flex flex-col items-center mb-6">
+                      <div className="relative mb-4">
+                        <Avatar className="w-32 h-32">
+                          <AvatarImage src={imagePreview || user?.profileImageUrl || undefined} />
+                          <AvatarFallback className="text-2xl bg-primary text-primary-foreground">
+                            {getInitials(user?.firstName, user?.lastName)}
+                          </AvatarFallback>
+                        </Avatar>
+                        <label 
+                          htmlFor="profile-image" 
+                          className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full cursor-pointer hover:bg-primary/90"
+                        >
+                          <IconCamera className="w-5 h-5" />
+                          <input 
+                            id="profile-image" 
+                            type="file" 
+                            accept="image/*" 
+                            className="hidden" 
+                            onChange={handleImageUpload}
+                            disabled={uploadingImage}
+                          />
+                        </label>
+                      </div>
+                      <p className="text-sm text-muted-foreground">Profil resminizi değiştirmek için tıklayın</p>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <FormField
+                        control={form.control}
                         name="firstName"
-                        value={formData.firstName}
-                        onChange={handleInputChange}
-                        placeholder="Adınız"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Ad</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Adınız" {...field} value={field.value || ""} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
-                    </div>
-                    <div>
-                      <label htmlFor="lastName" className="block text-sm font-medium mb-1">Soyad</label>
-                      <Input 
-                        id="lastName"
+                      
+                      <FormField
+                        control={form.control}
                         name="lastName"
-                        value={formData.lastName}
-                        onChange={handleInputChange}
-                        placeholder="Soyadınız"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Soyad</FormLabel>
+                            <FormControl>
+                              <Input placeholder="Soyadınız" {...field} value={field.value || ""} />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
                       />
                     </div>
-                  </div>
-                  <div>
-                    <label htmlFor="username" className="block text-sm font-medium mb-1">Kullanıcı Adı</label>
-                    <Input 
-                      id="username"
-                      name="username"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      placeholder="Kullanıcı adınız"
+                    
+                    <FormField
+                      control={form.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>E-posta</FormLabel>
+                          <FormControl>
+                            <Input 
+                              placeholder="E-posta adresiniz" 
+                              {...field} 
+                              value={field.value || ""} 
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            E-posta adresiniz bildirimler için kullanılacaktır
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <div>
-                    <label htmlFor="bio" className="block text-sm font-medium mb-1">Hakkımda</label>
-                    <Textarea 
-                      id="bio"
+                    
+                    <FormField
+                      control={form.control}
                       name="bio"
-                      value={formData.bio}
-                      onChange={handleInputChange}
-                      placeholder="Kendiniz hakkında kısa bir bilgi"
-                      rows={3}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>Biyografi</FormLabel>
+                          <FormControl>
+                            <Textarea 
+                              placeholder="Kendinizden bahsedin..." 
+                              className="resize-none min-h-[120px]"
+                              {...field}
+                              value={field.value || ""}
+                            />
+                          </FormControl>
+                          <FormDescription>
+                            Bu bilgi profilinizde görünecektir
+                          </FormDescription>
+                          <FormMessage />
+                        </FormItem>
+                      )}
                     />
-                  </div>
-                  <div className="flex justify-end space-x-2 pt-2">
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setIsEditing(false)}
-                    >
-                      İptal
-                    </Button>
-                    <Button
-                      type="submit"
-                      disabled={isPending}
-                    >
-                      {isPending ? "Kaydediliyor..." : "Kaydet"}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          ) : (
-            <div className="flex flex-col items-center sm:flex-row sm:items-start">
-              <Avatar className="w-24 h-24 mb-4 sm:mb-0 sm:mr-6">
-                <AvatarImage src={user?.profileImageUrl} />
-                <AvatarFallback>{getInitials(user?.firstName || "", user?.lastName || "")}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 text-center sm:text-left">
-                <h2 className="text-2xl font-bold mb-1">
-                  {user?.firstName} {user?.lastName}
-                </h2>
-                <p className="text-gray-500 dark:text-gray-400 mb-4">
-                  @{user?.username || user?.email?.split('@')[0]}
-                </p>
-                {user?.bio && (
-                  <p className="mb-4 text-gray-700 dark:text-gray-300">
-                    {user.bio}
+                    
+                    <div className="flex justify-end">
+                      <Button 
+                        type="submit" 
+                        className="flex items-center gap-2"
+                        disabled={updateProfileMutation.isPending}
+                      >
+                        <IconSave className="w-4 h-4" />
+                        <span>{updateProfileMutation.isPending ? "Kaydediliyor..." : "Kaydet"}</span>
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+          </TabsContent>
+          
+          <TabsContent value="settings">
+            <Card>
+              <CardHeader>
+                <CardTitle>Hesap Ayarları</CardTitle>
+                <CardDescription>
+                  Hesap tercihlerinizi yönetin
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Bildirimler</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Hangi bildirimleri almak istediğinizi belirleyin
                   </p>
-                )}
-                <div className="flex justify-center sm:justify-start space-x-4 mb-4">
-                  <div className="text-center">
-                    <div className="font-bold text-primary">{isLoadingFollowers ? "..." : followers?.length || 0}</div>
-                    <div className="text-sm text-gray-500">Takipçi</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold text-primary">{isLoadingFollowing ? "..." : following?.length || 0}</div>
-                    <div className="text-sm text-gray-500">Takip</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="font-bold text-primary">{isLoadingPosts ? "..." : posts?.length || 0}</div>
-                    <div className="text-sm text-gray-500">Paylaşım</div>
-                  </div>
+                  
+                  {/* Burada bildirim ayarları eklenebilir */}
+                  <p className="text-sm text-muted-foreground">Bildirim ayarları yakında eklenecek</p>
                 </div>
-                <Button
-                  onClick={() => setIsEditing(true)}
-                  variant="outline"
-                  className="w-full sm:w-auto"
-                >
-                  Profili Düzenle
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Profile Content */}
-      <Tabs defaultValue="posts" className="w-full">
-        <TabsList className="w-full mb-6">
-          <TabsTrigger value="posts" className="flex-1">
-            <MessageSquare className="w-4 h-4 mr-2" />
-            Paylaşımlar
-          </TabsTrigger>
-          <TabsTrigger value="activities" className="flex-1">
-            <Calendar className="w-4 h-4 mr-2" />
-            Etkinlikler
-          </TabsTrigger>
-          <TabsTrigger value="duas" className="flex-1">
-            <HandHelping className="w-4 h-4 mr-2" />
-            Dualar
-          </TabsTrigger>
-          <TabsTrigger value="connections" className="flex-1">
-            <Users className="w-4 h-4 mr-2" />
-            Bağlantılar
-          </TabsTrigger>
-        </TabsList>
-
-        <TabsContent value="posts" className="space-y-6">
-          {isLoadingPosts ? (
-            Array(3).fill(0).map((_, i) => (
-              <div key={i} className="mb-6">
-                <Skeleton className="h-[300px] w-full rounded-lg" />
-              </div>
-            ))
-          ) : posts && posts.length > 0 ? (
-            posts.map((post: Post) => (
-              <PostCard key={post.id} post={post} />
-            ))
-          ) : (
-            <div className="text-center py-8 bg-gray-50 dark:bg-gray-800/20 rounded-lg">
-              <p className="text-gray-600 dark:text-gray-400 mb-2">Henüz paylaşımınız yok.</p>
-              <p className="text-primary">İlk paylaşımınızı yapmak için anasayfaya dönebilirsiniz.</p>
-            </div>
-          )}
-        </TabsContent>
-
-        <TabsContent value="activities" className="space-y-6">
-          <div className="text-center py-8 bg-gray-50 dark:bg-gray-800/20 rounded-lg">
-            <p className="text-gray-600 dark:text-gray-400 mb-2">Henüz katıldığınız bir etkinlik yok.</p>
-            <p className="text-primary">Etkinliklere katılmak için etkinlikler sayfasını ziyaret edebilirsiniz.</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="duas" className="space-y-6">
-          <div className="text-center py-8 bg-gray-50 dark:bg-gray-800/20 rounded-lg">
-            <p className="text-gray-600 dark:text-gray-400 mb-2">Henüz dua isteğiniz yok.</p>
-            <p className="text-primary">Dua istekleri oluşturmak için dualar sayfasını ziyaret edebilirsiniz.</p>
-          </div>
-        </TabsContent>
-
-        <TabsContent value="connections" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <h3 className="text-lg font-semibold">Takipçiler</h3>
-            </CardHeader>
-            <CardContent>
-              {isLoadingFollowers ? (
-                <div className="flex space-x-4">
-                  {Array(3).fill(0).map((_, i) => (
-                    <Skeleton key={i} className="h-12 w-12 rounded-full" />
-                  ))}
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Gizlilik</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Hesap gizlilik ayarlarınızı yönetin
+                  </p>
+                  
+                  {/* Burada gizlilik ayarları eklenebilir */}
+                  <p className="text-sm text-muted-foreground">Gizlilik ayarları yakında eklenecek</p>
                 </div>
-              ) : followers && followers.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {followers.map((follower: any) => (
-                    <div key={follower.id} className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarImage src={follower.profileImageUrl} />
-                        <AvatarFallback>{getInitials(follower.firstName || "", follower.lastName || "")}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{follower.firstName} {follower.lastName}</p>
-                        <p className="text-xs text-gray-500">@{follower.username}</p>
-                      </div>
-                    </div>
-                  ))}
+                
+                <Separator />
+                
+                <div>
+                  <h3 className="text-lg font-medium text-destructive">Tehlikeli İşlemler</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Bu işlemler geri alınamaz, dikkatli olun
+                  </p>
+                  
+                  <Button variant="destructive">Hesabımı Sil</Button>
                 </div>
-              ) : (
-                <p className="text-gray-600 dark:text-gray-400">Henüz takipçiniz yok.</p>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card>
-            <CardHeader>
-              <h3 className="text-lg font-semibold">Takip Ettikleriniz</h3>
-            </CardHeader>
-            <CardContent>
-              {isLoadingFollowing ? (
-                <div className="flex space-x-4">
-                  {Array(3).fill(0).map((_, i) => (
-                    <Skeleton key={i} className="h-12 w-12 rounded-full" />
-                  ))}
-                </div>
-              ) : following && following.length > 0 ? (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  {following.map((follow: any) => (
-                    <div key={follow.id} className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarImage src={follow.profileImageUrl} />
-                        <AvatarFallback>{getInitials(follow.firstName || "", follow.lastName || "")}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{follow.firstName} {follow.lastName}</p>
-                        <p className="text-xs text-gray-500">@{follow.username}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <p className="text-gray-600 dark:text-gray-400">Henüz kimseyi takip etmiyorsunuz.</p>
-              )}
-            </CardContent>
-          </Card>
-        </TabsContent>
-      </Tabs>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
+
+export default ProfilePage;
