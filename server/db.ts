@@ -81,6 +81,9 @@ try {
   console.error("İlk veritabanı bağlantısı başlatılırken hata:", error);
 }
 
-// Bu export, sorunsuz bir şekilde import edilebilsin diye her zaman bir değer döndürür
-export const db = _db || {} as ReturnType<typeof drizzle>;
+// db objesini daima erişilebilir hale getir
+export const db = _db || drizzle({ 
+  client: new Pool({ connectionString: process.env.DATABASE_URL || "" }), 
+  schema 
+});
 export { pool };
