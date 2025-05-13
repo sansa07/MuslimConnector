@@ -57,7 +57,7 @@ export default function AdminDashboard() {
     };
 
     checkAdminAccess();
-  }, [isAuthenticated, navigate, toast]);
+  }, [isAuthenticated, setLocation, toast]);
 
   // İstatistikleri yükle
   const loadStats = async () => {
@@ -136,7 +136,7 @@ export default function AdminDashboard() {
           </Button>
           
           <Button 
-            onClick={() => navigate('/')}
+            onClick={() => setLocation('/')}
             variant="secondary"
           >
             Ana Sayfaya Dön
@@ -153,7 +153,7 @@ export default function AdminDashboard() {
           <p className="text-sm text-muted-foreground">{user.email}</p>
         </div>
         <Badge variant="secondary" className="ml-auto">
-          {user.role}
+          {user.role || 'Yönetici'}
         </Badge>
       </div>
       
@@ -224,7 +224,7 @@ export default function AdminDashboard() {
             <Button 
               variant="outline" 
               className="w-full justify-start"
-              onClick={() => navigate('/admin/users')}
+              onClick={() => setLocation('/admin/users')}
             >
               <UserCog className="mr-2 h-4 w-4" />
               Kullanıcı Yönetimi
@@ -233,7 +233,7 @@ export default function AdminDashboard() {
             <Button 
               variant="outline" 
               className="w-full justify-start"
-              onClick={() => navigate('/admin/content')}
+              onClick={() => setLocation('/admin/content')}
             >
               <Flag className="mr-2 h-4 w-4" />
               İçerik Moderasyonu

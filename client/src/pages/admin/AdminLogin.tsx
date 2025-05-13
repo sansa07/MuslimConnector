@@ -29,10 +29,27 @@ export default function AdminLogin() {
     setLoading(true);
     
     try {
-      // Admin kullanıcı adı ve şifre kontrolü
-      if (username === 'admin' && password === 'admin123') {
-        // Normal login işlemini kullan, ama role=admin olan bir kullanıcı olmalı
-        await auth.loginMutation.mutateAsync({ username, password });
+      try {
+        // Normal bir fetch isteği gönder
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ username, password }),
+          credentials: 'include'
+        });
+        
+        if (!response.ok) {
+          throw new Error('Giriş başarısız');
+        }
+        
+        const userData = await response.json();
+        
+        // Admin kontrolü yap
+        if (userData.role !== 'admin') {
+          throw new Error('Yönetici yetkisi gerekli');
+        }
         
         toast({
           title: "Giriş Başarılı",
