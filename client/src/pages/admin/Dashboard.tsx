@@ -1,279 +1,165 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { useLocation } from 'wouter';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { UserCog, UserX, Flag, MessageSquare, RefreshCw } from 'lucide-react';
+import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "wouter";
+import { useQuery } from "@tanstack/react-query";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest } from "@/lib/queryClient";
+import { UserManagement } from "@/components/admin/UserManagement";
+import { ContentModeration } from "@/components/admin/ContentModeration";
+import { IconUsers, IconFileWarning, IconLogout, IconHome } from "@/lib/icons";
 
-export default function AdminDashboard() {
-  const auth = useAuth();
-  const user = auth.user;
-  const isAuthenticated = auth.isAuthenticated;
+const Dashboard = () => {
+  const [, navigate] = useNavigate();
   const { toast } = useToast();
-  const [, setLocation] = useLocation();
-  const [stats, setStats] = useState({
-    totalUsers: 0,
-    bannedUsers: 0,
-    flaggedPosts: 0,
-    flaggedComments: 0
+  const [location] = useLocation();
+
+  // Admin durumunu kontrol et
+  const { data: adminStatus, isLoading } = useQuery({
+    queryKey: ["/api/admin/status"],
+    queryFn: async () => {
+      const res = await apiRequest("GET", "/api/admin/status");
+      return res.json();
+    },
+    retry: false,
   });
-  const [loading, setLoading] = useState(true);
 
-  // Admin erişimi kontrolü
+  // Admin değilse login sayfasına yönlendir
   useEffect(() => {
-    const checkAdminAccess = async () => {
-      if (!isAuthenticated) {
-        toast({
-          title: "Erişim Reddedildi",
-          description: "Bu sayfaya erişmek için giriş yapmanız gerekiyor",
-          variant: "destructive",
-        });
-        setLocation('/admin/login');
-        return;
-      }
-
-      try {
-        const res = await fetch('/api/admin/status');
-        if (!res.ok) {
-          // Yönetici değilse
-          toast({
-            title: "Yetkisiz Erişim",
-            description: "Bu sayfaya erişim yetkiniz yok",
-            variant: "destructive",
-          });
-          setLocation('/');
-          return;
-        }
-        
-        // Admin erişimi doğrulandı, istatistikleri yükle
-        loadStats();
-      } catch (error) {
-        toast({
-          title: "Bağlantı Hatası",
-          description: "Yönetici durumu kontrol edilirken bir hata oluştu",
-          variant: "destructive",
-        });
-      }
-    };
-
-    checkAdminAccess();
-  }, [isAuthenticated, setLocation, toast]);
-
-  // İstatistikleri yükle
-  const loadStats = async () => {
-    setLoading(true);
-    try {
-      // Kullanıcıları getir
-      const usersRes = await fetch('/api/admin/users');
-      if (usersRes.ok) {
-        const usersData = await usersRes.json();
-        const users = usersData.data || [];
-        const bannedCount = users.filter((user: any) => user.isBanned).length;
-        
-        // İşaretlenmiş gönderileri getir
-        const flaggedPostsRes = await fetch('/api/admin/flagged-content/posts');
-        const flaggedPostsData = await flaggedPostsRes.json();
-        
-        // İşaretlenmiş yorumları getir
-        const flaggedCommentsRes = await fetch('/api/admin/flagged-content/comments');
-        const flaggedCommentsData = await flaggedCommentsRes.json();
-        
-        setStats({
-          totalUsers: users.length,
-          bannedUsers: bannedCount,
-          flaggedPosts: (flaggedPostsData.data || []).length,
-          flaggedComments: (flaggedCommentsData.data || []).length
-        });
-      }
-    } catch (error) {
+    if (!isLoading && adminStatus && !adminStatus.isAdmin) {
       toast({
-        title: "Veri Yükleme Hatası",
-        description: "İstatistikler yüklenirken bir hata oluştu",
+        title: "Yetkisiz erişim",
+        description: "Yönetici paneline erişim için giriş yapmanız gerekiyor",
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
+      navigate("/admin");
     }
-  };
+  }, [adminStatus, isLoading, navigate, toast]);
 
-  // Veritabanı bağlantısını yeniden kur
-  const reconnectDatabase = async () => {
+  // Admin çıkış fonksiyonu
+  const handleLogout = async () => {
     try {
-      const res = await fetch('/api/db-check');
-      const data = await res.json();
-      
+      await apiRequest("POST", "/api/admin/logout");
       toast({
-        title: data.success ? "Bağlantı Başarılı" : "Bağlantı Başarısız",
-        description: data.message,
-        variant: data.success ? "default" : "destructive",
+        title: "Çıkış başarılı",
+        description: "Yönetici oturumunuz sonlandırıldı",
       });
+      navigate("/admin");
     } catch (error) {
       toast({
-        title: "Bağlantı Hatası",
-        description: "Veritabanı bağlantısı kontrol edilirken bir hata oluştu",
+        title: "Çıkış başarısız",
+        description: "Bir hata oluştu, lütfen tekrar deneyin",
         variant: "destructive",
       });
     }
   };
 
-  if (!isAuthenticated || !user) {
-    return null; // useEffect içinde yönlendirme yapılacak
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin w-8 h-8 border-4 border-primary border-t-transparent rounded-full"></div>
+      </div>
+    );
+  }
+
+  if (!adminStatus?.isAdmin) {
+    return null; // useEffect içinde yönlendirme yapılıyor
   }
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold">Yönetici Paneli</h1>
-        
-        <div className="space-x-4">
-          <Button 
-            variant="outline" 
-            onClick={reconnectDatabase}
-            className="flex items-center gap-2"
-          >
-            <RefreshCw className="h-4 w-4" />
-            Veritabanını Yenile
-          </Button>
-          
-          <Button 
-            onClick={() => setLocation('/')}
-            variant="secondary"
-          >
-            Ana Sayfaya Dön
-          </Button>
-        </div>
-      </div>
-      
-      <div className="flex items-center space-x-4 p-4 bg-slate-100 dark:bg-slate-800 rounded-lg">
-        <div className="h-12 w-12 rounded-full bg-primary text-white flex items-center justify-center">
-          <UserCog className="h-6 w-6" />
-        </div>
-        <div>
-          <h2 className="text-lg font-semibold">{user?.username || 'Admin'}</h2>
-          <p className="text-sm text-muted-foreground">{user?.email || '-'}</p>
-        </div>
-        <Badge variant="secondary" className="ml-auto">
-          {user?.role || 'Yönetici'}
-        </Badge>
-      </div>
-      
-      {loading ? (
-        <div className="flex justify-center my-12">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg">Toplam Kullanıcı</CardTitle>
-              <CardDescription>Sisteme kayıtlı kullanıcı sayısı</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold">{stats.totalUsers}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <UserX className="h-4 w-4 text-red-500" />
-                Yasaklı Kullanıcılar
-              </CardTitle>
-              <CardDescription>Sistemde yasaklanmış hesaplar</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-red-500">{stats.bannedUsers}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Flag className="h-4 w-4 text-yellow-500" />
-                İşaretli İçerikler
-              </CardTitle>
-              <CardDescription>İnceleme bekleyen gönderiler</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-yellow-500">{stats.flaggedPosts}</div>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-lg flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-yellow-500" />
-                İşaretli Yorumlar
-              </CardTitle>
-              <CardDescription>İnceleme bekleyen yorumlar</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="text-3xl font-bold text-yellow-500">{stats.flaggedComments}</div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-        <Card>
-          <CardHeader>
-            <CardTitle>Hızlı Erişim</CardTitle>
-            <CardDescription>Yönetimsel işlemler için hızlı bağlantılar</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <Button 
-              variant="outline" 
-              className="w-full justify-start"
-              onClick={() => setLocation('/admin/users')}
+    <div className="min-h-screen bg-gray-100 dark:bg-navy islamic-green:bg-emerald-100 islamic-gold:bg-amber-100 islamic-navy:bg-[#152238]">
+      <header className="bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] shadow-md">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <h1 className="text-xl font-bold text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300">
+            MüslimNet Yönetici Paneli
+          </h1>
+          <div className="flex items-center space-x-4">
+            <Link href="/" className="text-gray-600 dark:text-gray-300 hover:text-primary">
+              <IconHome className="w-5 h-5" />
+            </Link>
+            <button 
+              onClick={handleLogout}
+              className="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300"
             >
-              <UserCog className="mr-2 h-4 w-4" />
+              <IconLogout className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Toplam Kullanıcı</CardTitle>
+              <IconUsers className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">120</div>
+              <p className="text-xs text-muted-foreground">
+                Son 30 günde 24 yeni kullanıcı
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">İşaretli Gönderiler</CardTitle>
+              <IconFileWarning className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">7</div>
+              <p className="text-xs text-muted-foreground">
+                8 gönderi incelenmeyi bekliyor
+              </p>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-sm font-medium">Aktif Etkinlikler</CardTitle>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                className="h-4 w-4 text-muted-foreground"
+              >
+                <rect width="18" height="18" x="3" y="3" rx="2" />
+                <path d="M8 12h8" />
+                <path d="M12 8v8" />
+              </svg>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">12</div>
+              <p className="text-xs text-muted-foreground">
+                Bu hafta 3 yeni etkinlik eklendi
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Tabs defaultValue="users" className="bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] rounded-lg shadow-md">
+          <TabsList className="w-full justify-start border-b px-4 pt-2">
+            <TabsTrigger value="users" className="rounded-t-lg data-[state=active]:border-b-2 data-[state=active]:border-primary">
               Kullanıcı Yönetimi
-            </Button>
-            
-            <Button 
-              variant="outline" 
-              className="w-full justify-start"
-              onClick={() => setLocation('/admin/content')}
-            >
-              <Flag className="mr-2 h-4 w-4" />
+            </TabsTrigger>
+            <TabsTrigger value="moderation" className="rounded-t-lg data-[state=active]:border-b-2 data-[state=active]:border-primary">
               İçerik Moderasyonu
-            </Button>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardHeader>
-            <CardTitle>Sistem Durumu</CardTitle>
-            <CardDescription>Sistem bileşenlerinin durumu</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <div className="flex justify-between items-center">
-                <span>Veritabanı Bağlantısı</span>
-                <Badge variant="outline" className="bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300">
-                  Aktif
-                </Badge>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span>Oturum Yönetimi</span>
-                <Badge variant="outline" className="bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300">
-                  Aktif
-                </Badge>
-              </div>
-              
-              <div className="flex justify-between items-center">
-                <span>API Servisleri</span>
-                <Badge variant="outline" className="bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300">
-                  Aktif
-                </Badge>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="users" className="p-4">
+            <UserManagement />
+          </TabsContent>
+          <TabsContent value="moderation" className="p-4">
+            <ContentModeration />
+          </TabsContent>
+        </Tabs>
+      </main>
     </div>
   );
-}
+};
+
+export default Dashboard;

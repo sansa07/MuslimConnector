@@ -1,225 +1,231 @@
-import { Request, Response, Router } from 'express';
-import { storage } from '../storage';
-import { isAdmin } from '../middlewares/adminMiddleware';
+import { Router } from "express";
+import { storage } from "../storage";
+import { isAdmin } from "../middlewares/adminMiddleware";
 
-const router = Router();
+const adminRouter = Router();
 
-// Admin API durumunu kontrol et
-router.post('/status', isAdmin, (req: Request, res: Response) => {
-  res.json({
-    success: true,
-    message: "Yönetici oturumu aktif"
+// Admin authentication
+adminRouter.post("/login", async (req, res) => {
+  const { username, password } = req.body;
+  
+  if (username === "admin" && password === "admin123") {
+    if (!req.session) {
+      return res.status(500).json({ success: false, message: "Oturum hatası" });
+    }
+    
+    req.session.isAdmin = true;
+    req.session.adminId = "admin";
+    
+    return res.status(200).json({ 
+      success: true, 
+      message: "Yönetici girişi başarılı"
+    });
+  }
+  
+  return res.status(401).json({ 
+    success: false, 
+    message: "Geçersiz kullanıcı adı veya şifre"
   });
 });
 
-// Tüm kullanıcıları getir (yönetici dashboard için)
-router.get('/users', isAdmin, async (req: Request, res: Response) => {
+// Check admin status
+adminRouter.get("/status", (req, res) => {
+  return res.status(200).json({ 
+    isAdmin: req.session?.isAdmin || false
+  });
+});
+
+// Logout
+adminRouter.post("/logout", (req, res) => {
+  if (req.session) {
+    req.session.isAdmin = false;
+    delete req.session.adminId;
+  }
+  
+  return res.status(200).json({ 
+    success: true, 
+    message: "Çıkış yapıldı"
+  });
+});
+
+// Get all users
+adminRouter.get("/users", isAdmin, async (req, res) => {
   try {
     const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
     const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
     
     const users = await storage.getAllUsers(limit, offset);
-    
-    // Hassas verileri temizle
-    const safeUsers = users.map(user => {
-      const safeUser = { ...user };
-      if (safeUser.password) {
-        safeUser.password = undefined;
-      }
-      return safeUser;
-    });
-    
-    res.json({
-      success: true,
-      count: safeUsers.length,
-      data: safeUsers
-    });
+    return res.status(200).json({ users });
   } catch (error) {
-    console.error('Kullanıcılar getirilirken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Kullanıcılar getirilirken bir hata oluştu'
+    console.error("Kullanıcılar yüklenirken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Kullanıcılar yüklenirken hata oluştu" 
     });
   }
 });
 
-// İşaretlenmiş gönderileri listele
-router.get('/flagged-content/posts', isAdmin, async (req: Request, res: Response) => {
-  try {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
-    
-    const posts = await storage.getFlaggedPosts(limit, offset);
-    
-    res.json({
-      success: true,
-      count: posts.length,
-      data: posts
-    });
-  } catch (error) {
-    console.error('İşaretlenmiş gönderiler getirilirken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'İşaretlenmiş gönderiler getirilirken bir hata oluştu'
-    });
-  }
-});
-
-// İşaretlenmiş yorumları listele
-router.get('/flagged-content/comments', isAdmin, async (req: Request, res: Response) => {
-  try {
-    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
-    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
-    
-    const comments = await storage.getFlaggedComments(limit, offset);
-    
-    res.json({
-      success: true,
-      count: comments.length,
-      data: comments
-    });
-  } catch (error) {
-    console.error('İşaretlenmiş yorumlar getirilirken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'İşaretlenmiş yorumlar getirilirken bir hata oluştu'
-    });
-  }
-});
-
-// Kullanıcı yasakla
-router.post('/users/:id/ban', isAdmin, async (req: Request, res: Response) => {
+// Ban a user
+adminRouter.post("/users/:id/ban", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     const { reason } = req.body;
     
-    const user = await storage.banUser(id, reason || 'Topluluk kurallarını ihlal');
+    const user = await storage.banUser(id, reason);
     
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'Kullanıcı bulunamadı'
+      return res.status(404).json({ 
+        success: false, 
+        message: "Kullanıcı bulunamadı" 
       });
     }
     
-    // Hassas bilgileri temizle
-    const safeUser = { ...user };
-    if (safeUser.password) {
-      safeUser.password = undefined;
-    }
-    
-    res.json({
-      success: true,
-      message: 'Kullanıcı başarıyla yasaklandı',
-      data: safeUser
+    return res.status(200).json({ 
+      success: true, 
+      message: "Kullanıcı yasaklandı", 
+      user 
     });
+    
   } catch (error) {
-    console.error('Kullanıcı yasaklanırken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Kullanıcı yasaklanırken bir hata oluştu'
+    console.error("Kullanıcı yasaklanırken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Kullanıcı yasaklanırken hata oluştu" 
     });
   }
 });
 
-// Kullanıcı yasağını kaldır
-router.post('/users/:id/unban', isAdmin, async (req: Request, res: Response) => {
+// Unban a user
+adminRouter.post("/users/:id/unban", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
     
     const user = await storage.unbanUser(id);
     
     if (!user) {
-      return res.status(404).json({
-        success: false,
-        message: 'Kullanıcı bulunamadı'
+      return res.status(404).json({ 
+        success: false, 
+        message: "Kullanıcı bulunamadı" 
       });
     }
     
-    // Hassas bilgileri temizle
-    const safeUser = { ...user };
-    if (safeUser.password) {
-      safeUser.password = undefined;
-    }
-    
-    res.json({
-      success: true,
-      message: 'Kullanıcı yasağı başarıyla kaldırıldı',
-      data: safeUser
+    return res.status(200).json({ 
+      success: true, 
+      message: "Kullanıcı yasağı kaldırıldı", 
+      user 
     });
+    
   } catch (error) {
-    console.error('Kullanıcı yasağı kaldırılırken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Kullanıcı yasağı kaldırılırken bir hata oluştu'
+    console.error("Kullanıcı yasağı kaldırılırken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Kullanıcı yasağı kaldırılırken hata oluştu" 
     });
   }
 });
 
-// Gönderi moderasyon işlemi
-router.put('/posts/:id', isAdmin, async (req: Request, res: Response) => {
+// Get flagged content
+adminRouter.get("/moderation/posts", isAdmin, async (req, res) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+    
+    const flaggedPosts = await storage.getFlaggedPosts(limit, offset);
+    return res.status(200).json({ posts: flaggedPosts });
+  } catch (error) {
+    console.error("İşaretli gönderiler yüklenirken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "İşaretli gönderiler yüklenirken hata oluştu" 
+    });
+  }
+});
+
+// Get flagged comments
+adminRouter.get("/moderation/comments", isAdmin, async (req, res) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+    
+    const flaggedComments = await storage.getFlaggedComments(limit, offset);
+    return res.status(200).json({ comments: flaggedComments });
+  } catch (error) {
+    console.error("İşaretli yorumlar yüklenirken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "İşaretli yorumlar yüklenirken hata oluştu" 
+    });
+  }
+});
+
+// Approve/reject a post
+adminRouter.post("/moderation/posts/:id", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { isFlagged, moderationStatus, moderationNote } = req.body;
+    const { isApproved, moderationComment } = req.body;
     
     const post = await storage.updatePost(parseInt(id), {
-      flaggedForContent: isFlagged,
+      isApproved,
       isModerated: true,
-      moderationComment: moderationNote
+      flaggedForContent: false,
+      moderationComment
     });
     
     if (!post) {
-      return res.status(404).json({
-        success: false,
-        message: 'Gönderi bulunamadı'
+      return res.status(404).json({ 
+        success: false, 
+        message: "Gönderi bulunamadı" 
       });
     }
     
-    res.json({
-      success: true,
-      message: 'Gönderi başarıyla güncellendi',
-      data: post
+    return res.status(200).json({ 
+      success: true, 
+      message: "Gönderi güncellendi", 
+      post 
     });
+    
   } catch (error) {
-    console.error('Gönderi güncellenirken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Gönderi güncellenirken bir hata oluştu'
+    console.error("Gönderi güncellenirken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Gönderi güncellenirken hata oluştu" 
     });
   }
 });
 
-// Yorum moderasyon işlemi
-router.put('/comments/:id', isAdmin, async (req: Request, res: Response) => {
+// Approve/reject a comment
+adminRouter.post("/moderation/comments/:id", isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
-    const { isFlagged, moderationStatus, moderationNote } = req.body;
+    const { isApproved, moderationComment } = req.body;
     
     const comment = await storage.updateComment(parseInt(id), {
-      flaggedForContent: isFlagged,
+      isApproved,
       isModerated: true,
-      moderationComment: moderationNote
+      flaggedForContent: false,
+      moderationComment
     });
     
     if (!comment) {
-      return res.status(404).json({
-        success: false,
-        message: 'Yorum bulunamadı'
+      return res.status(404).json({ 
+        success: false, 
+        message: "Yorum bulunamadı" 
       });
     }
     
-    res.json({
-      success: true,
-      message: 'Yorum başarıyla güncellendi',
-      data: comment
+    return res.status(200).json({ 
+      success: true, 
+      message: "Yorum güncellendi", 
+      comment 
     });
+    
   } catch (error) {
-    console.error('Yorum güncellenirken hata:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Yorum güncellenirken bir hata oluştu'
+    console.error("Yorum güncellenirken hata:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Yorum güncellenirken hata oluştu" 
     });
   }
 });
 
-export default router;
+export default adminRouter;

@@ -38,9 +38,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   const apiRouter = Router();
   app.use('/api/v1', apiRouter);
   
-  // Admin rotaları
-  app.use('/api/admin', adminRoutes);
-
   // ÖNEMLİ: Auth middleware'i önce çağırarak rotaları kaydet
   await setupAuth(app);
   

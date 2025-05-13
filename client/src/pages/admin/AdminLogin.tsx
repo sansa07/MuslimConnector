@@ -1,121 +1,127 @@
-import { useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
-import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLocation } from 'wouter';
+import { useState } from "react";
+import { useNavigate } from "wouter";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { useToast } from "@/hooks/use-toast";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useMutation } from "@tanstack/react-query";
+import { IconMosque } from "@/lib/icons";
 
-export default function AdminLogin() {
-  const auth = useAuth();
+const loginSchema = z.object({
+  username: z.string().min(1, "Kullanıcı adı gereklidir"),
+  password: z.string().min(1, "Şifre gereklidir"),
+});
+
+type LoginFormValues = z.infer<typeof loginSchema>;
+
+const AdminLogin = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [, navigate] = useNavigate();
   const { toast } = useToast();
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [, setLocation] = useLocation();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!username || !password) {
-      toast({
-        title: "Hata",
-        description: "Kullanıcı adı ve şifre gereklidir",
-        variant: "destructive",
-      });
-      return;
-    }
-    
-    setLoading(true);
-    
-    try {
-      // Normal bir fetch isteği gönder
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, password }),
-        credentials: 'include'
-      });
-      
+  const form = useForm<LoginFormValues>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      username: "",
+      password: "",
+    },
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: async (data: LoginFormValues) => {
+      const response = await apiRequest("POST", "/api/admin/login", data);
       if (!response.ok) {
-        throw new Error('Giriş başarısız');
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Giriş başarısız");
       }
-      
-      const userData = await response.json();
-      
-      // Admin kontrolü yap
-      if (userData.role !== 'admin') {
-        throw new Error('Yönetici yetkisi gerekli');
-      }
-      
+      return await response.json();
+    },
+    onSuccess: () => {
       toast({
-        title: "Giriş Başarılı",
-        description: "Yönetici paneline yönlendiriliyorsunuz...",
+        title: "Giriş başarılı",
+        description: "Yönetici paneline yönlendiriliyorsunuz",
       });
-      
-      // Admin dashboard'a yönlendir
-      setLocation('/admin/dashboard');
-    } catch (error) {
+      queryClient.invalidateQueries({ queryKey: ["/api/admin/status"] });
+      navigate("/admin/dashboard");
+    },
+    onError: (error: Error) => {
       toast({
-        title: "Giriş Başarısız",
-        description: error instanceof Error ? error.message : "Bir hata oluştu",
+        title: "Giriş başarısız",
+        description: error.message,
         variant: "destructive",
       });
-    } finally {
-      setLoading(false);
-    }
+    },
+  });
+
+  const onSubmit = (data: LoginFormValues) => {
+    loginMutation.mutate(data);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 dark:bg-navy islamic-green:bg-emerald-100 islamic-gold:bg-amber-100 islamic-navy:bg-[#152238]">
       <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Yönetici Girişi</CardTitle>
-          <CardDescription className="text-center">
+        <CardHeader className="space-y-1 text-center">
+          <div className="flex justify-center mb-2">
+            <IconMosque className="h-12 w-12 text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300" />
+          </div>
+          <CardTitle className="text-2xl font-bold">Yönetici Girişi</CardTitle>
+          <CardDescription>
             Yönetici paneline erişmek için giriş yapın
           </CardDescription>
         </CardHeader>
-        
-        <form onSubmit={handleSubmit}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <label htmlFor="username" className="text-sm font-medium">Kullanıcı Adı</label>
-              <Input
-                id="username"
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-                placeholder="admin"
-                required
+        <CardContent>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="username"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Kullanıcı Adı</FormLabel>
+                    <FormControl>
+                      <Input placeholder="admin" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-sm font-medium">Şifre</label>
-              <Input
-                id="password"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Şifre</FormLabel>
+                    <FormControl>
+                      <Input type="password" placeholder="••••••••" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </CardContent>
-          
-          <CardFooter>
-            <Button 
-              type="submit" 
-              className="w-full" 
-              disabled={loading}
-            >
-              {loading ? "Giriş yapılıyor..." : "Giriş Yap"}
-            </Button>
-          </CardFooter>
-        </form>
+              <Button 
+                type="submit" 
+                className="w-full" 
+                disabled={loginMutation.isPending}
+              >
+                {loginMutation.isPending ? "Giriş yapılıyor..." : "Giriş Yap"}
+              </Button>
+            </form>
+          </Form>
+        </CardContent>
+        <CardFooter className="flex flex-col">
+          <p className="px-4 py-2 text-center text-sm text-muted-foreground">
+            Yönetici girişi sadece yetkili kişiler içindir.
+          </p>
+        </CardFooter>
       </Card>
     </div>
   );
-}
+};
+
+export default AdminLogin;
