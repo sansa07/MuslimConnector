@@ -90,12 +90,20 @@ const Sidebar = () => {
           <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">
             <IconSettings className="text-gray-600 dark:text-gray-300 islamic-navy:text-blue-300" />
           </button>
-          {isAuthenticated && (
-            <a href="/api/logout" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">
-              <IconLogout className="text-gray-600 dark:text-gray-300 islamic-navy:text-blue-300" />
-            </a>
-          )}
         </div>
+        
+        {/* Çıkış butonu ayrı bir satırda gösteriliyor */}
+        {isAuthenticated && (
+          <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700 islamic-navy:border-blue-800">
+            <a 
+              href="/api/logout" 
+              className="flex items-center p-2 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20"
+            >
+              <IconLogout className="mr-2" />
+              <span>Çıkış Yap</span>
+            </a>
+          </div>
+        )}
       </div>
     </aside>
   );

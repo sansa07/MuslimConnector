@@ -114,7 +114,7 @@ export default function MobileHeader() {
                     // Doğrudan logout sayfasına yönlendir
                     window.location.href = '/api/logout';
                   }}
-                  className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 w-full text-left"
+                  className="flex items-center space-x-3 p-3 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 w-full text-left z-50 relative"
                 >
                   <LogOut className="w-5 h-5" />
                   <span>Çıkış Yap</span>
