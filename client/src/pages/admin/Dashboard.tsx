@@ -151,11 +151,11 @@ export default function AdminDashboard() {
           <UserCog className="h-6 w-6" />
         </div>
         <div>
-          <h2 className="text-lg font-semibold">{user.username || 'Admin'}</h2>
-          <p className="text-sm text-muted-foreground">{user.email}</p>
+          <h2 className="text-lg font-semibold">{user?.username || 'Admin'}</h2>
+          <p className="text-sm text-muted-foreground">{user?.email || '-'}</p>
         </div>
         <Badge variant="secondary" className="ml-auto">
-          {user.role || 'Yönetici'}
+          {user?.role || 'Yönetici'}
         </Badge>
       </div>
       

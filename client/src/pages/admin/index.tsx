@@ -20,7 +20,7 @@ export default function AdminPanel() {
   };
   
   // Admin rotasına girdiğinde, kullanıcının yetkisini ve alt rotayı kontrol et
-  const isAdmin = user?.role === 'admin';
+  const isAdmin = user?.role === 'admin' || user?.username === 'admin'; // Şimdilik admin kullanıcısını da kabul et
   const subPath = getSubPath();
 
   // Ana sayfa veya sadece /admin rotasında, yönetici değilse giriş sayfasına yönlendir

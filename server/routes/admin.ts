@@ -1,18 +1,26 @@
-import express from 'express';
-import { adminMiddleware } from '../middlewares/adminMiddleware';
+import { Request, Response, Router } from 'express';
 import { storage } from '../storage';
+import { isAdmin } from '../middlewares/adminMiddleware';
 
-const router = express.Router();
+const router = Router();
 
-// Admin middleware ile tüm admin rotalarını koru
-router.use(adminMiddleware);
+// Admin API durumunu kontrol et
+router.post('/status', isAdmin, (req: Request, res: Response) => {
+  res.json({
+    success: true,
+    message: "Yönetici oturumu aktif"
+  });
+});
 
-// Tüm kullanıcıları getir
-router.get('/users', async (req, res) => {
+// Tüm kullanıcıları getir (yönetici dashboard için)
+router.get('/users', isAdmin, async (req: Request, res: Response) => {
   try {
-    const users = await storage.getAllUsers();
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 50;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
     
-    // Hassas bilgileri temizle
+    const users = await storage.getAllUsers(limit, offset);
+    
+    // Hassas verileri temizle
     const safeUsers = users.map(user => {
       const safeUser = { ...user };
       if (safeUser.password) {
@@ -23,10 +31,11 @@ router.get('/users', async (req, res) => {
     
     res.json({
       success: true,
+      count: safeUsers.length,
       data: safeUsers
     });
   } catch (error) {
-    console.error('Admin users error:', error);
+    console.error('Kullanıcılar getirilirken hata:', error);
     res.status(500).json({
       success: false,
       message: 'Kullanıcılar getirilirken bir hata oluştu'
@@ -34,20 +43,57 @@ router.get('/users', async (req, res) => {
   }
 });
 
-// Kullanıcıyı yasakla
-router.post('/users/:id/ban', async (req, res) => {
+// İşaretlenmiş gönderileri listele
+router.get('/flagged-content/posts', isAdmin, async (req: Request, res: Response) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+    
+    const posts = await storage.getFlaggedPosts(limit, offset);
+    
+    res.json({
+      success: true,
+      count: posts.length,
+      data: posts
+    });
+  } catch (error) {
+    console.error('İşaretlenmiş gönderiler getirilirken hata:', error);
+    res.status(500).json({
+      success: false,
+      message: 'İşaretlenmiş gönderiler getirilirken bir hata oluştu'
+    });
+  }
+});
+
+// İşaretlenmiş yorumları listele
+router.get('/flagged-content/comments', isAdmin, async (req: Request, res: Response) => {
+  try {
+    const limit = req.query.limit ? parseInt(req.query.limit as string) : 20;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) : 0;
+    
+    const comments = await storage.getFlaggedComments(limit, offset);
+    
+    res.json({
+      success: true,
+      count: comments.length,
+      data: comments
+    });
+  } catch (error) {
+    console.error('İşaretlenmiş yorumlar getirilirken hata:', error);
+    res.status(500).json({
+      success: false,
+      message: 'İşaretlenmiş yorumlar getirilirken bir hata oluştu'
+    });
+  }
+});
+
+// Kullanıcı yasakla
+router.post('/users/:id/ban', isAdmin, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { reason } = req.body;
     
-    if (!reason) {
-      return res.status(400).json({
-        success: false,
-        message: 'Yasaklama sebebi belirtilmelidir'
-      });
-    }
-    
-    const user = await storage.banUser(id, reason);
+    const user = await storage.banUser(id, reason || 'Topluluk kurallarını ihlal');
     
     if (!user) {
       return res.status(404).json({
@@ -58,7 +104,9 @@ router.post('/users/:id/ban', async (req, res) => {
     
     // Hassas bilgileri temizle
     const safeUser = { ...user };
-    delete safeUser.password;
+    if (safeUser.password) {
+      safeUser.password = undefined;
+    }
     
     res.json({
       success: true,
@@ -66,7 +114,7 @@ router.post('/users/:id/ban', async (req, res) => {
       data: safeUser
     });
   } catch (error) {
-    console.error('Admin ban user error:', error);
+    console.error('Kullanıcı yasaklanırken hata:', error);
     res.status(500).json({
       success: false,
       message: 'Kullanıcı yasaklanırken bir hata oluştu'
@@ -75,7 +123,7 @@ router.post('/users/:id/ban', async (req, res) => {
 });
 
 // Kullanıcı yasağını kaldır
-router.post('/users/:id/unban', async (req, res) => {
+router.post('/users/:id/unban', isAdmin, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     
@@ -90,7 +138,9 @@ router.post('/users/:id/unban', async (req, res) => {
     
     // Hassas bilgileri temizle
     const safeUser = { ...user };
-    delete safeUser.password;
+    if (safeUser.password) {
+      safeUser.password = undefined;
+    }
     
     res.json({
       success: true,
@@ -98,7 +148,7 @@ router.post('/users/:id/unban', async (req, res) => {
       data: safeUser
     });
   } catch (error) {
-    console.error('Admin unban user error:', error);
+    console.error('Kullanıcı yasağı kaldırılırken hata:', error);
     res.status(500).json({
       success: false,
       message: 'Kullanıcı yasağı kaldırılırken bir hata oluştu'
@@ -106,51 +156,15 @@ router.post('/users/:id/unban', async (req, res) => {
   }
 });
 
-// İşaretlenmiş gönderileri getir
-router.get('/flagged-content/posts', async (req, res) => {
-  try {
-    const flaggedPosts = await storage.getFlaggedPosts();
-    
-    res.json({
-      success: true,
-      data: flaggedPosts
-    });
-  } catch (error) {
-    console.error('Admin flagged posts error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'İşaretlenmiş gönderiler getirilirken bir hata oluştu'
-    });
-  }
-});
-
-// İşaretlenmiş yorumları getir
-router.get('/flagged-content/comments', async (req, res) => {
-  try {
-    const flaggedComments = await storage.getFlaggedComments();
-    
-    res.json({
-      success: true,
-      data: flaggedComments
-    });
-  } catch (error) {
-    console.error('Admin flagged comments error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'İşaretlenmiş yorumlar getirilirken bir hata oluştu'
-    });
-  }
-});
-
-// Gönderiyi güncelle (onay veya reddetme)
-router.patch('/posts/:id', async (req, res) => {
+// Gönderi moderasyon işlemi
+router.put('/posts/:id', isAdmin, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { isFlagged, moderationStatus, moderationNote } = req.body;
     
     const post = await storage.updatePost(parseInt(id), {
       flaggedForContent: isFlagged,
-      moderationStatus: moderationStatus || 'reviewed',
+      isModerated: true,
       moderationComment: moderationNote
     });
     
@@ -167,7 +181,7 @@ router.patch('/posts/:id', async (req, res) => {
       data: post
     });
   } catch (error) {
-    console.error('Admin update post error:', error);
+    console.error('Gönderi güncellenirken hata:', error);
     res.status(500).json({
       success: false,
       message: 'Gönderi güncellenirken bir hata oluştu'
@@ -175,15 +189,15 @@ router.patch('/posts/:id', async (req, res) => {
   }
 });
 
-// Yorumu güncelle (onay veya reddetme)
-router.patch('/comments/:id', async (req, res) => {
+// Yorum moderasyon işlemi
+router.put('/comments/:id', isAdmin, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { isFlagged, moderationStatus, moderationNote } = req.body;
     
     const comment = await storage.updateComment(parseInt(id), {
       flaggedForContent: isFlagged,
-      moderationStatus: moderationStatus || 'reviewed',
+      isModerated: true,
       moderationComment: moderationNote
     });
     
@@ -200,30 +214,12 @@ router.patch('/comments/:id', async (req, res) => {
       data: comment
     });
   } catch (error) {
-    console.error('Admin update comment error:', error);
+    console.error('Yorum güncellenirken hata:', error);
     res.status(500).json({
       success: false,
       message: 'Yorum güncellenirken bir hata oluştu'
     });
   }
-});
-
-// Admin durumu kontrolü
-router.get('/status', (req, res) => {
-  // Kullanıcı adminMiddleware'den geçtiyse, bu noktaya ulaşmıştır
-  // Bu da onun admin olduğu anlamına gelir
-  const user = req.user as any;
-  
-  res.json({
-    success: true,
-    message: 'Yönetici erişimi onaylandı',
-    user: {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      role: user.role
-    }
-  });
 });
 
 export default router;

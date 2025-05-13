@@ -10,6 +10,7 @@ import {
   getDailyStoryForDay,
   getCurrentDayOfYear
 } from "./api/daily-wisdom";
+import adminRoutes from "./routes/admin";
 import { 
   quranVerses, hadiths, verificationTokens, 
   insertPostSchema, insertCommentSchema, insertLikeSchema, 
