@@ -76,7 +76,7 @@ const MobileHeader = () => {
       {/* Mobile Menu Overlay */}
       {menuOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden">
-          <div className="bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] w-3/4 h-full ml-auto py-4 px-6 overflow-y-auto">
+          <div className="bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] w-3/4 h-full ml-auto py-4 px-6 overflow-y-auto pb-[60px]">
             <div className="flex justify-between items-center mb-6">
               <h2 className="font-amiri text-xl font-bold text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300">Menu</h2>
               <button onClick={toggleMenu}>
@@ -120,7 +120,7 @@ const MobileHeader = () => {
               ))}
             </nav>
 
-            <div className="flex flex-col mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+            <div className="flex flex-col mt-auto pt-4 border-t border-gray-200 dark:border-gray-700 mb-[30px]">
               <div className="flex items-center justify-between mb-4">
                 <ThemeToggle />
                 
