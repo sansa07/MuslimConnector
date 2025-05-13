@@ -12,7 +12,8 @@ import {
   IconSettings, 
   IconLogout,
   IconPrayerTimes,
-  IconWisdom
+  IconWisdom,
+  IconAdmin
 } from "@/lib/icons";
 
 const Sidebar = () => {
@@ -23,7 +24,8 @@ const Sidebar = () => {
     return location === route;
   };
 
-  const menuItems = [
+  // Menu öğelerini oluştur
+  let menuItems = [
     { label: "Anasayfa", path: "/", icon: <IconHome /> },
     { label: "Keşfet", path: "/explore", icon: <IconCompass /> },
     { label: "Etkinlikler", path: "/events", icon: <IconCalendar /> },
@@ -34,10 +36,15 @@ const Sidebar = () => {
     { label: "Topluluklar", path: "/communities", icon: <IconUsers /> },
     { label: "Hakkımızda", path: "/about", icon: <IconSettings /> },
   ];
+  
+  // Admin paneli bağlantısını ekle (sadece admin kullanıcılar için)
+  if (user?.role === 'admin' || user?.username === 'admin') {
+    menuItems.push({ label: "Admin Panel", path: "/admin", icon: <IconAdmin /> });
+  }
 
   return (
     <aside className="hidden lg:block fixed left-0 top-0 bottom-0 w-64 bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] shadow-md z-40">
-      <div className="p-4">
+      <div className="p-4 h-full overflow-y-auto pb-24">
         <div className="flex items-center mb-8">
           <i className="fas fa-mosque text-primary text-2xl mr-2 islamic-gold:text-amber-500 islamic-navy:text-blue-300"></i>
           <h1 className="font-amiri text-2xl font-bold text-primary dark:text-primary-light islamic-gold:text-amber-600 islamic-navy:text-blue-300">MüslimNet</h1>
@@ -84,7 +91,7 @@ const Sidebar = () => {
         </nav>
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200 dark:border-gray-700 islamic-navy:border-blue-800">
+      <div className="fixed bottom-0 left-0 w-64 p-4 border-t border-gray-200 dark:border-gray-700 islamic-navy:border-blue-800 bg-white dark:bg-navy-dark islamic-green:bg-emerald-50 islamic-gold:bg-amber-50 islamic-navy:bg-[#1c3353] z-40">
         <div className="flex items-center justify-between">
           <ThemeToggle />
           <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">

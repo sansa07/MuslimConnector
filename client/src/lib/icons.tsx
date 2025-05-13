@@ -60,6 +60,10 @@ export const IconBell = ({ className = "" }: IconProps) => (
   <i className={`fas fa-bell ${className}`}></i>
 );
 
+export const IconAdmin = ({ className = "" }: IconProps) => (
+  <i className={`fas fa-shield-alt ${className}`}></i>
+);
+
 export const IconClose = ({ className = "" }: IconProps) => (
   <i className={`fas fa-times ${className}`}></i>
 );

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
-import { IconMenu, IconSearch, IconBell, IconMosque, IconClose, IconUser, IconPrayerTimes, IconWisdom } from "@/lib/icons";
+import { IconMenu, IconSearch, IconBell, IconMosque, IconClose, IconUser, IconPrayerTimes, IconWisdom, IconLogout } from "@/lib/icons";
 import { ThemeToggle } from "@/components/ui/theme-provider";
 
 const MobileHeader = () => {
@@ -59,6 +59,14 @@ const MobileHeader = () => {
               </Link>
             )}
             <ThemeToggle />
+            {isAuthenticated && (
+              <a 
+                href="/api/logout" 
+                className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900 text-red-600 dark:text-red-400"
+              >
+                <IconLogout />
+              </a>
+            )}
             <button 
               className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900"
               onClick={toggleMenu}
@@ -120,11 +128,18 @@ const MobileHeader = () => {
               ))}
             </nav>
 
-            <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
-              <ThemeToggle />
+            <div className="flex flex-col mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex items-center justify-between mb-4">
+                <ThemeToggle />
+                <button className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-navy-light islamic-green:hover:bg-emerald-100 islamic-gold:hover:bg-amber-100 islamic-navy:hover:bg-blue-900">
+                  <IconSettings className="text-gray-600 dark:text-gray-300" />
+                </button>
+              </div>
+              
               {isAuthenticated && (
-                <a href="/api/logout" className="py-2 px-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 rounded-lg">
-                  Çıkış Yap
+                <a href="/api/logout" className="flex items-center py-3 px-4 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900 dark:hover:bg-opacity-20 rounded-lg">
+                  <IconLogout className="mr-2" />
+                  <span>Çıkış Yap</span>
                 </a>
               )}
             </div>
