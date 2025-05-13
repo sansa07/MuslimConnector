@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "wouter";
 import { useAuth } from "@/hooks/useAuth";
-import { IconMenu, IconSearch, IconBell, IconMosque, IconClose, IconUser, IconPrayerTimes, IconWisdom, IconLogout } from "@/lib/icons";
+import { IconMenu, IconSearch, IconBell, IconMosque, IconClose, IconUser, IconPrayerTimes, IconWisdom, IconLogout, IconSettings } from "@/lib/icons";
 import { ThemeToggle } from "@/components/ui/theme-provider";
 
 const MobileHeader = () => {
