@@ -8,7 +8,9 @@ import { Badge } from '@/components/ui/badge';
 import { UserCog, UserX, Flag, MessageSquare, RefreshCw } from 'lucide-react';
 
 export default function AdminDashboard() {
-  const { user, isAuthenticated } = useAuth();
+  const auth = useAuth();
+  const user = auth.user;
+  const isAuthenticated = auth.isAuthenticated;
   const { toast } = useToast();
   const [, setLocation] = useLocation();
   const [stats, setStats] = useState({

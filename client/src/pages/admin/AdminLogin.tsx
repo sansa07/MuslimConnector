@@ -29,45 +29,37 @@ export default function AdminLogin() {
     setLoading(true);
     
     try {
-      try {
-        // Normal bir fetch isteği gönder
-        const response = await fetch('/api/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ username, password }),
-          credentials: 'include'
-        });
-        
-        if (!response.ok) {
-          throw new Error('Giriş başarısız');
-        }
-        
-        const userData = await response.json();
-        
-        // Admin kontrolü yap
-        if (userData.role !== 'admin') {
-          throw new Error('Yönetici yetkisi gerekli');
-        }
-        
-        toast({
-          title: "Giriş Başarılı",
-          description: "Yönetici paneline yönlendiriliyorsunuz...",
-        });
-        
-        // Admin dashboard'a yönlendir
-        setLocation('/admin/dashboard');
-      } else {
-        toast({
-          title: "Giriş Başarısız",
-          description: "Geçersiz yönetici kimlik bilgileri",
-          variant: "destructive",
-        });
+      // Normal bir fetch isteği gönder
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, password }),
+        credentials: 'include'
+      });
+      
+      if (!response.ok) {
+        throw new Error('Giriş başarısız');
       }
+      
+      const userData = await response.json();
+      
+      // Admin kontrolü yap
+      if (userData.role !== 'admin') {
+        throw new Error('Yönetici yetkisi gerekli');
+      }
+      
+      toast({
+        title: "Giriş Başarılı",
+        description: "Yönetici paneline yönlendiriliyorsunuz...",
+      });
+      
+      // Admin dashboard'a yönlendir
+      setLocation('/admin/dashboard');
     } catch (error) {
       toast({
-        title: "Giriş Hatası",
+        title: "Giriş Başarısız",
         description: error instanceof Error ? error.message : "Bir hata oluştu",
         variant: "destructive",
       });

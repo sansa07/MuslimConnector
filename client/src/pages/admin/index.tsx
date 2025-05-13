@@ -9,7 +9,9 @@ const Dashboard = lazy(() => import("./Dashboard"));
 
 export default function AdminPanel() {
   const [location] = useLocation();
-  const { user, isAuthenticated } = useAuth();
+  const auth = useAuth();
+  const user = auth.user;
+  const isAuthenticated = auth.isAuthenticated;
   
   // URL'den path kısmını al (örn: /admin/login -> login)
   const getSubPath = () => {
