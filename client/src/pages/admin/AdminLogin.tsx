@@ -7,12 +7,12 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { useLocation } from 'wouter';
 
 export default function AdminLogin() {
-  const { loginMutation } = useAuth();
+  const auth = useAuth();
   const { toast } = useToast();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const [, navigate] = useNavigate();
+  const [, setLocation] = useLocation();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +32,7 @@ export default function AdminLogin() {
       // Admin kullanıcı adı ve şifre kontrolü
       if (username === 'admin' && password === 'admin123') {
         // Normal login işlemini kullan, ama role=admin olan bir kullanıcı olmalı
-        await loginMutation.mutateAsync({ username, password });
+        await auth.loginMutation.mutateAsync({ username, password });
         
         toast({
           title: "Giriş Başarılı",
@@ -40,7 +40,7 @@ export default function AdminLogin() {
         });
         
         // Admin dashboard'a yönlendir
-        navigate('/admin/dashboard');
+        setLocation('/admin/dashboard');
       } else {
         toast({
           title: "Giriş Başarısız",

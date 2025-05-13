@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { useNavigate } from 'wouter';
+import { useLocation } from 'wouter';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { UserCog, UserX, Flag, MessageSquare, RefreshCw } from 'lucide-react';
@@ -10,7 +10,7 @@ import { UserCog, UserX, Flag, MessageSquare, RefreshCw } from 'lucide-react';
 export default function AdminDashboard() {
   const { user, isAuthenticated } = useAuth();
   const { toast } = useToast();
-  const [, navigate] = useNavigate();
+  const [, setLocation] = useLocation();
   const [stats, setStats] = useState({
     totalUsers: 0,
     bannedUsers: 0,
@@ -28,7 +28,7 @@ export default function AdminDashboard() {
           description: "Bu sayfaya erişmek için giriş yapmanız gerekiyor",
           variant: "destructive",
         });
-        navigate('/admin/login');
+        setLocation('/admin/login');
         return;
       }
 
@@ -41,7 +41,7 @@ export default function AdminDashboard() {
             description: "Bu sayfaya erişim yetkiniz yok",
             variant: "destructive",
           });
-          navigate('/');
+          setLocation('/');
           return;
         }
         
