@@ -10,7 +10,6 @@ import {
   getDailyStoryForDay,
   getCurrentDayOfYear
 } from "./api/daily-wisdom";
-import adminRoutes from "./routes/admin";
 import { 
   quranVerses, hadiths, verificationTokens, 
   insertPostSchema, insertCommentSchema, insertLikeSchema, 
@@ -38,6 +37,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // API rotaları için v1 prefix ekleyelim
   const apiRouter = Router();
   app.use('/api/v1', apiRouter);
+  
+  // Admin rotaları
+  app.use('/api/admin', adminRoutes);
 
   // ÖNEMLİ: Auth middleware'i önce çağırarak rotaları kaydet
   await setupAuth(app);
