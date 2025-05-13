@@ -16,10 +16,11 @@ import {
   insertEventSchema, insertDuaRequestSchema
 } from "@shared/schema";
 import { z } from "zod";
-import { db } from "./db";
+import { db, connectToDatabase } from "./db";
 import { createNotification, getUserNotifications, markNotificationAsRead, markAllNotificationsAsRead } from "./api/notifications";
 import { sendEmail, getVerificationEmailHtml, generateToken } from "./api/email";
 import { handleFacebookAuth, handleGoogleAuth, handleGitHubAuth } from "./api/social-auth";
+import adminRoutes from "./routes/admin";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // API rotalarını düzgün yönlendirmek için middleware - bu TÜM API rotalarını önce yakalamalı
