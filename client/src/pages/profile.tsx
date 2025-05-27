@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "wouter";
+import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
