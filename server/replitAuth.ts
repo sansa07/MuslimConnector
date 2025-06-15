@@ -9,12 +9,18 @@ import memoize from "memoizee";
 import MemoryStore from "memorystore";
 import { storage } from "./storage";
 
-if (!process.env.REPLIT_DOMAINS) {
-  throw new Error("Environment variable REPLIT_DOMAINS not provided");
+// Check if Replit authentication is available
+const isReplitAuthAvailable = !!(process.env.REPLIT_DOMAINS && process.env.REPL_ID);
+
+if (!isReplitAuthAvailable) {
+  console.warn("REPLIT_DOMAINS or REPL_ID environment variables not provided. Replit authentication will be disabled.");
 }
 
 const getOidcConfig = memoize(
   async () => {
+    if (!isReplitAuthAvailable) {
+      throw new Error("Replit authentication not available");
+    }
     return await client.discovery(
       new URL(process.env.ISSUER_URL ?? "https://replit.com/oidc"),
       process.env.REPL_ID!
@@ -78,6 +84,77 @@ export async function setupAuth(app: Express) {
   app.use(getSession());
   app.use(passport.initialize());
   app.use(passport.session());
+
+  // Only setup Replit authentication if environment variables are available
+  if (!isReplitAuthAvailable) {
+    console.log("Replit authentication disabled - environment variables not available");
+    
+    // Setup fallback routes that redirect to regular auth
+    app.get("/api/login", (req, res) => {
+      res.redirect("/auth");
+    });
+
+    app.get("/api/callback", (req, res) => {
+      res.redirect("/auth");
+    });
+
+    app.get("/api/logout", (req, res) => {
+      try {
+        // HTML sayfası döndür - localStorage'ı temizlesin ve login sayfasına yönlendirsin
+        res.send(`
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <title>Çıkış yapılıyor...</title>
+              <script>
+                // LocalStorage'dan kullanıcı verisini temizle
+                localStorage.removeItem('userData');
+                
+                // 1 saniye sonra giriş sayfasına yönlendir
+                setTimeout(function() {
+                  window.location.href = '/auth';
+                }, 1000);
+              </script>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  height: 100vh;
+                  margin: 0;
+                  background-color: #f5f5f5;
+                }
+                .logout-container {
+                  text-align: center;
+                  padding: 20px;
+                  background-color: white;
+                  border-radius: 8px;
+                  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                }
+              </style>
+            </head>
+            <body>
+              <div class="logout-container">
+                <h2>Çıkış Yapılıyor</h2>
+                <p>Güvenli bir şekilde çıkış yapılıyor, lütfen bekleyin...</p>
+              </div>
+            </body>
+          </html>
+        `);
+        
+        // Oturumu da kapat
+        req.logout(() => {
+          console.log("Oturum başarıyla kapatıldı");
+        });
+      } catch (error) {
+        console.error("Logout error:", error);
+        res.redirect("/auth");
+      }
+    });
+
+    return;
+  }
 
   const config = await getOidcConfig();
 
@@ -195,6 +272,11 @@ export async function setupAuth(app: Express) {
 }
 
 export const isAuthenticated: RequestHandler = async (req, res, next) => {
+  // If Replit auth is not available, skip authentication check
+  if (!isReplitAuthAvailable) {
+    return next();
+  }
+
   const user = req.user as any;
 
   if (!req.isAuthenticated() || !user.expires_at) {
